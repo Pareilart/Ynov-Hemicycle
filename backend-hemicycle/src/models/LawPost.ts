@@ -2,12 +2,6 @@ import mongoose, { Schema, Model } from 'mongoose';
 import { ILawPost } from '../types/interfaces/ILawPost';
 
 const lawPostSchema = new Schema({
-    law_id: {
-        type: Number,
-        required: true,
-        unique: true,
-        default: 1
-    },
     legislature: {
         type: Number,
         required: true
@@ -68,16 +62,6 @@ const lawPostSchema = new Schema({
     }
 }, {
     timestamps: true
-});
-
-// Middleware pre-save pour auto-incrémenter le law_id
-lawPostSchema.pre('save', async function(this: ILawPost & mongoose.Document, next) {
-    if (this.isNew) {
-        const LawPostModel = this.constructor as Model<ILawPost>;
-        const lastLawPost = await LawPostModel.findOne({}, {}, { sort: { 'law_id': -1 } });
-        this.law_id = lastLawPost ? lastLawPost.law_id + 1 : 1;
-    }
-    next();
 });
 
 const LawPost = mongoose.model<ILawPost>('LawPost', lawPostSchema);

@@ -4,12 +4,12 @@ import { LawReactionType, LawReactionEmoji } from '../enum/LawReactionTypeEnum';
 
 const lawReactionSchema = new Schema<ILawReaction>({
     user_id: {
-        type: String,
+        type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
     law_post_id: {
-        type: String,
+        type: Schema.Types.ObjectId,
         ref: 'LawPost',
         required: true
     },

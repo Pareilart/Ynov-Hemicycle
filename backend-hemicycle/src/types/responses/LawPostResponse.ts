@@ -10,9 +10,18 @@ export interface LawReactionResponse {
     updated_at: string;
 }
 
+export interface ReactionStats {
+    total: number;
+    types: {
+        [key in LawReactionType]: number;
+    };
+    emojis: {
+        [key in LawReactionEmoji]: number;
+    };
+}
+
 export interface LawPostResponse {
     id: string; // ID MongoDB
-    law_id: number; // ID spécifique à la loi
     legislature: number;
     title: string;
     article_constitutionnel: number;
@@ -27,6 +36,7 @@ export interface LawPostResponse {
     reevaluable_count: number;
     user: UserResponse;
     reactions?: LawReactionResponse[];
+    reactions_stats: ReactionStats;
     created_at: string;
     updated_at: string;
 } 
