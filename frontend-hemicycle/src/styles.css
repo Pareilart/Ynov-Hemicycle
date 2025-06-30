@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+
+router-outlet {
+  display: none;
+}
