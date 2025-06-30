@@ -11,4 +11,9 @@ export type UserResponse = {
     emailVerifiedAt?: Date;
     role?: RoleResponse;
     addresses?: AddressesResponse;
+    token? : {
+        token : string;
+        expiresIn : number;
+        exp : number;
+    }
 }; 
