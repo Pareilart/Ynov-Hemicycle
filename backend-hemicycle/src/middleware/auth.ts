@@ -46,4 +46,22 @@ export const isAdmin = async (req: AuthenticatedRequest, res: Response, next: Ne
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la vérification des droits' });
     }
+};
+
+export const isDeputy = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ message: 'Authentification requise' });
+        }
+
+        const user = await User.findById(req.user._id).populate('role');
+        
+        if (!user || !user.role || (user.role as any).name !== RoleEnum.DEPUTY) {
+            return res.status(403).json({ message: 'Accès refusé. Droits de député requis' });
+        }
+
+        next();
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur lors de la vérification des droits' });
+    }
 }; 

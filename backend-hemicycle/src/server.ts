@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import deputeRoutes from './routes/deputeRoutes';
 import userRoutes from './routes/userRoutes';
 import authRoutes from './routes/authRoutes';
+import lawPostRoutes from './routes/lawPostRoutes';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ mongoose.connect(process.env.MONGODB_URI || '')
 app.use('/api/deputes', deputeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/law-posts', lawPostRoutes);
 
 // Route de base
 app.get('/', (req: Request, res: Response) => {

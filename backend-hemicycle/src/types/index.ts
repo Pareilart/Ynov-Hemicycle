@@ -4,6 +4,7 @@ export * from './interfaces/IDepute';
 export * from './interfaces/IPermission';
 export * from './interfaces/IRole';
 export * from './interfaces/IUser';
+export * from './interfaces/ILawPost';
 
 // Export des types de réponse
 export * from './responses/AddressesResponse';
