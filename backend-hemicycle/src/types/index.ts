@@ -47,6 +47,7 @@ export interface IUser extends Document {
   birthday: Date;
   sexe: 'Homme' | 'Femme' | 'Autre';
   addresses: Types.ObjectId;
+  password: string;
   email: string;
   emailVerifiedAt?: Date;
   role: Types.ObjectId;
