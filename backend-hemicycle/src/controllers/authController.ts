@@ -11,6 +11,7 @@ import { IUserDocument } from '../types/interfaces/IUserDocument';
 import { IUserCreate } from '../types/interfaces/IUserCreate';
 import { Types } from 'mongoose';
 import { ResponseHandler } from '../utils/responseHandler';
+import { UserDto } from '../types/dto/UserDto';
 
 export const login = async (req: Request, res: Response) => {
     try {
@@ -23,7 +24,9 @@ export const login = async (req: Request, res: Response) => {
         // Vérifier si l'utilisateur existe
         const user = await User.findOne({ email })
             .select('+password')
-            .populate<{ role: IRole }>('role') as IUserDocument | null;
+            .populate('role')
+            .populate('addresses')
+            .populate('votingSurvey') as IUserDocument | null;
             
         if (!user) {
             return ResponseHandler.unauthorized(res, "Email ou mot de passe incorrect");
@@ -37,14 +40,13 @@ export const login = async (req: Request, res: Response) => {
 
         try {
             const token = generateToken(user._id, user.role.name);
-            ResponseHandler.success(res, {
-                userId: user._id,
-                token: {
-                    token: token,
-                    expiresIn: 24 * 60 * 60 * 1000,
-                    exp: Date.now() + 24 * 60 * 60 * 1000
-                }
-            });
+            const userResponse = UserDto.toResponse(user);
+            userResponse.token = {
+                token: token,
+                expiresIn: 24 * 60 * 60 * 1000,
+                exp: Date.now() + 24 * 60 * 60 * 1000
+            };
+            ResponseHandler.success(res, userResponse);
         } catch (error) {
             return ResponseHandler.error(res, "Erreur lors de la génération du token");
         }
@@ -96,17 +98,20 @@ export const register = async (req: Request, res: Response) => {
         };
 
         const user = await User.create(userData);
+        const populatedUser = await User.findById(user._id)
+            .populate('role')
+            .populate('addresses')
+            .populate('votingSurvey') as IUserDocument;
 
         try {
             const token = generateToken(user._id as Types.ObjectId, userRole.name);
-            ResponseHandler.success(res, {
-                userId: user._id,
-                token: {
-                    token: token,
-                    expiresIn: 24 * 60 * 60 * 1000,
-                    exp: Date.now() + 24 * 60 * 60 * 1000
-                }
-            }, "Utilisateur créé avec succès", 201);
+            const userResponse = UserDto.toResponse(populatedUser);
+            userResponse.token = {
+                token: token,
+                expiresIn: 24 * 60 * 60 * 1000,
+                exp: Date.now() + 24 * 60 * 60 * 1000
+            };
+            ResponseHandler.success(res, userResponse, "Utilisateur créé avec succès", 201);
         } catch (error) {
             return ResponseHandler.error(res, "Erreur lors de la génération du token");
         }
@@ -125,35 +130,14 @@ export const me = async (req: AuthenticatedRequest, res: Response) => {
         const user = await User.findById(req.user._id)
             .populate('role')
             .populate('addresses')
-            .select('-password') as IUserPopulated | null;
+            .populate('votingSurvey')
+            .select('-password') as IUserDocument;
 
         if (!user) {
             return ResponseHandler.notFound(res, "Utilisateur non trouvé");
         }
 
-        const userResponse: UserResponse = {
-            id: user._id.toString(),
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            birthday: user.birthday,
-            sexe: user.sexe,
-            emailVerifiedAt: user.emailVerifiedAt,
-            role: {
-                id: user.role._id.toString(),
-                name: user.role.name,
-                description: user.role.description,
-            },
-            addresses: user.addresses ? {
-                line1: user.addresses.line1,
-                line2: user.addresses.line2,
-                postalCode: user.addresses.postalCode,
-                city: user.addresses.city,
-                state: user.addresses.state,
-                country: user.addresses.country,
-            } : undefined
-        };
-
+        const userResponse = UserDto.toResponse(user);
         ResponseHandler.success(res, userResponse);
     } catch (error: any) {
         console.error('Erreur lors de la récupération du profil:', error);

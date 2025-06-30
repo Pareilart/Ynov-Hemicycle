@@ -45,12 +45,19 @@ const userSchema = new Schema<IUser>(
             ref: "Role",
             required: true,
         },
-        votingSurveys: {
+        votingSurvey: {
             type: Schema.Types.ObjectId,
-            ref: "votingSurveys",
+            ref: "VotingSurvey",
             required: false
+        },
+        hasOnBoarding: {
+            type: Boolean,
+            default: false
         }
     },
+    {
+        timestamps: true
+    }
 );
 
 export default mongoose.model<IUser>("User", userSchema, "users");
