@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import Role from '../models/Role';
 import { RoleEnum } from '../enum/RoleEnum';
+import { AuthenticatedRequest } from '../middleware/auth';
+import { UserResponse, RoleResponse, IUserPopulated } from '../types';
 
 export const login = async (req: Request, res: Response) => {
     try {
@@ -95,5 +97,50 @@ export const register = async (req: Request, res: Response) => {
     } catch (error: any) {
         console.error('Erreur d\'inscription:', error);
         res.status(500).json({ message: "Erreur lors de l'inscription", error: error.message });
+    }
+};
+
+export const me = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ message: "Utilisateur non authentifié" });
+        }
+
+        const user = await User.findById(req.user._id)
+            .populate('role')
+            .populate('addresses')
+            .select('-password') as IUserPopulated | null;
+
+        if (!user) {
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
+        }
+
+        const userResponse: UserResponse = {
+            id: user._id.toString(),
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            birthday: user.birthday,
+            sexe: user.sexe,
+            emailVerifiedAt: user.emailVerifiedAt,
+            role: {
+                id: user.role._id.toString(),
+                name: user.role.name,
+                description: user.role.description,
+            },
+            addresses: user.addresses ? {
+                line1: user.addresses.line1,
+                line2: user.addresses.line2,
+                postalCode: user.addresses.postalCode,
+                city: user.addresses.city,
+                state: user.addresses.state,
+                country: user.addresses.country,
+            } : undefined
+        };
+
+        res.status(200).json(userResponse);
+    } catch (error: any) {
+        console.error('Erreur lors de la récupération du profil:', error);
+        res.status(500).json({ message: "Erreur lors de la récupération du profil", error: error.message });
     }
 }; 
