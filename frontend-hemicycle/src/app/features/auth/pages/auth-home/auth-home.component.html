@@ -1,0 +1,37 @@
+<section class="flex flex-col gap-5">
+  <section class="flex flex-col gap-1">
+    <h1 class="font-bold text-2xl">Bienvenue !</h1>
+    <p class="text-sm text-surface-500 dark:text-surface-400">
+      Sur votre espace Hemicycle, vous pouvez vous authentifier pour accéder à vos données.
+    </p>
+  </section>
+
+  <div class="flex flex-row gap-3">
+    <p-button
+      class="flex-1"
+      label="Connexion"
+      [routerLink]="['/auth', 'login']"
+      [outlined]="false"
+      severity="primary"
+      [fluid]="true"
+    />
+
+    <p-button
+      class="flex-1"
+      label="Inscription"
+      [routerLink]="['/auth', 'register']"
+      [outlined]="true"
+      severity="secondary"
+      [fluid]="true"
+    />
+  </div>
+
+  <div class="flex flex-col">
+    <p class="text-center text-sm text-surface-500 dark:text-surface-400">
+      Vous êtes député-e ?
+      <a [routerLink]="['/auth', 'login']" class="text-primary-500 hover:underline focus:underline focus:outline-none">
+        Connectez-vous ici
+      </a>
+    </p>
+  </div>
+</section>

@@ -1,6 +1,7 @@
 import { Timestampable } from "@core/models/timestampable/timestampable.model";
 import { Uuid } from "@core/models/uuid/uuid.model";
 import { Email } from "@core/models/email/email.model";
+import { UserGender } from "./user-gender.enum";
 
 /**
  * Modèle User
@@ -63,20 +64,6 @@ export interface User extends Timestampable {
   readonly email: Email;
 
   /**
-   * Propriété image
-   * @readonly
-   *
-   * @description
-   * Image de l'utilisateur
-   *
-   * @memberof User
-   * @since 1.0.0
-   *
-   * @type {string} image
-   */
-  readonly image?: string;
-
-  /**
    * Propriété firstName
    * @readonly
    *
@@ -88,7 +75,7 @@ export interface User extends Timestampable {
    *
    * @type {string} firstName
    */
-  readonly firstName?: string;
+  readonly firstName: string;
 
   /**
    * Propriété lastName
@@ -102,6 +89,48 @@ export interface User extends Timestampable {
    *
    * @type {string} lastName
    */
-  readonly lastName?: string;
+  readonly lastName: string;
+
+  /**
+   * Propriété gender
+   * @readonly
+   *
+   * @description
+   * Genre de l'utilisateur
+   *
+   * @memberof User
+   * @since 1.0.0
+   *
+   * @type {UserGender} gender
+   */
+  readonly gender: UserGender;
+
+  /**
+   * Propriété city
+   * @readonly
+   *
+   * @description
+   * Ville de l'utilisateur
+   *
+   * @memberof User
+   * @since 1.0.0
+   *
+   * @type {string} city
+   */
+  readonly city?: string;
+
+  /**
+   * Propriété postalCode
+   * @readonly
+   *
+   * @description
+   * Code postal de l'utilisateur
+   *
+   * @memberof User
+   * @since 1.0.0
+   *
+   * @type {string} postalCode
+   */
+  readonly postalCode?: string;
   //#endregion
 };

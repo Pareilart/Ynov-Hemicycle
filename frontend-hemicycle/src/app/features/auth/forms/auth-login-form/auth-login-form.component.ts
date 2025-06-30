@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, Signal } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserCredentials } from '@core/models/user/user-credentials.model';
 import { PasswordModule } from 'primeng/password';
@@ -50,6 +50,12 @@ type AuthLoginFormControls = {
     ? FormControl<Email | string>
     : FormControl<AuthLoginFormValues[K]>;
 };
+
+type AuthProvider = {
+  id: string;
+  name: string;
+  icon: string;
+}
 
 @Component({
   selector: 'app-auth-login-form',
@@ -111,6 +117,37 @@ export class AuthLoginFormComponent {
       disabled: false
     })
   });
+
+  /**
+   * Propriété providers
+   * @readonly
+   *
+   * @description
+   * Providers de connexion
+   *
+   * @access public
+   * @memberof AuthLoginFormComponent
+   * @since 1.0.0
+   *
+   * @type {Signal<AuthProvider[]>} providers
+   */
+  public readonly providers: Signal<AuthProvider[]> = signal<AuthProvider[]>([
+    {
+      id: 'google',
+      name: 'Google',
+      icon: 'pi pi-google'
+    },
+    {
+      id: 'microsoft',
+      name: 'Microsoft',
+      icon: 'pi pi-microsoft'
+    },
+    {
+      id: 'apple',
+      name: 'Apple',
+      icon: 'pi pi-apple'
+    },
+  ]);
   //#endregion
 
   //#region Méthodes

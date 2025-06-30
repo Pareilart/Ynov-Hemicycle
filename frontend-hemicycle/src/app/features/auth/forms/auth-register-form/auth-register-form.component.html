@@ -1,61 +1,130 @@
 <form class="flex flex-col gap-5 w-full" [formGroup]="form" (ngSubmit)="onSubmit()">
-  <section class="flex flex-col gap-1">
-    <h1 class="font-bold text-2xl">Inscription</h1>
+  <section class="flex flex-col gap-5">
+    <h1 class="font-bold text-primary-500 text-3xl">Inscription</h1>
     <p class="text-sm text-surface-500 dark:text-surface-400">Créez votre compte pour commencer</p>
   </section>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <section class="flex flex-col gap-1">
-      <label for="firstName">Prénom</label>
-      <input id="firstName" formControlName="firstName" placeholder="Votre prénom" type="text" autocomplete="given-name" pInputText [fluid]="true" />
-    </section>
+  <p-stepper [value]="1">
+    <p-step-list>
+      <p-step [value]="1">Informations</p-step>
+      <p-step [disabled]="credentialsForm.invalid" [value]="2">Identifiants</p-step>
+    </p-step-list>
 
-    <section class="flex flex-col gap-1">
-      <label for="lastName">Nom</label>
-      <input id="lastName" formControlName="lastName" placeholder="Votre nom" type="text" autocomplete="family-name" pInputText [fluid]="true" />
-    </section>
-  </div>
+    <p-step-panels>
+      <p-step-panel [value]="1">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="flex flex-col gap-5" [formGroup]="infosForm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <section class="flex flex-col gap-1">
+                <label for="firstName">Prénom</label>
+                <input id="firstName" formControlName="firstName" placeholder="Votre prénom" type="text" autocomplete="given-name" pInputText [fluid]="true" />
+              </section>
 
-  <section class="flex flex-col gap-1">
-    <label for="email">Email</label>
-    <input id="email" formControlName="email" placeholder="exemple@domain.com" type="email" autocomplete="email" pInputText [fluid]="true" />
-  </section>
+              <section class="flex flex-col gap-1">
+                <label for="lastName">Nom</label>
+                <input id="lastName" formControlName="lastName" placeholder="Votre nom" type="text" autocomplete="family-name" pInputText [fluid]="true" />
+              </section>
+            </div>
 
-  <section class="flex flex-col gap-1">
-    <label for="password">Mot de passe</label>
-    <p-password weakLabel="Faible" strongLabel="Fort" mediumLabel="Moyen" formControlName="password" autocomplete="new-password" placeholder="Votre mot de passe" inputId="password" [fluid]="true" [toggleMask]="true">
-      <ng-template #header>
-        <div class="font-semibold text-xm mb-4">Créez un mot de passe sécurisé</div>
-      </ng-template>
+            <section class="flex flex-col gap-1">
+              <label for="gender">Genre</label>
+              <p-select formControlName="gender" [options]="genderOptions()" optionLabel="label" optionValue="value" [fluid]="true" />
+            </section>
 
-      <ng-template #footer>
-        <p-divider />
-        <ul class="pl-2 ml-2 my-0 leading-normal">
-          <li>Contient au moins une minuscule</li>
-          <li>Contient au moins une majuscule</li>
-          <li>Contient au moins un chiffre</li>
-          <li>Contient au moins 8 caractères</li>
-        </ul>
-      </ng-template>
-    </p-password>
-  </section>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <section class="flex flex-col gap-1">
+                <label for="city">Ville</label>
+                <input id="city" formControlName="city" placeholder="Votre ville" type="text" autocomplete="address-level2" pInputText [fluid]="true" />
+              </section>
 
-  <section class="flex flex-col gap-1">
-    <label for="passwordConfirmation">Confirmez le mot de passe</label>
-    <p-password formControlName="passwordConfirmation" autocomplete="new-password" placeholder="Confirmez votre mot de passe" inputId="passwordConfirmation" [feedback]="false" [toggleMask]="true" [fluid]="true" />
-  </section>
+              <section class="flex flex-col gap-1">
+                <label for="postalCode">Code postal</label>
+                <input id="postalCode" formControlName="postalCode" placeholder="Votre code postal" type="text" autocomplete="address-level2" pInputText [fluid]="true" />
+              </section>
+            </div>
 
-  <section class="flex flex-row gap-3 items-center">
-    <p-checkbox formControlName="terms" [binary]="true" inputId="terms" />
-    <label for="terms" class="text-sm">J'accepte les <a routerLink="/terms" class="text-primary-600 hover:underline focus:underline focus:outline-none">conditions d'utilisation</a> et la <a routerLink="/privacy" class="text-primary-600 hover:underline focus:underline focus:outline-none">politique de confidentialité</a></label>
-  </section>
+            <section class="flex flex-row gap-3">
+              <p-button
+                class="w-full"
+                type="button"
+                [fluid]="true"
+                severity="primary"
+                iconPos="right"
+                icon="pi pi-arrow-right text-xs"
+                label="Suivant"
+                [disabled]="infosForm.invalid"
+                (onClick)="activateCallback(2)"
+              />
+            </section>
+          </div>
+        </ng-template>
+      </p-step-panel>
 
-  <section class="flex flex-row gap-3">
-    <p-button class="w-full" type="submit" [fluid]="true" label="S'inscrire" [disabled]="form.invalid" />
-  </section>
+      <p-step-panel [value]="2">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="flex flex-col gap-5" [formGroup]="credentialsForm">
+            <section class="flex flex-col gap-1">
+              <label for="email">Email</label>
+              <input id="email" formControlName="email" placeholder="exemple@domain.com" type="email" autocomplete="email" pInputText [fluid]="true" />
+            </section>
+
+            <section class="flex flex-col gap-1">
+              <label for="password">Mot de passe</label>
+              <p-password weakLabel="Faible" strongLabel="Fort" mediumLabel="Moyen" formControlName="password" autocomplete="new-password" placeholder="Votre mot de passe" inputId="password" [fluid]="true" [toggleMask]="true">
+                <ng-template #header>
+                  <div class="font-semibold text-xm mb-4">Créez un mot de passe sécurisé</div>
+                </ng-template>
+
+                <ng-template #footer>
+                  <p-divider />
+                  <ul class="pl-2 ml-2 my-0 leading-normal">
+                    <li>Contient au moins une minuscule</li>
+                    <li>Contient au moins une majuscule</li>
+                    <li>Contient au moins un chiffre</li>
+                    <li>Contient au moins 8 caractères</li>
+                  </ul>
+                </ng-template>
+              </p-password>
+            </section>
+
+            <section class="flex flex-col gap-1">
+              <label for="passwordConfirmation">Confirmez le mot de passe</label>
+              <p-password formControlName="passwordConfirmation" autocomplete="new-password" placeholder="Confirmez votre mot de passe" inputId="passwordConfirmation" [feedback]="false" [toggleMask]="true" [fluid]="true" />
+            </section>
+
+            <section class="flex flex-row gap-3 items-center">
+              <p-checkbox formControlName="terms" [binary]="true" inputId="terms" />
+              <label for="terms" class="text-sm">J'accepte les <a routerLink="/terms" class="text-primary-600 hover:underline focus:underline focus:outline-none">conditions d'utilisation</a> et la <a routerLink="/privacy" class="text-primary-600 hover:underline focus:underline focus:outline-none">politique de confidentialité</a></label>
+            </section>
+
+            <section class="flex flex-row gap-3 flex-wrap">
+              <p-button
+                class="flex-1"
+                type="button"
+                [fluid]="true"
+                icon="pi pi-arrow-left text-xs"
+                [outlined]="true"
+                label="Précédent"
+                severity="secondary"
+                (onClick)="activateCallback(1)"
+              />
+
+              <p-button
+                class="flex-1"
+                type="submit"
+                [fluid]="true"
+                label="S'inscrire"
+                [disabled]="form.invalid"
+              />
+            </section>
+          </div>
+        </ng-template>
+      </p-step-panel>
+    </p-step-panels>
+  </p-stepper>
 
   <p class="text-center text-sm text-surface-500 dark:text-surface-400">
     Vous avez déjà un compte ?
-    <a [routerLink]="['/auth', 'login']" class="text-primary-600 hover:underline focus:underline focus:outline-none">Connectez-vous</a>
+    <a [routerLink]="['/auth', 'login']" class="text-primary-500 hover:underline focus:underline focus:outline-none">Connectez-vous</a>
   </p>
 </form>

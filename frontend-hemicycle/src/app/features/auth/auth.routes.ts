@@ -3,6 +3,8 @@ import { AuthLoginComponent } from "@features/auth/pages/auth-login/auth-login.c
 import { AuthRegisterComponent } from "@features/auth/pages/auth-register/auth-register.component";
 import { AuthForgotPasswordComponent } from "@features/auth/pages/auth-forgot-password/auth-forgot-password.component";
 import { AuthResetPasswordComponent } from "@features/auth/pages/auth-reset-password/auth-reset-password.component";
+import { AuthHomeComponent } from '@features/auth/pages/auth-home/auth-home.component';
+import { AuthOtpVerificationComponent } from './pages/auth-otp-verification/auth-otp-verification.component';
 
 /**
  * Routes AUTH_ROUTES
@@ -16,6 +18,11 @@ import { AuthResetPasswordComponent } from "@features/auth/pages/auth-reset-pass
  * @see https://angular.dev/guide/router
  */
 export const AUTH_ROUTES: Routes = [
+  {
+    path: '',
+    title: 'Authentification',
+    component: AuthHomeComponent,
+  },
   {
     path: 'login',
     title: 'Connexion',
@@ -35,6 +42,11 @@ export const AUTH_ROUTES: Routes = [
     path: 'reset-password',
     title: 'Réinitialisation du mot de passe',
     component: AuthResetPasswordComponent,
+  },
+  {
+    path: 'verification',
+    title: 'Confirmation OTP',
+    component: AuthOtpVerificationComponent,
   },
   {
     path: '',

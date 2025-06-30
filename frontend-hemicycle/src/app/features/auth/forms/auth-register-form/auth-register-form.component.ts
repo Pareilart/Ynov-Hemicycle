@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, Signal, WritableSignal } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { UserGender } from '@app/core/models/user/user-gender.enum';
 import { Email } from '@core/models/email/email.model';
 import { UserRegistration } from '@core/models/user/user-registration.model';
 import { ButtonModule } from 'primeng/button';
@@ -8,6 +9,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DividerModule } from 'primeng/divider';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
+import { StepperModule } from 'primeng/stepper';
+import { SelectModule } from 'primeng/select';
 
 /**
  * Type AuthRegisterFormValues
@@ -28,10 +31,13 @@ import { PasswordModule } from 'primeng/password';
  *
  * @see UserRegistration
  */
-type AuthRegisterFormValues = UserRegistration & {
-  passwordConfirmation: string;
-  terms: boolean;
-};
+type AuthRegisterFormValues = {
+  infos: Pick<UserRegistration, 'firstName' | 'lastName' | 'gender' | 'city' | 'postalCode'>;
+  credentials: Pick<UserRegistration, 'email' | 'password'> & {
+    passwordConfirmation: string;
+    terms: boolean;
+  };
+}
 
 /**
  * Type AuthRegisterFormControls
@@ -47,10 +53,33 @@ type AuthRegisterFormValues = UserRegistration & {
  *
  * @see UserRegistration
  */
-type AuthRegisterFormControls = {
-  [K in keyof Required<AuthRegisterFormValues>]: K extends 'email'
-    ? FormControl<Email | string>
-    : FormControl<Required<AuthRegisterFormValues>[K]>;
+type AuthRegisterFormControls ={
+  infos: FormGroup<{
+    [K in keyof Required<AuthRegisterFormValues['infos']>]: FormControl<Required<AuthRegisterFormValues['infos']>[K]>
+  }>;
+  credentials: FormGroup<{
+    [K in keyof Required<AuthRegisterFormValues['credentials']>]: K extends 'email'
+      ? FormControl<Email | string>
+      : FormControl<Required<AuthRegisterFormValues['credentials']>[K]>;
+  }>;
+}
+
+/**
+ * Type GenderOption
+ * @type GenderOption
+ *
+ * @description
+ * Type représentant une option de genre
+ *
+ * @version 1.0.0
+ *
+ * @author Valentin FORTIN <contact@valentin-fortin.pro>
+ *
+ * @see UserGender
+ */
+type GenderOption = {
+  label: string;
+  value: UserGender;
 };
 
 @Component({
@@ -62,7 +91,9 @@ type AuthRegisterFormControls = {
     DividerModule,
     InputTextModule,
     CheckboxModule,
-    ButtonModule
+    ButtonModule,
+    StepperModule,
+    SelectModule
   ],
   templateUrl: './auth-register-form.component.html',
   styleUrl: './auth-register-form.component.css'
@@ -86,6 +117,34 @@ export class AuthRegisterFormComponent {
     inject<NonNullableFormBuilder>(NonNullableFormBuilder);
 
   /**
+   * Propriété genderOptions
+   * @readonly
+   *
+   * @description
+   * Options de genre
+   *
+   * @access public
+   * @memberof AuthRegisterFormComponent
+   * @since 1.0.0
+   *
+   * @type {Signal<GenderOption[]>} genderOptions
+   */
+  public readonly genderOptions: Signal<GenderOption[]> = signal<GenderOption[]>([
+    {
+      label: 'Masculin',
+      value: UserGender.MALE
+    },
+    {
+      label: 'Féminin',
+      value: UserGender.FEMALE
+    },
+    {
+      label: 'Autre',
+      value: UserGender.OTHER
+    }
+  ]);
+
+  /**
    * Propriété form
    * @readonly
    *
@@ -99,31 +158,50 @@ export class AuthRegisterFormComponent {
    * @type {FormGroup<AuthRegisterFormControls>} form
    */
   public readonly form: FormGroup<AuthRegisterFormControls> = this.formBuilder.group({
-    firstName: this.formBuilder.control<string>({
-      value: '',
-      disabled: false
+    infos: this.formBuilder.group({
+      firstName: this.formBuilder.control<string>({
+        value: '',
+        disabled: false
+      }),
+      lastName: this.formBuilder.control<string>({
+        value: '',
+        disabled: false
+      }),
+      gender: this.formBuilder.control<UserGender>({
+        value: UserGender.MALE,
+        disabled: false
+      }, [Validators.required]),
+      city: this.formBuilder.control<string>({
+        value: '',
+        disabled: false
+      }, [Validators.required]),
+      postalCode: this.formBuilder.control<string>({
+        value: '',
+        disabled: false
+      }, [Validators.required]),
     }),
-    lastName: this.formBuilder.control<string>({
-      value: '',
-      disabled: false
-    }),
-    email: this.formBuilder.control<Email | string>({
-      value: '',
-      disabled: false
-    }, [Validators.required, Validators.email]),
-    password: this.formBuilder.control<string>({
-      value: '',
-      disabled: false
-    }, [Validators.required]),
-    passwordConfirmation: this.formBuilder.control<string>({
-      value: '',
-      disabled: false
-    }, [Validators.required]),
-    terms: this.formBuilder.control<boolean>({
-      value: false,
-      disabled: false
-    }, [Validators.requiredTrue])
+    credentials: this.formBuilder.group({
+      email: this.formBuilder.control<Email | string>({
+        value: '',
+        disabled: false
+      }, [Validators.required, Validators.email]),
+      password: this.formBuilder.control<string>({
+        value: '',
+        disabled: false
+      }, [Validators.required]),
+      passwordConfirmation: this.formBuilder.control<string>({
+        value: '',
+        disabled: false
+      }, [Validators.required]),
+      terms: this.formBuilder.control<boolean>({
+        value: false,
+        disabled: false
+      }, [Validators.requiredTrue])
+    })
   });
+
+  public readonly infosForm: FormGroup = this.form.get('infos') as FormGroup;
+  public readonly credentialsForm: FormGroup = this.form.get('credentials') as FormGroup;
   //#endregion
 
   //#region Méthodes

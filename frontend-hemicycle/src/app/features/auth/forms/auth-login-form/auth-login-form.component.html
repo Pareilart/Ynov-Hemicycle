@@ -1,6 +1,6 @@
 <form class="flex flex-col gap-5 w-full" [formGroup]="form" (ngSubmit)="onSubmit()">
-  <section class="flex flex-col gap-1">
-    <h1 class="font-bold text-2xl">Connexion</h1>
+  <section class="flex flex-col gap-5">
+    <h1 class="font-bold text-primary-500 text-3xl">Connexion</h1>
     <p class="text-sm text-surface-500 dark:text-surface-400">Connectez-vous pour accéder à votre compte</p>
   </section>
 
@@ -71,9 +71,29 @@
     />
   </section>
 
+  <section class="flex flex-col gap-5">
+    <p-divider styleClass="m-0" layout="horizontal">
+      <span>OU</span>
+    </p-divider>
+
+    <div class="flex flex-row gap-3 justify-center flex-wrap">
+      @for (provider of providers(); track $index) {
+        <p-button
+          class="flex-1"
+          type="button"
+          severity="secondary"
+          [outlined]="true"
+          [fluid]="true"
+          [icon]="provider.icon"
+          [label]="provider.name"
+        />
+      }
+    </div>
+  </section>
+
   <p class="text-center text-sm text-surface-500 dark:text-surface-400">
     Vous n'avez pas de compte ?
-    <a [routerLink]="['/auth', 'register']" class="text-primary-600 hover:underline focus:underline focus:outline-none">
+    <a [routerLink]="['/auth', 'register']" class="text-primary-500 hover:underline focus:underline focus:outline-none">
       Créez-en un
     </a>
   </p>

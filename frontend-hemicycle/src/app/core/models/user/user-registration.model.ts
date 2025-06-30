@@ -29,5 +29,8 @@ export type UserRegistration = {
     | 'firstName'
     | 'lastName'
     | 'email'
+    | 'gender'
+    | 'city'
+    | 'postalCode'
   >]: User[K];
 } & { password: string; }
