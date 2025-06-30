@@ -1,0 +1,61 @@
+<form class="flex flex-col gap-5 w-full" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <section class="flex flex-col gap-1">
+    <h1 class="font-bold text-2xl">Inscription</h1>
+    <p class="text-sm text-surface-500 dark:text-surface-400">Créez votre compte pour commencer</p>
+  </section>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <section class="flex flex-col gap-1">
+      <label for="firstName">Prénom</label>
+      <input id="firstName" formControlName="firstName" placeholder="Votre prénom" type="text" autocomplete="given-name" pInputText [fluid]="true" />
+    </section>
+
+    <section class="flex flex-col gap-1">
+      <label for="lastName">Nom</label>
+      <input id="lastName" formControlName="lastName" placeholder="Votre nom" type="text" autocomplete="family-name" pInputText [fluid]="true" />
+    </section>
+  </div>
+
+  <section class="flex flex-col gap-1">
+    <label for="email">Email</label>
+    <input id="email" formControlName="email" placeholder="exemple@domain.com" type="email" autocomplete="email" pInputText [fluid]="true" />
+  </section>
+
+  <section class="flex flex-col gap-1">
+    <label for="password">Mot de passe</label>
+    <p-password weakLabel="Faible" strongLabel="Fort" mediumLabel="Moyen" formControlName="password" autocomplete="new-password" placeholder="Votre mot de passe" inputId="password" [fluid]="true" [toggleMask]="true">
+      <ng-template #header>
+        <div class="font-semibold text-xm mb-4">Créez un mot de passe sécurisé</div>
+      </ng-template>
+
+      <ng-template #footer>
+        <p-divider />
+        <ul class="pl-2 ml-2 my-0 leading-normal">
+          <li>Contient au moins une minuscule</li>
+          <li>Contient au moins une majuscule</li>
+          <li>Contient au moins un chiffre</li>
+          <li>Contient au moins 8 caractères</li>
+        </ul>
+      </ng-template>
+    </p-password>
+  </section>
+
+  <section class="flex flex-col gap-1">
+    <label for="passwordConfirmation">Confirmez le mot de passe</label>
+    <p-password formControlName="passwordConfirmation" autocomplete="new-password" placeholder="Confirmez votre mot de passe" inputId="passwordConfirmation" [feedback]="false" [toggleMask]="true" [fluid]="true" />
+  </section>
+
+  <section class="flex flex-row gap-3 items-center">
+    <p-checkbox formControlName="terms" [binary]="true" inputId="terms" />
+    <label for="terms" class="text-sm">J'accepte les <a routerLink="/terms" class="text-primary-600 hover:underline focus:underline focus:outline-none">conditions d'utilisation</a> et la <a routerLink="/privacy" class="text-primary-600 hover:underline focus:underline focus:outline-none">politique de confidentialité</a></label>
+  </section>
+
+  <section class="flex flex-row gap-3">
+    <p-button class="w-full" type="submit" [fluid]="true" label="S'inscrire" [disabled]="form.invalid" />
+  </section>
+
+  <p class="text-center text-sm text-surface-500 dark:text-surface-400">
+    Vous avez déjà un compte ?
+    <a [routerLink]="['/auth', 'login']" class="text-primary-600 hover:underline focus:underline focus:outline-none">Connectez-vous</a>
+  </p>
+</form>

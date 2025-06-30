@@ -1,4 +1,33 @@
 @import 'tailwindcss';
+@import "primeicons/primeicons.css";
+@plugin "tailwindcss-primeui";
+
+:root {
+  --p-primary-0: #FFF0F5;
+  --p-primary-50: #FFE5EE;
+  --p-primary-100: #FFCCDD;
+  --p-primary-200: #FF99BB;
+  --p-primary-300: #FF6699;
+  --p-primary-400: #FF3377;
+  --p-primary-500: #D4145A;
+  --p-primary-600: #B30F4D;
+  --p-primary-700: #920B40;
+  --p-primary-800: #710833;
+  --p-primary-900: #510426;
+  --p-primary-950: #300217;
+
+  /* --p-surface-50: var(--color-gray-50);
+  --p-surface-100: var(--color-gray-100);
+  --p-surface-200: var(--color-gray-200);
+  --p-surface-300: var(--color-gray-300);
+  --p-surface-400: var(--color-gray-400);
+  --p-surface-500: var(--color-gray-500);
+  --p-surface-600: var(--color-gray-600);
+  --p-surface-700: var(--color-gray-700);
+  --p-surface-800: var(--color-gray-800);
+  --p-surface-900: var(--color-gray-900);
+  --p-surface-950: var(--color-gray-950); */
+}
 
 router-outlet {
   display: none;
