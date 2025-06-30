@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/hemicycle')
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connecté à MongoDB'))
   .catch(err => console.error('Erreur de connexion à MongoDB:', err));
 
@@ -32,7 +32,7 @@ app.use((err, req, res, next) => {
 });
 
 // Port d'écoute
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Serveur démarré sur le port ${PORT}`);
-}); 
+});
