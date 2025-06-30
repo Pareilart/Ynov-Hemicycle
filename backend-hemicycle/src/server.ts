@@ -1,20 +1,21 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-require('dotenv').config();
+import express, { Request, Response, NextFunction } from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+
+import deputeRoutes from './routes/deputeRoutes';
+import userRoutes from './routes/userRoutes';
+
+dotenv.config();
 
 const app = express();
-
-// Import des routes
-const deputeRoutes = require('./routes/deputeRoutes');
-const userRoutes = require('./routes/userRoutes');
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGODB_URI || '')
   .then(() => console.log('Connecté à MongoDB'))
   .catch(err => console.error('Erreur de connexion à MongoDB:', err));
 
@@ -23,12 +24,12 @@ app.use('/api/deputes', deputeRoutes);
 app.use('/api/users', userRoutes);
 
 // Route de base
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   res.json({ message: 'Bienvenue sur l\'API Hemicycle' });
 });
 
 // Gestion des erreurs
-app.use((err, req, res, next) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Une erreur est survenue !' });
 });
@@ -37,4 +38,4 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Serveur démarré sur le port ${PORT}`);
-});
+}); 

@@ -1,6 +1,7 @@
-const mongoose = require("mongoose");
+import mongoose, { Schema } from 'mongoose';
+import { IDepute } from '../types';
 
-const deputeSchema = new mongoose.Schema(
+const deputeSchema = new Schema<IDepute>(
   {
     nom: {
       type: String,
@@ -43,4 +44,4 @@ const deputeSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Depute", deputeSchema);
+export default mongoose.model<IDepute>("Depute", deputeSchema);

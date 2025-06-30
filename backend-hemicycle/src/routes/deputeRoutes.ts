@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import * as deputeController from '../controllers/deputeController';
+
 const router = express.Router();
-const deputeController = require('../controllers/deputeController');
 
 // Routes pour les députés
 router.get('/', deputeController.getAllDeputes);
@@ -9,4 +10,4 @@ router.post('/', deputeController.createDepute);
 router.put('/:id', deputeController.updateDepute);
 router.delete('/:id', deputeController.deleteDepute);
 
-module.exports = router; 
+export default router; 

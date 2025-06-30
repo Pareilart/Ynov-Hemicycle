@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-export {};
+import mongoose, { Schema } from 'mongoose';
+import { IUser } from '../types';
 
-const userSchema = new mongoose.Schema(
+const userSchema = new Schema<IUser>(
     {
         firstName: {
             type: String,
@@ -20,8 +20,8 @@ const userSchema = new mongoose.Schema(
             enum: ["Homme", "Femme", "Autre"],
             required: true,
         },
-        city: {
-            type: mongoose.Schema.Types.ObjectId,
+        addresses: {
+            type: Schema.Types.ObjectId,
             ref: "Addresses",
             required: true,
         },
@@ -36,16 +36,16 @@ const userSchema = new mongoose.Schema(
             required: false,
         },
         role: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "Role",
             required: true,
         },
-        votingSurveys : {
-            type: mongoose.Schema.Types.ObjectId,
+        votingSurveys: {
+            type: Schema.Types.ObjectId,
             ref: "votingSurveys",
             required: false
         }
     },
 );
 
-module.exports = mongoose.model("User", userSchema, "users");
+export default mongoose.model<IUser>("User", userSchema, "users");

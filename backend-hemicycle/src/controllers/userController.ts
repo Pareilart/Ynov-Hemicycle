@@ -1,26 +1,19 @@
-const User = require('../models/User');
-const RoleEnum = require('../enum/RoleEnum');
-const Role = require('../models/Role');
-export {};
+import { Request, Response } from 'express';
+import User from '../models/User';
+import { RoleEnum } from '../enum/RoleEnum';
+import { AuthenticatedRequest } from '../middleware/auth';
 
-exports.getAllUsers = async (req, res) => {
+export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
     try {
-        if (req.user.role !== RoleEnum.ADMIN) {
-            return res.status(404);
-        }
         const users = await User.find().populate('role', 'name').populate('city', 'name');
         res.json(users);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: (error as Error).message });
     }
-}
+};
 
-exports.getUserById = async (req, res) => {
+export const getUserById = async (req: Request, res: Response): Promise<void> => {
     try {
-        if (req.user.role !== RoleEnum.ADMIN || req.user.id !== req.params.id) {
-            return res.status(404);
-        }
-
         const user = await User.findById(req.params.id).populate('role', 'name').populate('city', 'name');
         if (user) {
             res.json(user);
@@ -28,26 +21,22 @@ exports.getUserById = async (req, res) => {
             res.status(404).json({ message: "Utilisateur non trouvé" });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: (error as Error).message });
     }
-}
+};
 
-exports.createUser = async (req, res) => {
+export const createUser = async (req: Request, res: Response): Promise<void> => {
     const user = new User(req.body);
     try {
         const newUser = await user.save();
         res.status(201).json(newUser);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(400).json({ message: (error as Error).message });
     }
-}
+};
 
-exports.updateUser = async (req, res) => {
+export const updateUser = async (req: Request, res: Response): Promise<void> => {
     try {
-        if (req.user.role !== RoleEnum.ADMIN || req.user.id !== req.params.id) {
-            return res.status(404);
-        }
-
         const user = await User.findById(req.params.id);
         if (user) {
             Object.assign(user, req.body);
@@ -57,15 +46,12 @@ exports.updateUser = async (req, res) => {
             res.status(404).json({ message: "Utilisateur non trouvé" });
         }
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(400).json({ message: (error as Error).message });
     }
-}
+};
 
-exports.deleteUser = async (req, res) => {
+export const deleteUser = async (req: Request, res: Response): Promise<void> => {
     try {
-        if (req.user.role !== RoleEnum.ADMIN || req.user.id !== req.params.id) {
-            return res.status(404);
-        }
         const user = await User.findById(req.params.id);
         if (user) {
             await user.deleteOne();
@@ -74,7 +60,7 @@ exports.deleteUser = async (req, res) => {
             res.status(404).json({ message: "Utilisateur non trouvé" });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: (error as Error).message });
     }
-}
+};
 
