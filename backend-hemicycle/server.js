@@ -7,6 +7,7 @@ const app = express();
 
 // Import des routes
 const deputeRoutes = require('./routes/deputeRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 // Middleware
 app.use(cors());
@@ -19,6 +20,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Routes
 app.use('/api/deputes', deputeRoutes);
+app.use('/api/users', userRoutes);
 
 // Route de base
 app.get('/', (req, res) => {
