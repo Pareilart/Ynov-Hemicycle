@@ -22,6 +22,7 @@ export class UserDto {
       email: userDoc.email,
       emailVerifiedAt: userDoc.emailVerifiedAt,
       hasOnBoarding: userDoc.hasOnBoarding || false,
+      twoFactorEnabled: userDoc.twoFactorEnabled || false,
     };
 
     // Ajouter le rôle s'il existe

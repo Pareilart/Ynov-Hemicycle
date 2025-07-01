@@ -60,6 +60,10 @@ export const registerValidator = [
         );
       }
     }),
+
+  body('twoFactorEnabled')
+    .isBoolean()
+    .withMessage('La 2FA doit être un booléen'),
 ];
 
 export const loginValidator = [
@@ -79,4 +83,15 @@ export const refreshTokenValidator = [
     .isString()
     .notEmpty()
     .withMessage('Le refresh token est requis'),
+];
+
+export const verify2FACodeValidator = [
+  body('code')
+    .isString()
+    .notEmpty()
+    .withMessage('Le code est requis'),
+  body('email')
+    .isEmail()
+    .notEmpty()
+    .withMessage('L\'email est requis'),
 ];

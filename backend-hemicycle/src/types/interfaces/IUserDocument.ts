@@ -16,4 +16,5 @@ export interface IUserDocument extends Document {
   addresses?: IAddresses & { _id: Types.ObjectId };
   votingSurvey?: IVotingSurvey & { _id: Types.ObjectId };
   hasOnBoarding: boolean;
+  twoFactorEnabled: boolean;
 }
