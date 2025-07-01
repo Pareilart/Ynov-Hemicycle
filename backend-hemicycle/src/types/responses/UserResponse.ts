@@ -30,4 +30,4 @@ export interface UserResponse {
     };
     votingSurvey?: VotingSurveyResponse;
     hasOnBoarding: boolean;
-} 
+}

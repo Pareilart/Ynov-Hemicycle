@@ -10,14 +10,11 @@ import { IUserCreate } from '../../types/interfaces/IUserCreate';
 import { Types } from 'mongoose';
 import { ResponseHandler } from '../../utils/responseHandler';
 import { UserDto } from '../../types/dto/UserDto';
+import { UserService } from '../../services/userService';
 
 export const login = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
-
-        if (!email || !password) {
-            return ResponseHandler.badRequest(res, "Email et mot de passe requis");
-        }
 
         // Vérifier si l'utilisateur existe
         const user = await User.findOne({ email })
@@ -36,83 +33,44 @@ export const login = async (req: Request, res: Response) => {
             return ResponseHandler.unauthorized(res, "Email ou mot de passe incorrect");
         }
 
-        try {
-            const token = generateToken(user._id, user.role.name);
-            const userResponse = UserDto.toResponse(user);
-            userResponse.token = {
-                token: token,
-                expiresIn: 24 * 60 * 60 * 1000,
-                exp: Date.now() + 24 * 60 * 60 * 1000
-            };
-            ResponseHandler.success(res, userResponse);
-        } catch (error) {
-            return ResponseHandler.error(res, "Erreur lors de la génération du token");
-        }
+        const token = generateToken(user._id, user.role.name);
+        console.log(token);
+        const userResponse = UserDto.toResponse(user);
+        userResponse.token = {
+            token: token.token,
+            expiresIn: token.expiresIn,
+            exp: token.expiresAt.getTime()
+        };
+        
+        return ResponseHandler.success(res, userResponse);
     } catch (error: any) {
         console.error('Erreur de connexion:', error);
-        ResponseHandler.error(res, "Erreur lors de la connexion", error.message);
+        return ResponseHandler.error(res, "Erreur lors de la connexion", error.message);
     }
 };
 
 export const register = async (req: Request, res: Response) => {
     try {
-        const { email, password, firstName, lastName } = req.body;
-
-        // Vérification des champs requis
-        if (!email || !password || !firstName || !lastName) {
-            return ResponseHandler.badRequest(res, "Tous les champs sont requis", {
-                required: ["email", "password", "firstName", "lastName"]
-            });
-        }
-
-        // Validation du format de l'email
-        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailRegex.test(email)) {
-            return ResponseHandler.badRequest(res, "Format d'email invalide");
-        }
-
-        // Vérifier si l'utilisateur existe déjà
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return ResponseHandler.badRequest(res, "Cet email est déjà utilisé");
-        }
-
-        // Trouver le rôle "user"
         const userRole = await Role.findOne({ name: RoleEnum.USER });
         if (!userRole) {
             return ResponseHandler.error(res, "Erreur: le rôle 'user' n'existe pas dans la base de données");
         }
 
-        // Hasher le mot de passe
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Créer le nouvel utilisateur
         const userData: IUserCreate = {
-            email,
-            password: hashedPassword,
-            firstName,
-            lastName,
+            ...req.body,
             role: userRole._id,
         };
 
-        const user = await User.create(userData);
-        const populatedUser = await User.findById(user._id)
-            .populate('role')
-            .populate('addresses')
-            .populate('votingSurvey') as IUserDocument;
+        const { user: createdUser, message } = await UserService.createUser(userData);
+        const token = generateToken(new Types.ObjectId(createdUser.id), userRole.name);
+        
+        createdUser.token = {
+            token: token.token,
+            expiresIn: token.expiresIn,
+            exp: token.expiresAt.getTime()
+        };
 
-        try {
-            const token = generateToken(user._id as Types.ObjectId, userRole.name);
-            const userResponse = UserDto.toResponse(populatedUser);
-            userResponse.token = {
-                token: token,
-                expiresIn: 24 * 60 * 60 * 1000,
-                exp: Date.now() + 24 * 60 * 60 * 1000
-            };
-            ResponseHandler.success(res, userResponse, "Utilisateur créé avec succès", 201);
-        } catch (error) {
-            return ResponseHandler.error(res, "Erreur lors de la génération du token");
-        }
+        ResponseHandler.success(res, createdUser, message, 201);
     } catch (error: any) {
         console.error('Erreur d\'inscription:', error);
         ResponseHandler.error(res, "Erreur lors de l'inscription", error.message);

@@ -10,6 +10,9 @@ import { Types } from 'mongoose';
 import { UserDto } from '../../types/dto/UserDto';
 import { IUserDocument } from '../../types/interfaces/IUserDocument';
 import { ResponseHandler } from '../../utils/responseHandler';
+import { UserService } from '../../services/userService';
+import Role from '../../models/Role';
+import { RoleEnum } from '../../enum/RoleEnum';
 
 export const userOnboarding = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     try {
@@ -71,6 +74,140 @@ export const userOnboarding = async (req: AuthenticatedRequest, res: Response): 
         } else {
             ResponseHandler.error(res, "Erreur lors de la mise à jour de l'utilisateur");
         }
+    } catch (error) {
+        ResponseHandler.error(res, (error as Error).message);
+    }
+};
+
+export const updateProfile = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    try {
+        if (!req.user?._id) {
+            ResponseHandler.unauthorized(res, "Utilisateur non authentifié");
+            return;
+        }
+
+        const { user, message } = await UserService.updateProfile(req.user._id.toString(), req.body);
+        ResponseHandler.success(res, user, message);
+    } catch (error) {
+        ResponseHandler.badRequest(res, (error as Error).message);
+    }
+};
+
+export const getProfile = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    try {
+        const user = await User.findById(req.user?._id)
+            .populate('role')
+            .populate('addresses')
+            .populate('votingSurvey');
+
+        if (!user) {
+            ResponseHandler.notFound(res, "Utilisateur non trouvé");
+            return;
+        }
+
+        ResponseHandler.success(res, UserDto.toResponse(user as unknown as IUserDocument), "Profil récupéré avec succès");
+    } catch (error) {
+        ResponseHandler.error(res, (error as Error).message);
+    }
+};
+
+export const deleteUser = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    try {
+        const user = await User.findById(req.user?._id).populate('role');
+        if (!user) {
+            ResponseHandler.notFound(res, "Utilisateur non trouvé");
+            return;
+        }
+
+        // Vérifier si l'utilisateur est un admin
+        if (user.role && (user.role as any).name === RoleEnum.ADMIN) {
+            // Compter le nombre total d'administrateurs
+            const adminRole = await Role.findOne({ name: RoleEnum.ADMIN });
+            if (!adminRole) {
+                ResponseHandler.error(res, "Erreur: rôle administrateur non trouvé");
+                return;
+            }
+
+            const adminCount = await User.countDocuments({ role: adminRole._id });
+            
+            if (adminCount <= 1) {
+                ResponseHandler.forbidden(res, "Impossible de supprimer votre compte car vous êtes le dernier administrateur du système");
+                return;
+            }
+        }
+
+        await user.deleteOne();
+        ResponseHandler.success(res, null, "Utilisateur supprimé avec succès");
+    } catch (error) {
+        ResponseHandler.error(res, (error as Error).message);
+    }
+};
+
+export const exportProfile = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    try {
+        const user = await User.findById(req.user?._id)
+            .populate('role')
+            .populate('addresses')
+            .populate('votingSurvey');
+
+        if (!user) {
+            ResponseHandler.notFound(res, "Utilisateur non trouvé");
+            return;
+        }
+
+        const profile = UserDto.toResponse(user as unknown as IUserDocument);
+        
+        // Définir les en-têtes du CSV
+        const headers = [
+            'ID',
+            'Prénom',
+            'Nom',
+            'Date de naissance',
+            'Sexe',
+            'Email',
+            'Email vérifié le',
+            'Onboarding complété',
+            'Rôle',
+            'Adresse ligne 1',
+            'Adresse ligne 2',
+            'Code postal',
+            'Ville',
+            'État/Région',
+            'Pays',
+            'Fréquence de vote',
+            'Inscription électorale',
+            'Positionnement politique',
+            'Proximité politique'
+        ].join(',');
+
+        // Préparer les données
+        const data = [
+            profile.id,
+            profile.firstName,
+            profile.lastName,
+            profile.birthday ? new Date(profile.birthday).toLocaleDateString('fr-FR') : '',
+            profile.sexe || '',
+            profile.email,
+            profile.emailVerifiedAt ? new Date(profile.emailVerifiedAt).toLocaleDateString('fr-FR') : '',
+            profile.hasOnBoarding ? 'Oui' : 'Non',
+            profile.role?.name || '',
+            profile.addresses?.line1 || '',
+            profile.addresses?.line2 || '',
+            profile.addresses?.postalCode || '',
+            profile.addresses?.city || '',
+            profile.addresses?.state || '',
+            profile.addresses?.country || '',
+            profile.votingSurvey?.voting_frequency || '',
+            profile.votingSurvey?.electoral_registration || '',
+            profile.votingSurvey?.positioning || '',
+            profile.votingSurvey?.proximity || ''
+        ].map(field => `"${String(field).replace(/"/g, '""')}"`).join(',');
+
+        const csvContent = `${headers}\n${data}`;
+
+        res.setHeader('Content-Disposition', 'attachment; filename="profile.csv"');
+        res.setHeader('Content-Type', 'text/csv');
+        res.send(csvContent);
     } catch (error) {
         ResponseHandler.error(res, (error as Error).message);
     }

@@ -58,8 +58,7 @@ export class LawPostDto {
             user: this.createUserResponse(lawPost.user_id),
             created_at: lawPost.createdAt?.toISOString() || new Date().toISOString(),
             updated_at: lawPost.updatedAt?.toISOString() || new Date().toISOString(),
-            reactions_stats: this.initializeReactionStats(),
-            reactions: reactions.map(r => this.transformReaction(r))
+            reactions_stats: this.initializeReactionStats()
         };
 
         if (reactions.length > 0) {
@@ -72,6 +71,10 @@ export class LawPostDto {
                     response.reactions_stats.emojis[reaction.reaction_emoji as keyof typeof LawReactionEmoji]++;
                 }
             });
+
+            if (reactions.length === 1) {
+                response.reactions = reactions.map(r => this.transformReaction(r));
+            }
         }
 
         return response;

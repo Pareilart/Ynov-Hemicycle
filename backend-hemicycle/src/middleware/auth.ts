@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { IUser } from '../types';
 import User from '../models/User';
-import { RoleEnum } from '../enum/RoleEnum';
+import { AuthUtils } from '../utils/authUtils';
 
 export interface AuthenticatedRequest extends Request {
     user?: IUser;
@@ -32,13 +32,9 @@ export const auth = async (req: AuthenticatedRequest, res: Response, next: NextF
 
 export const isAdmin = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
-        if (!req.user) {
-            return res.status(401).json({ message: 'Authentification requise' });
-        }
-
-        const user = await User.findById(req.user._id).populate('role');
+        const isAdmin = await AuthUtils.checkIsAdmin(req, res);
         
-        if (!user || !user.role || (user.role as any).name !== RoleEnum.ADMIN) {
+        if (!isAdmin) {
             return res.status(403).json({ message: 'Accès refusé. Droits administrateur requis' });
         }
 
@@ -50,13 +46,9 @@ export const isAdmin = async (req: AuthenticatedRequest, res: Response, next: Ne
 
 export const isDeputy = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
-        if (!req.user) {
-            return res.status(401).json({ message: 'Authentification requise' });
-        }
-
-        const user = await User.findById(req.user._id).populate('role');
+        const isDeputy = await AuthUtils.checkIsDeputy(req, res);
         
-        if (!user || !user.role || (user.role as any).name !== RoleEnum.DEPUTY) {
+        if (!isDeputy) {
             return res.status(403).json({ message: 'Accès refusé. Droits de député requis' });
         }
 

@@ -30,7 +30,7 @@ export const addLawReaction = async (req: AuthenticatedRequest, res: Response): 
             return;
         }
 
-        const lawPost = await LawPost.findById(law_post_id);
+        const lawPost = await LawPost.findById(law_post_id).populate('user_id', 'firstName lastName email hasOnBoarding');
         if (!lawPost) {
             ResponseHandler.notFound(res, "Loi non trouvée");
             return;
@@ -60,21 +60,21 @@ export const addLawReaction = async (req: AuthenticatedRequest, res: Response): 
             if (reaction_emoji !== undefined) {
                 existingReaction.reaction_emoji = reaction_emoji || undefined;
             }
-            const updatedReaction = await existingReaction.save();
-            ResponseHandler.success(res, updatedReaction, "Réaction mise à jour avec succès");
-            return;
+            await existingReaction.save();
+        } else {
+            // Si aucune réaction existante n'a été trouvée, on en crée une nouvelle
+            const newReaction = new LawReaction({
+                user_id: req.user._id,
+                law_post_id: lawPost._id,
+                reaction_type,
+                ...(reaction_emoji && { reaction_emoji })
+            });
+            await newReaction.save();
         }
 
-        // Si aucune réaction existante n'a été trouvée, on en crée une nouvelle
-        const newReaction = new LawReaction({
-            user_id: req.user._id,
-            law_post_id: lawPost._id,
-            reaction_type,
-            ...(reaction_emoji && { reaction_emoji })
-        });
-
-        const savedReaction = await newReaction.save();
-        ResponseHandler.success(res, savedReaction, "Réaction ajoutée avec succès", 201);
+        // Transformer la réponse en utilisant LawPostDto sans les réactions
+        const response = LawPostDto.toResponse(lawPost, []);
+        ResponseHandler.success(res, response, existingReaction ? "Réaction mise à jour avec succès" : "Réaction ajoutée avec succès", existingReaction ? 200 : 201);
 
     } catch (error: any) {
         if (error instanceof mongoose.Error.ValidationError) {
@@ -102,7 +102,7 @@ export const getLawPost = async (req: AuthenticatedRequest, res: Response): Prom
 
         // Récupérer la loi avec les informations de l'utilisateur
         const lawPost = await LawPost.findById(law_id)
-            .populate('user_id', 'firstName lastName email');
+            .populate('user_id', 'firstName lastName email hasOnBoarding');
 
         if (!lawPost) {
             ResponseHandler.notFound(res, "Loi non trouvée");
@@ -111,6 +111,7 @@ export const getLawPost = async (req: AuthenticatedRequest, res: Response): Prom
 
         // Récupérer toutes les réactions pour cette loi avec les informations des utilisateurs
         const reactions = await LawReaction.find({ law_post_id: lawPost._id })
+            .populate('user_id', 'firstName lastName email hasOnBoarding')
             .sort({ created_at: -1 }); // Trier par date de création décroissante
 
         const response = LawPostDto.toResponse(lawPost, reactions);
