@@ -6,12 +6,12 @@ import { PoliticalPositioningEnum } from '../enum/PoliticalPositioningEnum';
 import { PoliticalProximityEnum } from '../enum/PoliticalProximityEnum';
 
 const votingSurveySchema = new mongoose.Schema<IVotingSurvey>({
-  voting_frequency: {
+  votingFrequency: {
     type: String,
     enum: Object.values(VotingFrequencyEnum),
     required: true,
   },
-  electoral_registration: {
+  electoralRegistration: {
     type: String,
     enum: Object.values(ElectoralRegistrationEnum),
     required: true,
@@ -28,8 +28,8 @@ const votingSurveySchema = new mongoose.Schema<IVotingSurvey>({
   },
 }, {
   timestamps: {
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
   },
 });
 

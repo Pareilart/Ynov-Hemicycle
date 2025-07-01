@@ -4,10 +4,10 @@ import { LawReactionType, LawReactionEmoji } from '../../enum/LawReactionTypeEnu
 export interface LawReactionResponse {
   id: string;
   user: UserResponse;
-  reaction_type: LawReactionType;
-  reaction_emoji?: LawReactionEmoji;
-  created_at: string;
-  updated_at: string;
+  reactionType: LawReactionType;
+  reactionEmoji?: LawReactionEmoji;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ReactionStats {
@@ -24,19 +24,19 @@ export interface LawPostResponse {
   id: string; // ID MongoDB
   legislature: number;
   title: string;
-  article_constitutionnel: number;
-  vote_type: string;
+  articleConstitutionnel: number;
+  voteType: string;
   adopted: boolean;
-  date_proposition: string;
-  date_adoption: string;
-  vote_yes: number;
-  vote_no: number;
-  vote_abstention: number;
-  has_reevaluable: boolean;
-  reevaluable_count: number;
+  dateProposition: string;
+  dateAdoption: string;
+  voteYes: number;
+  voteNo: number;
+  voteAbstention: number;
+  hasReevaluable: boolean;
+  reevaluableCount: number;
   user: UserResponse;
   reactions?: LawReactionResponse[];
-  reactions_stats: ReactionStats;
+  reactionsStats: ReactionStats;
   createdAt: string;
   updatedAt: string;
 }

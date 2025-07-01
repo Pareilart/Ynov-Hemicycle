@@ -7,8 +7,8 @@ import { PoliticalProximityEnum } from '../../enum/PoliticalProximityEnum';
 
 export interface VotingSurveyResponse {
   id: string;
-  voting_frequency: VotingFrequencyEnum;
-  electoral_registration: ElectoralRegistrationEnum;
+  votingFrequency: VotingFrequencyEnum;
+  electoralRegistration: ElectoralRegistrationEnum;
   positioning: PoliticalPositioningEnum;
   proximity: PoliticalProximityEnum;
 }

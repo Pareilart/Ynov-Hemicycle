@@ -49,8 +49,8 @@ export class UserDto {
     if (userDoc.votingSurvey) {
       response.votingSurvey = {
         id: userDoc.votingSurvey._id.toString(),
-        voting_frequency: userDoc.votingSurvey.voting_frequency,
-        electoral_registration: userDoc.votingSurvey.electoral_registration,
+        votingFrequency: userDoc.votingSurvey.votingFrequency,
+        electoralRegistration: userDoc.votingSurvey.electoralRegistration,
         positioning: userDoc.votingSurvey.positioning,
         proximity: userDoc.votingSurvey.proximity,
       } as VotingSurveyResponse;

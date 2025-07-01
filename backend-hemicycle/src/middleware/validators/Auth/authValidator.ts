@@ -43,7 +43,7 @@ export const registerValidator = [
       try {
         const date = new Date(value);
         const now = new Date();
-        if (isNaN(date.getTime())) {
+        if (Number.isNaN(date.getTime())) {
           throw new Error(
             'Format de date invalide. Utilisez le format YYYY-MM-DD (exemple: 2000-12-31)',
           );

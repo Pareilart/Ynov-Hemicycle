@@ -220,17 +220,17 @@ export const exportProfile = async (
 
     // Ajouter les réactions aux lois si demandé
     if (includeLawReaction) {
-      const userReactions = await LawReaction.find({ user_id: req.user?._id })
-        .populate<{ law_post_id: Document<unknown, {}, ILawPost> }>('law_post_id')
-        .sort({ created_at: -1 });
+      const userReactions = await LawReaction.find({ userId: req.user?._id })
+        .populate<{ lawPostId: Document<unknown, {}, ILawPost> }>('lawPostId')
+        .sort({ createdAt: -1 });
 
       exportData.lawReactions = userReactions.map((reaction) => {
-        const lawPost = reaction.law_post_id as Document<unknown, {}, ILawPost>;
+        const lawPost = reaction.lawPostId as Document<unknown, {}, ILawPost>;
         return {
           reaction_id: ((reaction as unknown) as ILawReaction)._id.toString(),
           loi_titre: lawPost.get('title') || '',
-          type_reaction: reaction.reaction_type,
-          emoji_reaction: reaction.reaction_emoji || '',
+          type_reaction: reaction.reactionType,
+          emoji_reaction: reaction.reactionEmoji || '',
           date_reaction: new Date(reaction.createdAt).toLocaleDateString(
             'fr-FR',
           ),
@@ -276,9 +276,9 @@ export const exportProfile = async (
           region: exportData.profile.addresses?.state || '',
           pays: exportData.profile.addresses?.country || '',
           frequence_vote:
-          exportData.profile.votingSurvey?.voting_frequency || '',
+          exportData.profile.votingSurvey?.votingFrequency || '',
           inscription_electorale:
-          exportData.profile.votingSurvey?.electoral_registration || '',
+          exportData.profile.votingSurvey?.electoralRegistration || '',
           positionnement_politique:
           exportData.profile.votingSurvey?.positioning || '',
           proximite_politique:
@@ -302,11 +302,11 @@ export const exportProfile = async (
             ]
             : reactions.map((reaction: any) => ({
               ...profileData,
-              reaction_id: reaction.reaction_id,
-              loi_titre: reaction.loi_titre,
-              type_reaction: reaction.type_reaction,
-              emoji_reaction: reaction.emoji_reaction,
-              date_reaction: reaction.date_reaction,
+              reaction_id: reaction.reactionId,
+              loi_titre: reaction.loiTitre,
+              type_reaction: reaction.typeReaction,
+              emoji_reaction: reaction.emojiReaction,
+              date_reaction: reaction.dateReaction,
             }));
         }
       } else if (includeLawReaction) {

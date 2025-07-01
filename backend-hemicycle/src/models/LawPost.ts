@@ -10,11 +10,11 @@ const lawPostSchema = new Schema({
     type: String,
     required: true,
   },
-  article_constitutionnel: {
+  articleConstitutionnel: {
     type: Number,
     required: true,
   },
-  vote_type: {
+  voteType: {
     type: String,
     required: true,
   },
@@ -22,40 +22,40 @@ const lawPostSchema = new Schema({
     type: Boolean,
     required: true,
   },
-  date_proposition: {
+  dateProposition: {
     type: Date,
     required: true,
   },
-  date_adoption: {
+  dateAdoption: {
     type: Date,
     required: true,
   },
-  vote_yes: {
+  voteYes: {
     type: Number,
     required: true,
     default: 0,
   },
-  vote_no: {
+  voteNo: {
     type: Number,
     required: true,
     default: 0,
   },
-  vote_abstention: {
+  voteAbstention: {
     type: Number,
     required: true,
     default: 0,
   },
-  has_reevaluable: {
+  hasReevaluable: {
     type: Boolean,
     required: true,
     default: false,
   },
-  reevaluable_count: {
+  reevaluableCount: {
     type: Number,
     required: true,
     default: 0,
   },
-  user_id: {
+  userId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,

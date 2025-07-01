@@ -14,59 +14,59 @@ export const addLawReaction = async (req: AuthenticatedRequest, res: Response): 
       return;
     }
 
-    const { law_post_id } = req.params;
-    const { reaction_type, reaction_emoji } = req.body;
+    const { lawPostId } = req.params;
+    const { reactionType, reactionEmoji } = req.body;
 
     // Validation des paramètres
-    if (!law_post_id || !reaction_type) {
+    if (!lawPostId || !reactionType) {
       ResponseHandler.badRequest(res, 'L\'ID de la loi et le type de réaction sont requis');
       return;
     }
 
     // Vérifier si l'ID est un ObjectId MongoDB valide
-    if (!mongoose.Types.ObjectId.isValid(law_post_id)) {
+    if (!mongoose.Types.ObjectId.isValid(lawPostId)) {
       ResponseHandler.badRequest(res, 'ID de loi invalide');
       return;
     }
 
-    const lawPost = await LawPost.findById(law_post_id).populate('user_id', 'firstName lastName email hasOnBoarding');
+    const lawPost = await LawPost.findById(lawPostId).populate('userId', 'firstName lastName email hasOnBoarding');
     if (!lawPost) {
       ResponseHandler.notFound(res, 'Loi non trouvée');
       return;
     }
 
     // Vérification que le type de réaction est valide
-    if (!Object.values(LawReactionType).includes(reaction_type as LawReactionType)) {
+    if (!Object.values(LawReactionType).includes(reactionType as LawReactionType)) {
       ResponseHandler.badRequest(res, 'Type de réaction invalide');
       return;
     }
 
     // Vérification que l'emoji de réaction est valide si fourni
-    if (reaction_emoji && !Object.values(LawReactionEmoji).includes(reaction_emoji as LawReactionEmoji)) {
+    if (reactionEmoji && !Object.values(LawReactionEmoji).includes(reactionEmoji as LawReactionEmoji)) {
       ResponseHandler.badRequest(res, 'Emoji de réaction invalide');
       return;
     }
 
     // Recherche d'une réaction existante pour cet utilisateur et ce post
     const existingReaction = await LawReaction.findOne({
-      user_id: req.user._id,
-      law_post_id: lawPost._id,
+      userId: req.user._id,
+      lawPostId: lawPost._id,
     });
 
     // Si une réaction existe, on met à jour son type et l'emoji si fourni
     if (existingReaction) {
-      existingReaction.reaction_type = reaction_type;
-      if (reaction_emoji !== undefined) {
-        existingReaction.reaction_emoji = reaction_emoji || undefined;
+      existingReaction.reactionType = reactionType;
+      if (reactionEmoji !== undefined) {
+        existingReaction.reactionEmoji = reactionEmoji || undefined;
       }
       await existingReaction.save();
     } else {
       // Si aucune réaction existante n'a été trouvée, on en crée une nouvelle
       const newReaction = new LawReaction({
-        user_id: req.user._id,
-        law_post_id: lawPost._id,
-        reaction_type,
-        ...(reaction_emoji && { reaction_emoji }),
+        userId: req.user._id,
+        lawPostId: lawPost._id,
+        reactionType,
+        reactionEmoji,
       });
       await newReaction.save();
     }
@@ -90,20 +90,20 @@ export const addLawReaction = async (req: AuthenticatedRequest, res: Response): 
 
 export const getLawPost = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const { law_id } = req.params;
-    if (!law_id) {
+    const { lawId } = req.params;
+    if (!lawId) {
       ResponseHandler.badRequest(res, 'L\'ID de la loi est requis');
       return;
     }
 
     // Vérifier si l'ID est un ObjectId MongoDB valide
-    if (!mongoose.Types.ObjectId.isValid(law_id)) {
+    if (!mongoose.Types.ObjectId.isValid(lawId)) {
       ResponseHandler.badRequest(res, 'ID de loi invalide');
       return;
     }
 
     // Récupérer la loi avec les informations de l'utilisateur
-    const lawPost = await LawPost.findById(law_id)
+    const lawPost = await LawPost.findById(lawId)
       .populate('user_id', 'firstName lastName email hasOnBoarding');
 
     if (!lawPost) {
