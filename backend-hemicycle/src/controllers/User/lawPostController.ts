@@ -9,6 +9,7 @@ import LawReaction from '../../models/LawReaction';
 import { LawPostDto } from '../../types/dto/LawPostDto';
 import { LawPostReportingResponse } from '../../types/responses/LawPostReportingResponse';
 import { IUser } from '../../types/interfaces/IUser';
+import { ILawPostReporting } from '../../types/interfaces/ILawPostReporting';
 
 export const addLawReaction = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
@@ -32,7 +33,7 @@ export const addLawReaction = async (req: AuthenticatedRequest, res: Response): 
       return;
     }
 
-    const lawPost = await LawPost.LawPost.findById(lawPostId).populate(
+    const lawPost = await LawPost.findById(lawPostId).populate(
       'userId',
       'firstName lastName email hasOnBoarding',
     );
@@ -109,7 +110,7 @@ export const getLawPost = async (req: AuthenticatedRequest, res: Response): Prom
     }
 
     // Récupérer la loi avec les informations de l'utilisateur
-    const lawPost = await LawPost.LawPost.findById(lawId)
+    const lawPost = await LawPost.findById(lawId)
       .populate('userId', 'firstName lastName email hasOnBoarding');
 
     if (!lawPost) {
@@ -145,7 +146,7 @@ export const reportLawPost = async (req: AuthenticatedRequest, res: Response): P
       return;
     }
 
-    const lawPost = await LawPost.LawPost.findById(lawPostId);
+    const lawPost = await LawPost.findById(lawPostId);
     if (!lawPost) {
       ResponseHandler.notFound(res, 'Publication non trouvée');
       return;
@@ -162,7 +163,7 @@ export const reportLawPost = async (req: AuthenticatedRequest, res: Response): P
       lawPostId,
       reason,
       description,
-    });
+    }) as ILawPostReporting;
 
     const response: LawPostReportingResponse = {
       id: newReport._id.toString(),

@@ -29,9 +29,6 @@ const lawPostReportingSchema = new Schema<ILawPostReporting>({
 // Index unique pour s'assurer qu'un utilisateur ne peut signaler qu'une seule fois une publication
 lawPostReportingSchema.index({ userId: 1, lawPostId: 1 }, { unique: true });
 
-// Vérifie si le modèle existe déjà avant de le créer
-export default mongoose.models.LawPostReporting
-  || mongoose.model<ILawPostReporting>(
-    'LawPostReporting',
-    lawPostReportingSchema,
-  );
+const LawPostReporting = mongoose.model<ILawPostReporting>('LawPostReporting', lawPostReportingSchema);
+
+export default LawPostReporting;

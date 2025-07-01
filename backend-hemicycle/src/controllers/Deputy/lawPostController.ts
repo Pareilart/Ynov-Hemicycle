@@ -19,7 +19,7 @@ export const createLawPost = async (req: AuthenticatedRequest, res: Response): P
     }
 
     // Création de la proposition de loi
-    const lawPost = new LawPost.LawPost({
+    const lawPost = new LawPost({
       ...req.body,
       userId: req.user._id,
       adopted: false,
@@ -31,7 +31,7 @@ export const createLawPost = async (req: AuthenticatedRequest, res: Response): P
     });
 
     const savedLawPost = await lawPost.save();
-    const populatedLawPost = await LawPost.LawPost.findById(savedLawPost._id).populate(
+    const populatedLawPost = await LawPost.findById(savedLawPost._id).populate(
       'userId',
       'firstName lastName email',
     );
@@ -59,7 +59,7 @@ export const getLawPost = async (req: AuthenticatedRequest, res: Response): Prom
       return;
     }
 
-    const lawPosts = await LawPost.LawPost.find({ userId: req.user._id })
+    const lawPosts = await LawPost.find({ userId: req.user._id })
       .populate('userId', 'firstName lastName email')
       .sort({ createdAt: -1 });
 
