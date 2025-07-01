@@ -19,7 +19,7 @@ export const createLawPost = async (req: AuthenticatedRequest, res: Response): P
     }
 
     // Création de la proposition de loi
-    const lawPost = new LawPost({
+    const lawPost = new LawPost.LawPost({
       ...req.body,
       userId: req.user._id,
       adopted: false,
@@ -31,7 +31,10 @@ export const createLawPost = async (req: AuthenticatedRequest, res: Response): P
     });
 
     const savedLawPost = await lawPost.save();
-    const populatedLawPost = await LawPost.findById(savedLawPost._id).populate('userId', 'firstName lastName email');
+    const populatedLawPost = await LawPost.LawPost.findById(savedLawPost._id).populate(
+      'userId',
+      'firstName lastName email',
+    );
 
     if (!populatedLawPost) {
       throw new Error('Erreur lors de la récupération de la loi créée');
@@ -41,5 +44,28 @@ export const createLawPost = async (req: AuthenticatedRequest, res: Response): P
     ResponseHandler.success(res, response, 'Proposition de loi créée avec succès', 201);
   } catch (error: unknown) {
     ResponseHandler.error(res, 'Erreur lors de la création de la proposition de loi', error as Error);
+  }
+};
+
+export const getLawPost = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    if (!req.user) {
+      ResponseHandler.unauthorized(res, 'Utilisateur non authentifié');
+      return;
+    }
+
+    if (!req.user.role || (req.user.role as unknown as IRole).name !== RoleEnum.DEPUTY) {
+      ResponseHandler.forbidden(res, 'Accès réservé aux députés');
+      return;
+    }
+
+    const lawPosts = await LawPost.LawPost.find({ userId: req.user._id })
+      .populate('userId', 'firstName lastName email')
+      .sort({ createdAt: -1 });
+
+    const response = await Promise.all(lawPosts.map((lawPost) => LawPostDto.toResponse(lawPost)));
+    ResponseHandler.success(res, response, 'Propositions de loi récupérées avec succès');
+  } catch (error: unknown) {
+    ResponseHandler.error(res, 'Erreur lors de la récupération des propositions de loi', error as Error);
   }
 };

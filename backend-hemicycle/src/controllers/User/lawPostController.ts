@@ -2,10 +2,13 @@ import { Response } from 'express';
 import mongoose from 'mongoose';
 import { AuthenticatedRequest } from '../../middleware/auth';
 import LawPost from '../../models/LawPost';
+import LawPostReporting from '../../models/LawPostReporting';
 import { ResponseHandler } from '../../utils/responseHandler';
 import { LawReactionType, LawReactionEmoji } from '../../enum/LawReactionTypeEnum';
 import LawReaction from '../../models/LawReaction';
 import { LawPostDto } from '../../types/dto/LawPostDto';
+import { LawPostReportingResponse } from '../../types/responses/LawPostReportingResponse';
+import { IUser } from '../../types/interfaces/IUser';
 
 export const addLawReaction = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
@@ -29,7 +32,10 @@ export const addLawReaction = async (req: AuthenticatedRequest, res: Response): 
       return;
     }
 
-    const lawPost = await LawPost.findById(lawPostId).populate('userId', 'firstName lastName email hasOnBoarding');
+    const lawPost = await LawPost.LawPost.findById(lawPostId).populate(
+      'userId',
+      'firstName lastName email hasOnBoarding',
+    );
     if (!lawPost) {
       ResponseHandler.notFound(res, 'Loi non trouvée');
       return;
@@ -103,8 +109,8 @@ export const getLawPost = async (req: AuthenticatedRequest, res: Response): Prom
     }
 
     // Récupérer la loi avec les informations de l'utilisateur
-    const lawPost = await LawPost.findById(lawId)
-      .populate('user_id', 'firstName lastName email hasOnBoarding');
+    const lawPost = await LawPost.LawPost.findById(lawId)
+      .populate('userId', 'firstName lastName email hasOnBoarding');
 
     if (!lawPost) {
       ResponseHandler.notFound(res, 'Loi non trouvée');
@@ -112,13 +118,67 @@ export const getLawPost = async (req: AuthenticatedRequest, res: Response): Prom
     }
 
     // Récupérer toutes les réactions pour cette loi avec les informations des utilisateurs
-    const reactions = await LawReaction.find({ law_post_id: lawPost._id })
-      .populate('user_id', 'firstName lastName email hasOnBoarding')
-      .sort({ created_at: -1 }); // Trier par date de création décroissante
+    const reactions = await LawReaction.find({ lawPostId: lawPost._id })
+      .populate('userId', 'firstName lastName email hasOnBoarding')
+      .sort({ createdAt: -1 }); // Trier par date de création décroissante
 
     const response = LawPostDto.toResponse(lawPost, reactions);
     ResponseHandler.success(res, response, 'Loi récupérée avec succès');
   } catch (error: unknown) {
     ResponseHandler.error(res, 'Erreur lors de la récupération de la loi', error as Error);
+  }
+};
+
+export const reportLawPost = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const user = req.user as IUser;
+    if (!user) {
+      ResponseHandler.unauthorized(res, 'Utilisateur non authentifié');
+      return;
+    }
+
+    const { lawPostId } = req.params;
+    const { reason, description } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(lawPostId)) {
+      ResponseHandler.badRequest(res, 'ID de loi invalide');
+      return;
+    }
+
+    const lawPost = await LawPost.LawPost.findById(lawPostId);
+    if (!lawPost) {
+      ResponseHandler.notFound(res, 'Publication non trouvée');
+      return;
+    }
+
+    const existingReport = await LawPostReporting.findOne({ userId: user._id, lawPostId });
+    if (existingReport) {
+      ResponseHandler.badRequest(res, 'Vous avez déjà signalé cette publication');
+      return;
+    }
+
+    const newReport = await LawPostReporting.create({
+      userId: user._id,
+      lawPostId,
+      reason,
+      description,
+    });
+
+    const response: LawPostReportingResponse = {
+      id: newReport._id.toString(),
+      lawPost: await LawPostDto.toResponse(lawPost),
+      reason: newReport.reason,
+      description: newReport.description,
+      createdAt: newReport.createdAt.toISOString(),
+      updatedAt: newReport.updatedAt.toISOString(),
+    };
+
+    ResponseHandler.success(res, response, 'Publication signalée avec succès', 201);
+  } catch (error) {
+    if (error instanceof mongoose.Error.ValidationError) {
+      ResponseHandler.badRequest(res, 'Données de signalement invalides', error);
+    } else {
+      ResponseHandler.error(res, 'Erreur lors du signalement de la publication', error as Error);
+    }
   }
 };

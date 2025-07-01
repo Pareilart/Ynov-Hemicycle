@@ -34,7 +34,7 @@ export interface LawPostResponse {
   voteAbstention: number;
   hasReevaluable: boolean;
   reevaluableCount: number;
-  user: UserResponse;
+  user?: UserResponse;
   reactions?: LawReactionResponse[];
   reactionsStats: ReactionStats;
   createdAt: string;
