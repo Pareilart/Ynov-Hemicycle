@@ -12,6 +12,7 @@ import { IUserCreate } from '../types/interfaces/IUserCreate';
 import { Types } from 'mongoose';
 import { ResponseHandler } from '../utils/responseHandler';
 import { UserDto } from '../types/dto/UserDto';
+import { sendWelcomeEmail } from '../service/EmailService';
 
 export const login = async (req: Request, res: Response) => {
     try {
@@ -111,6 +112,16 @@ export const register = async (req: Request, res: Response) => {
                 expiresIn: 24 * 60 * 60 * 1000,
                 exp: Date.now() + 24 * 60 * 60 * 1000
             };
+            
+            // Envoyer un email de bienvenue
+            try {
+                await sendWelcomeEmail(email, firstName, lastName);
+                console.log(`Email de bienvenue envoyé à ${email}`);
+            } catch (emailError) {
+                console.error('Erreur lors de l\'envoi de l\'email de bienvenue:', emailError);
+                // On continue malgré l'erreur d'envoi d'email
+            }
+            
             ResponseHandler.success(res, userResponse, "Utilisateur créé avec succès", 201);
         } catch (error) {
             return ResponseHandler.error(res, "Erreur lors de la génération du token");

@@ -27,7 +27,7 @@ app.use('/api/deputes', deputeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/law-posts', lawPostRoutes);
-app.use('/api/emails', emailRoutes);
+app.use('/api/email', emailRoutes);
 
 // Route de base
 app.get('/', (req: Request, res: Response) => {
