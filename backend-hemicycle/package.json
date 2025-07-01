@@ -34,7 +34,7 @@
     "mailtrap": "^4.1.0",
     "mongodb": "^6.17.0",
     "mongoose": "^8.2.1",
-    "nodemailer": "^7.0.4",
+    "nodemailer": "^6.9.4",
     "sparkpost": "^2.1.4",
     "winston": "^3.17.0"
   },
