@@ -1,6 +1,7 @@
 import { Routes } from '@core/models/route/route.model';
 import { LegalCguComponent } from "@app/features/legal/pages/legal-cgu/legal-cgu.component";
 import { LegalPolitiqueComponent } from "@app/features/legal/pages/legal-politique/legal-politique.component";
+import { LegalMentionsComponent } from "@app/features/legal/pages/legal-mentions/legal-mentions.component";
 /**
  * Routes LEGAL_ROUTES
  * @const LEGAL_ROUTES
@@ -22,5 +23,10 @@ export const LEGAL_ROUTES: Routes = [
     path: 'politique',
     title: 'Politique de confidentialité',
     component: LegalPolitiqueComponent,
+  },
+  {
+    path: 'mentions',
+    title: 'Mentions légales',
+    component: LegalMentionsComponent,
   },
 ];
