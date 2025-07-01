@@ -142,7 +142,7 @@ export const exportDataProfileValidator = [
     .notEmpty()
     .withMessage("Le format d'export ne peut pas être vide")
     .isIn(["CSV", "JSON"])
-    .withMessage("Le format d'export doit être CSV, JSON ou XML"),
+    .withMessage("Le format d'export doit être CSV ou JSON"),
 
   body("profile")
     .isBoolean()
