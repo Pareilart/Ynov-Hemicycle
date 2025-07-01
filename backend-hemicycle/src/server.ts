@@ -28,6 +28,11 @@ import userLawPostRoutes from './routes/User/lawPostRoutes';
 import userRoutes from './routes/User/userRoutes';
 import emailRoutes from './routes/emailRoutes';
 
+/**
+ * HEALTH
+ */
+import healthRoutes from './routes/healthRoutes';
+
 dotenv.config();
 
 const app = express();
@@ -52,6 +57,7 @@ app.use('/api/users/law-posts', userLawPostRoutes);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/emails', emailRoutes);
+app.use('/api/health', healthRoutes);
 
 // Route de base
 app.get('/', (req: Request, res: Response) => {
