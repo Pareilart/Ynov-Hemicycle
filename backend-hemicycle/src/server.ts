@@ -3,6 +3,10 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
+// Logging
+import { log, createServiceLogger } from './utils/logger';
+import { requestLogger } from './middleware/requestLogger';
+
 // Routes
 
 /**
@@ -41,10 +45,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Logging middleware (must be before routes)
+app.use(requestLogger);
+
 // MongoDB connection
+const mongoLogger = createServiceLogger('mongodb');
 mongoose.connect(process.env.MONGODB_URI || '')
-  .then(() => console.log('Connecté à MongoDB'))
-  .catch((err) => console.error('Erreur de connexion à MongoDB:', err));
+  .then(() => mongoLogger.info('Connecté à MongoDB'))
+  .catch((err) => mongoLogger.error('Erreur de connexion à MongoDB', { error: err.message, stack: err.stack }));
 
 // Routes
 app.use('/api/admin/users', adminUserRoutes);
@@ -66,12 +74,21 @@ app.get('/', (req: Request, res: Response) => {
 
 // Gestion des erreurs
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
+  log.error('Unhandled error in the application', {
+    error: err.message,
+    stack: err.stack,
+    url: req.originalUrl,
+    method: req.method,
+  });
   res.status(500).json({ message: 'Une erreur est survenue !' });
 });
 
 // Port d'écoute
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
-  console.log(`Serveur démarré sur le port ${PORT}`);
+  log.info(`Server started on port ${PORT}`, {
+    port: PORT,
+    environment: process.env.NODE_ENV || 'development',
+    timestamp: new Date().toISOString(),
+  });
 });

@@ -16,15 +16,15 @@ const createTransporter = () => nodemailer.createTransport({
 export const sendEmail = async (options: IEmailOptions): Promise<any> => {
   try {
     const transporter = createTransporter();
-    
+
     const mailOptions: IEmailOptions = {
       from: options.from,
       to: options.to,
       subject: options.subject,
       text: options.text,
-      html: options.html
+      html: options.html,
     };
-    
+
     console.log(`Tentative d'envoi d'email à: ${options.to}`);
     const result = await transporter.sendMail(mailOptions);
     console.log('Email envoyé avec succès:', result);
@@ -47,12 +47,12 @@ export const sendWelcomeEmail = async (email: string, firstName: string, lastNam
       </body>
     </html>
   `;
-  
-  return await sendEmail({
+
+  return sendEmail({
     to: email,
     subject,
     from: process.env.EMAIL_FROM || 'noreply@hemicycle.app',
     html,
-    text: `Bienvenue sur Hemicycle, ${firstName} ${lastName}! Merci pour votre inscription sur notre plateforme Hemicycle. Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter et commencer à utiliser notre application. Cordialement, L'équipe Hemicycle`
+    text: `Bienvenue sur Hemicycle, ${firstName} ${lastName}! Merci pour votre inscription sur notre plateforme Hemicycle. Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter et commencer à utiliser notre application. Cordialement, L'équipe Hemicycle`,
   });
 };
