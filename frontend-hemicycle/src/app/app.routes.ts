@@ -43,6 +43,10 @@ export const APP_ROUTES: Routes = [
             path: 'legal',
             loadChildren: () => import('@features/legal/legal.routes').then(m => m.LEGAL_ROUTES)
           },
+          {
+            path: 'profil',
+            loadChildren: () => import('@features/profil/profil.routes').then(m => m.PROFIL_ROUTES)
+          },
         ]
       },
     ]
