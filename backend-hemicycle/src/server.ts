@@ -7,6 +7,7 @@ import deputeRoutes from './routes/deputeRoutes';
 import userRoutes from './routes/userRoutes';
 import authRoutes from './routes/authRoutes';
 import lawPostRoutes from './routes/lawPostRoutes';
+import emailRoutes from './routes/emailRoutes';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use('/api/deputes', deputeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/law-posts', lawPostRoutes);
+app.use('/api/emails', emailRoutes);
 
 // Route de base
 app.get('/', (req: Request, res: Response) => {
