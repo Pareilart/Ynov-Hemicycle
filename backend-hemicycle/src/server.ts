@@ -3,10 +3,29 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
-import deputeRoutes from './routes/deputeRoutes';
-import userRoutes from './routes/userRoutes';
-import authRoutes from './routes/authRoutes';
-import lawPostRoutes from './routes/lawPostRoutes';
+// Routes
+
+/**
+ * ADMIN
+ */
+import adminUserRoutes from './routes/Admin/userRoutes';
+
+/**
+ * AUTH
+ */
+import authRoutes from './routes/Auth/authRoutes';
+
+/**
+ * DEPUTY
+ */
+import deputyDeputeRoutes from './routes/Deputy/deputeRoutes';
+import deputyLawPostRoutes from './routes/Deputy/lawPostRoutes';
+
+/**
+ * USER
+ */
+import userLawPostRoutes from './routes/User/lawPostRoutes';
+import userRoutes from './routes/User/userRoutes';
 
 dotenv.config();
 
@@ -22,10 +41,15 @@ mongoose.connect(process.env.MONGODB_URI || '')
   .catch(err => console.error('Erreur de connexion à MongoDB:', err));
 
 // Routes
-app.use('/api/deputes', deputeRoutes);
+app.use('/api/admin/users', adminUserRoutes);
+
+app.use('/api/deputy', deputyDeputeRoutes);
+app.use('/api/deputy/law-posts', deputyLawPostRoutes);
+
 app.use('/api/users', userRoutes);
+app.use('/api/users/law-posts', userLawPostRoutes);
+
 app.use('/api/auth', authRoutes);
-app.use('/api/law-posts', lawPostRoutes);
 
 // Route de base
 app.get('/', (req: Request, res: Response) => {

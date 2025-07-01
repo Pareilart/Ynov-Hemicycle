@@ -1,17 +1,15 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import User from '../models/User';
-import Role from '../models/Role';
-import { RoleEnum } from '../enum/RoleEnum';
-import { AuthenticatedRequest } from '../middleware/auth';
-import { UserResponse, IUserPopulated } from '../types';
-import { generateToken } from '../utils/jwtUtils';
-import { IRole } from '../types/interfaces/IRole';
-import { IUserDocument } from '../types/interfaces/IUserDocument';
-import { IUserCreate } from '../types/interfaces/IUserCreate';
+import User from '../../models/User';
+import Role from '../../models/Role';
+import { RoleEnum } from '../../enum/RoleEnum';
+import { AuthenticatedRequest } from '../../middleware/auth';
+import { generateToken } from '../../utils/jwtUtils';
+import { IUserDocument } from '../../types/interfaces/IUserDocument';
+import { IUserCreate } from '../../types/interfaces/IUserCreate';
 import { Types } from 'mongoose';
-import { ResponseHandler } from '../utils/responseHandler';
-import { UserDto } from '../types/dto/UserDto';
+import { ResponseHandler } from '../../utils/responseHandler';
+import { UserDto } from '../../types/dto/UserDto';
 
 export const login = async (req: Request, res: Response) => {
     try {
