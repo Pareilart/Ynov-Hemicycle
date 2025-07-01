@@ -1,24 +1,41 @@
 import { Request, Response } from 'express';
-import { sendEmail } from '../service/EmailService';
+import { sendWelcomeEmail } from '../services/EmailService';
+import User from '../models/User';
 
-export const sendTestEmail = async (req: Request, res: Response) => {
+export const sendWelcomeEmailToUser = async (req: Request, res: Response) => {
   try {
-    const result = await sendEmail({
-      to: req.body.to,
-      subject: 'Test depuis Postman',
-      html: '<html><body><p>Test d\'envoi d\'email via Postman!</p></body></html>',
-    });
+    const { email } = req.body;
+    
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'L\'adresse email est requise'
+      });
+    }
+
+    // Vérifier si l'utilisateur existe
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Utilisateur non trouvé avec cet email'
+      });
+    }
+
+    const result = await sendWelcomeEmail(email, user.firstName, user.lastName);
 
     res.status(200).json({
       success: true,
-      message: 'Email envoyé avec succès',
-      data: result,
+      message: 'Email de bienvenue envoyé avec succès',
+      data: result
     });
   } catch (error) {
+    console.error('Erreur d\'envoi d\'email de bienvenue:', error);
     res.status(500).json({
       success: false,
-      message: 'Erreur lors de l\'envoi de l\'email',
-      error,
+      message: 'Erreur lors de l\'envoi de l\'email de bienvenue',
+      error: error
     });
   }
 };

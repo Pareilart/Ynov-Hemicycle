@@ -56,7 +56,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/users/law-posts', userLawPostRoutes);
 
 app.use('/api/auth', authRoutes);
-app.use('/api/emails', emailRoutes);
+app.use('/api/email', emailRoutes);
 app.use('/api/health', healthRoutes);
 
 // Route de base
