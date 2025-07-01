@@ -25,7 +25,7 @@ const deputeSchema = new Schema<IDepute>(
     },
     photo: {
       type: String,
-      default: "default.jpg",
+      default: 'default.jpg',
     },
     mandats: [
       {
@@ -41,7 +41,7 @@ const deputeSchema = new Schema<IDepute>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-export default mongoose.model<IDepute>("Depute", deputeSchema);
+export default mongoose.model<IDepute>('Depute', deputeSchema);

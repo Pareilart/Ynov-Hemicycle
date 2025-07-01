@@ -1,8 +1,9 @@
-import { Document, Types } from 'mongoose';
+import { Types } from 'mongoose';
+import { IPermission } from './IPermission';
 
-export interface IRole extends Document {
-  _id: Types.ObjectId;
+export interface IRole {
+  _id?: Types.ObjectId;
   name: string;
-  permissions: Types.ObjectId[];
+  permissions: Types.ObjectId[] | IPermission[];
   description: string;
-} 
+}

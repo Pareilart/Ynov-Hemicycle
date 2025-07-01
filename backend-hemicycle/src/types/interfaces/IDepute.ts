@@ -18,4 +18,4 @@ export interface IDepute extends Document {
   };
   createdAt: Date;
   updatedAt: Date;
-} 
+}
