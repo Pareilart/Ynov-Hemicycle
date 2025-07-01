@@ -39,7 +39,7 @@ app.use(express.json());
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI || '')
   .then(() => console.log('Connecté à MongoDB'))
-  .catch(err => console.error('Erreur de connexion à MongoDB:', err));
+  .catch((err) => console.error('Erreur de connexion à MongoDB:', err));
 
 // Routes
 app.use('/api/admin/users', adminUserRoutes);
@@ -68,4 +68,4 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Serveur démarré sur le port ${PORT}`);
-}); 
+});

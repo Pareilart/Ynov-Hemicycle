@@ -8,4 +8,4 @@ const router = express.Router();
 router.post('/:law_post_id/addLawReaction', auth, addLawReaction);
 router.get('/:law_id', auth, getLawPost);
 
-export default router; 
+export default router;

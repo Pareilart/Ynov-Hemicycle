@@ -13,4 +13,4 @@ router.post('/create', auth, isAdmin, createUserValidator, validateRequest, crea
 router.put('/update/:id', auth, isAdmin, updateUserValidator, validateRequest, updateUser);
 router.delete('/delete/:id', auth, isAdmin, deleteUser);
 
-export default router; 
+export default router;

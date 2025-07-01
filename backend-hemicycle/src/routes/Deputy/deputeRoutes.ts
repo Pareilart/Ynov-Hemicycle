@@ -11,4 +11,4 @@ router.post('/', auth, deputeController.createDepute);
 router.put('/:id', auth, deputeController.updateDepute);
 router.delete('/:id', auth, deputeController.deleteDepute);
 
-export default router; 
+export default router;

@@ -7,4 +7,4 @@ const router = express.Router();
 // Route pour créer une proposition de loi (accessible uniquement aux députés)
 router.post('/create', auth, isDeputy, createLawPost);
 
-export default router; 
+export default router;

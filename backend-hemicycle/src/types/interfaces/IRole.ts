@@ -5,4 +5,4 @@ export interface IRole extends Document {
   name: string;
   permissions: Types.ObjectId[];
   description: string;
-} 
+}

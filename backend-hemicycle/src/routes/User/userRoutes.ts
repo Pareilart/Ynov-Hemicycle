@@ -1,32 +1,32 @@
-import express from "express";
-import { auth } from "../../middleware/auth";
+import express from 'express';
+import { auth } from '../../middleware/auth';
 import {
   deleteUser,
   getProfile,
   updateProfile,
   userOnboarding,
   exportProfile,
-} from "../../controllers/User/userController";
-import { exportDataProfileValidator, updateProfileValidator } from "../../middleware/validators/User/userValidator";
-import { validateRequest } from "../../middleware/validators/validationMiddleware";
+} from '../../controllers/User/userController';
+import { exportDataProfileValidator, updateProfileValidator } from '../../middleware/validators/User/userValidator';
+import { validateRequest } from '../../middleware/validators/validationMiddleware';
 
 const router = express.Router();
 
 // Routes pour les utilisateurs
-router.post("/onboarding", auth, userOnboarding);
+router.post('/onboarding', auth, userOnboarding);
 
 /**
  * Profil utilisateur
  */
 router.put(
-  "/profile/update",
+  '/profile/update',
   auth,
   updateProfileValidator,
   validateRequest,
-  updateProfile
+  updateProfile,
 );
-router.get("/profile", auth, getProfile);
-router.delete("/profile/delete", auth, deleteUser);
-router.post("/profile/export-data", auth, exportDataProfileValidator, validateRequest, exportProfile);
+router.get('/profile', auth, getProfile);
+router.delete('/profile/delete', auth, deleteUser);
+router.post('/profile/export-data', auth, exportDataProfileValidator, validateRequest, exportProfile);
 
 export default router;

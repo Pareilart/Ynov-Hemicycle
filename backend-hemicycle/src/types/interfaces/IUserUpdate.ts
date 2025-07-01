@@ -1,10 +1,10 @@
-import { Types } from "mongoose";
+import { Types } from 'mongoose';
 
 export interface IUserUpdate {
-    firstName?: string;
-    lastName?: string;
-    birthday?: Date;
-    sexe?: string;
-    email?: string;
-    password?: string;
-} 
+  firstName?: string;
+  lastName?: string;
+  birthday?: Date;
+  sexe?: string;
+  email?: string;
+  password?: string;
+}
