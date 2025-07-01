@@ -21,7 +21,30 @@
                   <span class="font-medium">Prénom</span>
                   <span class="text-red-500">*</span>
                 </label>
-                <input id="firstName" formControlName="firstName" placeholder="Votre prénom" type="text" autocomplete="given-name" pInputText [fluid]="true" />
+
+                <input
+                  id="firstName"
+                  formControlName="firstName"
+                  placeholder="Votre prénom"
+                  type="text"
+                  autocomplete="given-name"
+                  pInputText
+                  [fluid]="true"
+                />
+
+                <app-form-errors [control]="infosForm.get('firstName')!" help="Veuillez renseigner votre prénom">
+                  <app-form-errors-item validator="required">
+                    <p>Veuillez saisir votre prénom.</p>
+                  </app-form-errors-item>
+
+                  <app-form-errors-item validator="minlength">
+                    <p>Veuillez saisir un prénom de minimum 2 caractères.</p>
+                  </app-form-errors-item>
+
+                  <app-form-errors-item validator="maxlength">
+                    <p>Veuillez saisir un prénom de maximum 50 caractères.</p>
+                  </app-form-errors-item>
+                </app-form-errors>
               </section>
 
               <section class="flex flex-col gap-1">
@@ -29,7 +52,30 @@
                   <span class="font-medium">Nom</span>
                   <span class="text-red-500">*</span>
                 </label>
-                <input id="lastName" formControlName="lastName" placeholder="Votre nom" type="text" autocomplete="family-name" pInputText [fluid]="true" />
+
+                <input
+                  id="lastName"
+                  formControlName="lastName"
+                  placeholder="Votre nom"
+                  type="text"
+                  autocomplete="family-name"
+                  pInputText
+                  [fluid]="true"
+                />
+
+                <app-form-errors [control]="infosForm.get('lastName')!" help="Veuillez renseigner votre nom">
+                  <app-form-errors-item validator="required">
+                    <p>Veuillez saisir votre nom.</p>
+                  </app-form-errors-item>
+
+                  <app-form-errors-item validator="minlength">
+                    <p>Veuillez saisir un nom de minimum 2 caractères.</p>
+                  </app-form-errors-item>
+
+                  <app-form-errors-item validator="maxlength">
+                    <p>Veuillez saisir un nom de maximum 50 caractères.</p>
+                  </app-form-errors-item>
+                </app-form-errors>
               </section>
             </div>
 
@@ -38,26 +84,41 @@
                 <span class="font-medium">Genre</span>
                 <span class="text-red-500">*</span>
               </label>
-              <p-select formControlName="gender" [options]="genderOptions()" optionLabel="label" optionValue="value" [fluid]="true" />
+
+              <p-select
+                formControlName="gender"
+                [options]="genderOptions()"
+                optionLabel="label"
+                optionValue="value"
+                [fluid]="true"
+              />
+
+              <app-form-errors [control]="infosForm.get('gender')!" help="Veuillez sélectionner votre genre">
+                <app-form-errors-item validator="required">
+                  <p>Veuillez sélectionner votre genre.</p>
+                </app-form-errors-item>
+              </app-form-errors>
             </section>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <section class="flex flex-col gap-1">
-                <label for="city" class="flex flex-row gap-1">
-                  <span class="font-medium">Ville</span>
-                  <span class="text-red-500">*</span>
-                </label>
-                <input id="city" formControlName="city" placeholder="Votre ville" type="text" autocomplete="address-level2" pInputText [fluid]="true" />
-              </section>
+            <section class="flex flex-col gap-1">
+              <label for="birthday" class="flex flex-row gap-1">
+                <span class="font-medium">Date de naissance</span>
+                <span class="text-red-500">*</span>
+              </label>
 
-              <section class="flex flex-col gap-1">
-                <label for="postalCode" class="flex flex-row gap-1">
-                  <span class="font-medium">Code postal</span>
-                  <span class="text-red-500">*</span>
-                </label>
-                <input id="postalCode" formControlName="postalCode" placeholder="Votre code postal" type="text" autocomplete="address-level2" pInputText [fluid]="true" />
-              </section>
-            </div>
+              <p-date-picker
+                inputId="birthday"
+                formControlName="birthday"
+                placeholder="Votre date de naissance"
+                [fluid]="true"
+              />
+
+              <app-form-errors [control]="infosForm.get('birthday')!" help="Veuillez sélectionner votre date de naissance">
+                <app-form-errors-item validator="required">
+                  <p>Veuillez sélectionner votre date de naissance.</p>
+                </app-form-errors-item>
+              </app-form-errors>
+            </section>
 
             <section class="flex flex-row gap-3">
               <p-button
@@ -80,8 +141,30 @@
         <ng-template #content let-activateCallback="activateCallback">
           <div class="flex flex-col gap-5" [formGroup]="credentialsForm">
             <section class="flex flex-col gap-1">
-              <label for="email">Adresse e-mail</label>
-              <input id="email" formControlName="email" placeholder="exemple@domain.com" type="email" autocomplete="email" pInputText [fluid]="true" />
+              <label for="email" class="flex flex-row gap-1">
+                <span class="font-medium">Adresse e-mail</span>
+                <span class="text-red-500">*</span>
+              </label>
+
+              <input
+                id="email"
+                formControlName="email"
+                placeholder="exemple@domain.com"
+                type="email"
+                autocomplete="email"
+                pInputText
+                [fluid]="true"
+              />
+
+              <app-form-errors [control]="credentialsForm.get('email')!">
+                <app-form-errors-item validator="required">
+                  <p>Veuillez saisir votre adresse e-mail.</p>
+                </app-form-errors-item>
+
+                <app-form-errors-item validator="email">
+                  <p>Veuillez saisir une adresse e-mail valide.</p>
+                </app-form-errors-item>
+              </app-form-errors>
             </section>
 
             <section class="flex flex-col gap-1">
@@ -105,10 +188,42 @@
                   </ul>
                 </ng-template>
               </p-password>
+
+              <app-form-errors [control]="credentialsForm.get('password')!" help="Veuillez renseigner votre mot de passe">
+                <app-form-errors-item validator="required">
+                  <p>Veuillez saisir votre mot de passe.</p>
+                </app-form-errors-item>
+
+                <app-form-errors-item validator="minlength">
+                  <p>Veuillez saisir un mot de passe de minimum 8 caractères.</p>
+                </app-form-errors-item>
+
+                <app-form-errors-item validator="maxlength">
+                  <p>Veuillez saisir un mot de passe de maximum 50 caractères.</p>
+                </app-form-errors-item>
+              </app-form-errors>
             </section>
 
             <section class="flex flex-col gap-1">
-              <label for="passwordConfirmation">Confirmez le mot de passe</label>
+              <label for="passwordConfirmation" class="flex flex-row gap-1">
+                <span class="font-medium">Confirmez le mot de passe</span>
+                <span class="text-red-500">*</span>
+              </label>
+
+              <app-form-errors [control]="credentialsForm.get('passwordConfirmation')!" help="Veuillez renseigner votre mot de passe">
+                <app-form-errors-item validator="required">
+                  <p>Veuillez saisir votre mot de passe.</p>
+                </app-form-errors-item>
+
+                <app-form-errors-item validator="minlength">
+                  <p>Veuillez saisir un mot de passe de minimum 8 caractères.</p>
+                </app-form-errors-item>
+
+                <app-form-errors-item validator="maxlength">
+                  <p>Veuillez saisir un mot de passe de maximum 50 caractères.</p>
+                </app-form-errors-item>
+              </app-form-errors>
+
               <p-password formControlName="passwordConfirmation" autocomplete="new-password" placeholder="Confirmez votre mot de passe" inputId="passwordConfirmation" [feedback]="false" [toggleMask]="true" [fluid]="true" />
             </section>
 
@@ -134,7 +249,8 @@
                 type="submit"
                 [fluid]="true"
                 label="S'inscrire"
-                [disabled]="form.invalid"
+                [loading]="loading()"
+                [disabled]="form.invalid && !loading()"
               />
             </section>
           </div>

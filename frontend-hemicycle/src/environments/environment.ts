@@ -38,7 +38,7 @@ export const environment: Environment = {
     main: {
       name: "Main",
       version: "1.0.0",
-      url: "http://localhost:3000"
+      url: "http://localhost:5001/api"
     }
   }
 };

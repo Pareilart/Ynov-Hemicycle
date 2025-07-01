@@ -1,7 +1,6 @@
 import { Timestampable } from "@core/models/timestampable/timestampable.model";
-import { Uuid } from "@core/models/uuid/uuid.model";
 import { Email } from "@core/models/email/email.model";
-import { UserGender } from "./user-gender.enum";
+import { UserRole } from "./user-role.model";
 
 /**
  * Modèle User
@@ -12,24 +11,11 @@ import { UserGender } from "./user-gender.enum";
  *
  * @version 1.0.0
  *
- * @property {Uuid} id - Identifiant unique de l'utilisateur
+ * @property {string} id - Identifiant unique de l'utilisateur
  * @property {Email} email - Email de l'utilisateur
  * @property {string} image - Image de l'utilisateur
  * @property {string} firstName - Prénom de l'utilisateur
  * @property {string} lastName - Nom de l'utilisateur
- *
- * @example
- * ```typescript
- * const user: User = {
- *   id: "123e4567-e89b-12d3-a456-426614174000",
- *   email: "contact@valentin-fortin.pro",
- *   firstName: "Valentin",
- *   lastName: "FORTIN",
- *   createdAt: new Date(),
- *   updatedAt: new Date(),
- *   deletedAt: undefined
- * };
- * ```
  *
  * @author Valentin FORTIN <contact@valentin-fortin.pro>
  */
@@ -45,9 +31,9 @@ export interface User extends Timestampable {
    * @memberof User
    * @since 1.0.0
    *
-   * @type {Uuid} id
+   * @type {string} id
    */
-  readonly id: Uuid;
+  readonly id: string;
 
   /**
    * Propriété email
@@ -92,45 +78,32 @@ export interface User extends Timestampable {
   readonly lastName: string;
 
   /**
-   * Propriété gender
+   * Propriété role
    * @readonly
    *
    * @description
-   * Genre de l'utilisateur
+   * Rôle de l'utilisateur
    *
    * @memberof User
    * @since 1.0.0
    *
-   * @type {UserGender} gender
+   * @type {UserRole} role
    */
-  readonly gender: UserGender;
+  readonly role: UserRole;
 
   /**
-   * Propriété city
+   * Propriété hasOnBoarding
    * @readonly
    *
    * @description
-   * Ville de l'utilisateur
+   * Indique si l'utilisateur a terminé
+   * son onboarding
    *
    * @memberof User
    * @since 1.0.0
    *
-   * @type {string} city
+   * @type {boolean} hasOnBoarding
    */
-  readonly city?: string;
-
-  /**
-   * Propriété postalCode
-   * @readonly
-   *
-   * @description
-   * Code postal de l'utilisateur
-   *
-   * @memberof User
-   * @since 1.0.0
-   *
-   * @type {string} postalCode
-   */
-  readonly postalCode?: string;
+  readonly hasOnBoarding: boolean;
   //#endregion
 };

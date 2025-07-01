@@ -2,6 +2,7 @@ import { MaintenanceGuard } from '@core/guards/maintenance.guard';
 import { AuthLayoutComponent } from '@layouts/auth-layout/auth-layout.component';
 import { MainLayoutComponent } from '@layouts/main-layout/main-layout.component';
 import { Routes } from '@core/models/route/route.model';
+import { AuthGuard } from './core/guards/auth.guard';
 
 /**
  * Routes APP_ROUTES
@@ -30,10 +31,12 @@ export const APP_ROUTES: Routes = [
         children: [
           {
             path: '',
+            canActivate: [AuthGuard],
             loadChildren: () => import('@features/main/main.routes').then(m => m.MAIN_ROUTES)
           },
           {
             path: 'legislation',
+            canActivate: [AuthGuard],
             loadChildren: () => import('@features/legislation/legislation.routes').then(m => m.LEGISLATION_ROUTES)
           },
         ]

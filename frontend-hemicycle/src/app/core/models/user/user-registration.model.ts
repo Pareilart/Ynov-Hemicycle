@@ -1,3 +1,4 @@
+import { UserGender } from "./user-gender.enum";
 import { User } from "./user.model";
 
 /**
@@ -12,13 +13,15 @@ import { User } from "./user.model";
  * @property {string} firstName - Prénom de l'utilisateur
  * @property {string} lastName - Nom de l'utilisateur
  * @property {Email} email - Email de l'utilisateur
+ * @property {string} password - Mot de passe de l'utilisateur
  *
  * @example
  * ```typescript
  * const userRegistration: UserRegistration = {
  *   email: "contact@valentin-fortin.pro",
  *   firstName: "Valentin",
- *   lastName: "FORTIN"
+ *   lastName: "FORTIN",
+ *   password: "password"
  * };
  * ```
  *
@@ -29,8 +32,9 @@ export type UserRegistration = {
     | 'firstName'
     | 'lastName'
     | 'email'
-    | 'gender'
-    | 'city'
-    | 'postalCode'
   >]: User[K];
-} & { password: string; }
+} & {
+  password: string,
+  gender: UserGender,
+  birthday: Date,
+}

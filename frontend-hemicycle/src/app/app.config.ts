@@ -12,6 +12,10 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { DialogService } from 'primeng/dynamicdialog';
+import { provideStore } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { authReducer } from './core/stores/auth/auth.reducer';
+import { AuthEffects } from './core/stores/auth/auth.effects';
 
 /**
  * Interceptors
@@ -40,22 +44,12 @@ const interceptors: HttpInterceptorFn[] = [];
 export const appConfig: ApplicationConfig = {
   providers: [
     provideExperimentalZonelessChangeDetection(),
-    provideHttpClient(
-      withFetch(),
-      withInterceptors(interceptors),
-      withXsrfConfiguration({
-        cookieName: 'csrftoken',
-        headerName: 'X-CSRFToken'
-      })
-    ),
-    provideRouter(
-      APP_ROUTES,
-      withComponentInputBinding()
-    ),
-    provideClientHydration(
-      withEventReplay(),
-      withIncrementalHydration()
-    ),
+    provideHttpClient(withFetch(), withInterceptors(interceptors), withXsrfConfiguration({
+      cookieName: 'csrftoken',
+      headerName: 'X-CSRFToken'
+    })),
+    provideRouter(APP_ROUTES, withComponentInputBinding()),
+    provideClientHydration(withEventReplay(), withIncrementalHydration()),
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
@@ -70,15 +64,17 @@ export const appConfig: ApplicationConfig = {
       }
     }),
     provideTitleStrategy(TitleStrategy),
-    provideNgxWebstorage(
-      withNgxWebstorageConfig({
-        prefix: environment.storage.prefix,
-        separator: environment.storage.separator,
-        caseSensitive: environment.storage.caseSensitive
-      }),
-      withLocalStorage(),
-      withSessionStorage()
-    ),
-    DialogService
+    provideNgxWebstorage(withNgxWebstorageConfig({
+      prefix: environment.storage.prefix,
+      separator: environment.storage.separator,
+      caseSensitive: environment.storage.caseSensitive
+    }),
+    withLocalStorage(),
+    withSessionStorage()),
+    DialogService,
+    provideStore({
+      auth: authReducer
+    }),
+    provideEffects([AuthEffects])
   ]
 };

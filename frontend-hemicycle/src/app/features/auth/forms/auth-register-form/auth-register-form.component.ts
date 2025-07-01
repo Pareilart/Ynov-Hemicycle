@@ -11,6 +11,14 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { StepperModule } from 'primeng/stepper';
 import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
+import { Store } from '@ngrx/store';
+import { AuthState } from '@app/core/stores/auth/auth.state';
+import { selectAuthLoading } from '@app/core/stores/auth/auth.selectors';
+import { register } from '@app/core/stores/auth/auth.actions';
+import { CommonModule } from '@angular/common';
+import { FormErrorsComponent } from "../../../../shared/components/form-errors/form-errors.component";
+import { FormErrorsItemComponent } from "../../../../shared/components/form-errors/form-errors-item/form-errors-item.component";
 
 /**
  * Type AuthRegisterFormValues
@@ -32,7 +40,7 @@ import { SelectModule } from 'primeng/select';
  * @see UserRegistration
  */
 type AuthRegisterFormValues = {
-  infos: Pick<UserRegistration, 'firstName' | 'lastName' | 'gender' | 'city' | 'postalCode'>;
+  infos: Pick<UserRegistration, 'firstName' | 'lastName' | 'gender' | 'birthday'>;
   credentials: Pick<UserRegistration, 'email' | 'password'> & {
     passwordConfirmation: string;
     terms: boolean;
@@ -93,8 +101,12 @@ type GenderOption = {
     CheckboxModule,
     ButtonModule,
     StepperModule,
-    SelectModule
-  ],
+    SelectModule,
+    DatePickerModule,
+    CommonModule,
+    FormErrorsComponent,
+    FormErrorsItemComponent
+],
   templateUrl: './auth-register-form.component.html',
   styleUrl: './auth-register-form.component.css',
 })
@@ -115,6 +127,38 @@ export class AuthRegisterFormComponent {
    */
   private readonly formBuilder: NonNullableFormBuilder =
     inject<NonNullableFormBuilder>(NonNullableFormBuilder);
+
+  /**
+   * Propriété store
+   * @readonly
+   *
+   * @description
+   * Service de stockage
+   *
+   * @access private
+   * @memberof AuthRegisterFormComponent
+   * @since 1.0.0
+   *
+   * @type {Store<AuthState>} store
+   */
+  private readonly store: Store<AuthState> =
+    inject<Store<AuthState>>(Store<AuthState>);
+
+  /**
+   * Propriété loading
+   * @readonly
+   *
+   * @description
+   * Indicateur de chargement
+   *
+   * @access public
+   * @memberof AuthRegisterFormComponent
+   * @since 1.0.0
+   *
+   * @type {Signal<boolean>} loading
+   */
+  public readonly loading: Signal<boolean> =
+    this.store.selectSignal(selectAuthLoading);
 
   /**
    * Propriété genderOptions
@@ -145,6 +189,36 @@ export class AuthRegisterFormComponent {
   ]);
 
   /**
+   * Propriété birthdayMinDate
+   * @readonly
+   *
+   * @description
+   * Date minimum de naissance
+   *
+   * @access public
+   * @memberof AuthRegisterFormComponent
+   * @since 1.0.0
+   *
+   * @type {Date} birthdayMinDate
+   */
+  public readonly birthdayMinDate: Date = new Date(new Date().getFullYear() - 100, 0, 1);
+
+  /**
+   * Propriété birthdayMaxDate
+   * @readonly
+   *
+   * @description
+   * Date maximum de naissance
+   *
+   * @access public
+   * @memberof AuthRegisterFormComponent
+   * @since 1.0.0
+   *
+   * @type {Date} birthdayMaxDate
+   */
+  public readonly birthdayMaxDate: Date = new Date(new Date().getFullYear() - 18, 0, 1);
+
+  /**
    * Propriété form
    * @readonly
    *
@@ -162,21 +236,17 @@ export class AuthRegisterFormComponent {
       firstName: this.formBuilder.control<string>({
         value: '',
         disabled: false
-      }),
+      }, [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
       lastName: this.formBuilder.control<string>({
         value: '',
         disabled: false
-      }),
+      }, [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
       gender: this.formBuilder.control<UserGender>({
         value: UserGender.MALE,
         disabled: false
       }, [Validators.required]),
-      city: this.formBuilder.control<string>({
-        value: '',
-        disabled: false
-      }, [Validators.required]),
-      postalCode: this.formBuilder.control<string>({
-        value: '',
+      birthday: this.formBuilder.control<Date>({
+        value: new Date(),
         disabled: false
       }, [Validators.required]),
     }),
@@ -200,7 +270,34 @@ export class AuthRegisterFormComponent {
     })
   });
 
+  /**
+   * Propriété infosForm
+   * @readonly
+   *
+   * @description
+   * Formulaire d'informations
+   *
+   * @access public
+   * @memberof AuthRegisterFormComponent
+   * @since 1.0.0
+   *
+   * @type {FormGroup} infosForm
+   */
   public readonly infosForm: FormGroup = this.form.get('infos') as FormGroup;
+
+  /**
+   * Propriété credentialsForm
+   * @readonly
+   *
+   * @description
+   * Formulaire d'identifiants
+   *
+   * @access public
+   * @memberof AuthRegisterFormComponent
+   * @since 1.0.0
+   *
+   * @type {FormGroup} credentialsForm
+   */
   public readonly credentialsForm: FormGroup = this.form.get('credentials') as FormGroup;
   //#endregion
 
@@ -222,7 +319,19 @@ export class AuthRegisterFormComponent {
   public onSubmit(): void {
     if (this.form.invalid) return;
 
-    console.log(this.form.value);
+    const infos = this.form.value.infos!;
+    const credentials = this.form.value.credentials!;
+
+    this.store.dispatch(register({
+      registration: {
+        firstName: infos.firstName!,
+        lastName: infos.lastName!,
+        email: credentials.email!,
+        password: credentials.password!,
+        gender: infos.gender!,
+        birthday: infos.birthday!
+      }
+    }))
   }
   //#endregion
 }

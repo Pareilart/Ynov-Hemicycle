@@ -1,5 +1,7 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
+import { ApiReponse } from "@app/core/models/api/api-response.model";
+import { JwtToken } from "@app/core/models/jwt/jwt-token.model";
 import { UserCredentials } from "@app/core/models/user/user-credentials.model";
 import { UserRegistration } from "@app/core/models/user/user-registration.model";
 import { User } from "@app/core/models/user/user.model";
@@ -57,11 +59,13 @@ export class AuthService {
    *
    * @param {UserCredentials} credentials - Identifiants de connexion
    *
-   * @returns {Observable<User>} - Retourne un Observable<User>
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne un Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>
    */
-  public login(credentials: UserCredentials): Observable<User> {
+  public login(credentials: UserCredentials): Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>> {
     const url: string = `${AuthService.API_URL}/login`;
-    return this.httpClient.post<User>(url, credentials);
+    return this.httpClient.post<ApiReponse<User & { token: JwtToken }>>(url, credentials, {
+      observe: 'response'
+    });
   }
 
   /**
@@ -77,11 +81,20 @@ export class AuthService {
    *
    * @param {UserRegistration} payload - Identifiants d'inscription
    *
-   * @returns {Observable<User>} - Retourne un Observable<User>
+   * @returns {Observable<HttpResponse<ApiReponse<User>>>} - Retourne un Observable<HttpResponse<ApiReponse<User>>>
    */
-  public register(payload: UserRegistration): Observable<User> {
+  public register(payload: UserRegistration): Observable<HttpResponse<ApiReponse<User>>> {
     const url: string = `${AuthService.API_URL}/register`;
-    return this.httpClient.post<User>(url, payload);
+    return this.httpClient.post<ApiReponse<User>>(url, {
+      sexe: payload.gender,
+      lastName: payload.lastName,
+      firstName: payload.firstName,
+      email: payload.email,
+      password: payload.password,
+      birthday: payload.birthday,
+    }, {
+      observe: 'response'
+    });
   }
   //#endregion
 }

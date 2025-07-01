@@ -79,7 +79,8 @@
       type="submit"
       [fluid]="true"
       label="Se connecter"
-      [disabled]="form.invalid"
+      [loading]="loading()"
+      [disabled]="form.invalid && !loading()"
     />
   </section>
 

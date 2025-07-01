@@ -8,6 +8,10 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
 import { Email } from '@core/models/email/email.model';
+import { AuthState } from '@app/core/stores/auth/auth.state';
+import { Store } from '@ngrx/store';
+import { selectAuthLoading } from '@app/core/stores/auth/auth.selectors';
+import { login } from '@app/core/stores/auth/auth.actions';
 
 /**
  * Type AuthLoginFormValues
@@ -91,6 +95,38 @@ export class AuthLoginFormComponent {
     inject<NonNullableFormBuilder>(NonNullableFormBuilder);
 
   /**
+   * Propriété store
+   * @readonly
+   *
+   * @description
+   * Store de l'authentification
+   *
+   * @access private
+   * @memberof AuthLoginFormComponent
+   * @since 1.0.0
+   *
+   * @type {Store<AuthState>} store
+   */
+  private readonly store: Store<AuthState> =
+    inject<Store<AuthState>>(Store<AuthState>);
+
+  /**
+   * Propriété loading
+   * @readonly
+   *
+   * @description
+   * Signal de chargement
+   *
+   * @access public
+   * @memberof AuthLoginFormComponent
+   * @since 1.0.0
+   *
+   * @type {Signal<boolean>} loading
+   */
+  public readonly loading: Signal<boolean> =
+    this.store.selectSignal(selectAuthLoading);
+
+  /**
    * Propriété form
    * @readonly
    *
@@ -168,7 +204,12 @@ export class AuthLoginFormComponent {
   public onSubmit(): void {
     if (this.form.invalid) return;
 
-    console.log(this.form.value);
+    this.store.dispatch(login({
+      credentials: {
+        email: this.form.value.email!,
+        password: this.form.value.password!
+      }
+    }))
   }
   //#endregion
 }
