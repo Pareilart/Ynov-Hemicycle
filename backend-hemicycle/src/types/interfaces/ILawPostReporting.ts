@@ -3,8 +3,8 @@ import { LawPostReport } from '../../enum/LawReactionTypeEnum';
 
 export interface ILawPostReporting extends Document {
   _id: Types.ObjectId;
-  userId: string;
-  lawPostId: string;
+  userId: Types.ObjectId;
+  lawPostId: Types.ObjectId;
   reason: LawPostReport;
   description?: string;
   createdAt: Date;

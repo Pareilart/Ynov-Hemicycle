@@ -1,11 +1,13 @@
 import { LawPostResponse } from '../responses/LawPostResponse';
 import { UserResponse } from '../responses/UserResponse';
-import { LawReactionEmoji, LawReactionType } from '../../enum/LawReactionTypeEnum';
+import { LawReactionEmoji, LawReactionType, LawPostReport } from '../../enum/LawReactionTypeEnum';
 import { ILawPost } from '../interfaces/ILawPost';
 import { ILawReaction } from '../interfaces/ILawReaction';
 import { IUserDocument } from '../interfaces/IUserDocument';
+import { ILawPostReporting } from '../interfaces/ILawPostReporting';
 import User from '../../models/User';
 import { LawReactionResponse } from '../responses/LawReactionResponse';
+import { LawPostReportingResponse } from '../responses/LawPostReportingResponse';
 
 export class LawPostDto {
   private static createUserResponse(user: IUserDocument): UserResponse {
@@ -48,7 +50,37 @@ export class LawPostDto {
     };
   }
 
-  public static async toResponse(lawPost: ILawPost, reactions: ILawReaction[] = []): Promise<LawPostResponse> {
+  private static async transformReporting(reporting: ILawPostReporting, lawPost: ILawPost): Promise<LawPostReportingResponse> {
+    const user = await User.findById(reporting.userId);
+    if (!user) throw new Error('User not found');
+
+    return {
+      id: reporting._id.toString(),
+      user: this.createUserResponse(user as IUserDocument),
+      lawPost: await this.toResponse(lawPost),
+      reason: reporting.reason,
+      description: reporting.description,
+      createdAt: reporting.createdAt?.toISOString() || new Date().toISOString(),
+      updatedAt: reporting.updatedAt?.toISOString() || new Date().toISOString(),
+    };
+  }
+
+  private static initializeReportStats() {
+    return {
+      total: 0,
+      reasons: {
+        [LawPostReport.MISINFORMATION]: 0,
+        [LawPostReport.IRRELEVANT]: 0,
+        [LawPostReport.UNCONSTRUCTIVE]: 0,
+      },
+    };
+  }
+
+  public static async toResponse(
+    lawPost: ILawPost,
+    reactions: ILawReaction[] = [],
+    reports: ILawPostReporting[] = [],
+  ): Promise<LawPostResponse> {
     const response: LawPostResponse = {
       id: lawPost._id.toString(),
       legislature: lawPost.legislature,
@@ -82,6 +114,21 @@ export class LawPostDto {
 
       if (reactions.length === 1) {
         response.reactions = await Promise.all(reactions.map((r) => this.transformReaction(r)));
+      }
+    }
+
+    if (reports.length > 0) {
+      const reportStats = this.initializeReportStats();
+      reportStats.total = reports.length;
+      reports.forEach((report) => {
+        if (report.reason) {
+          reportStats.reasons[report.reason as keyof typeof LawPostReport]++;
+        }
+      });
+      response.reportsStats = reportStats;
+
+      if (reports.length === 1) {
+        response.reports = await Promise.all(reports.map((r) => this.transformReporting(r, lawPost)));
       }
     }
 

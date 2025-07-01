@@ -1,5 +1,6 @@
 import { UserResponse } from './UserResponse';
-import { LawReactionType, LawReactionEmoji } from '../../enum/LawReactionTypeEnum';
+import { LawReactionType, LawReactionEmoji, LawPostReport } from '../../enum/LawReactionTypeEnum';
+import { LawPostReportingResponse } from './LawPostReportingResponse';
 
 export interface LawReactionResponse {
   id: string;
@@ -20,6 +21,13 @@ export interface ReactionStats {
   };
 }
 
+export interface ReportStats {
+  total: number;
+  reasons: {
+    [key in LawPostReport]: number;
+  };
+}
+
 export interface LawPostResponse {
   id: string; // ID MongoDB
   legislature: number;
@@ -37,6 +45,8 @@ export interface LawPostResponse {
   user?: UserResponse;
   reactions?: LawReactionResponse[];
   reactionsStats: ReactionStats;
+  reports?: LawPostReportingResponse[];
+  reportsStats?: ReportStats;
   createdAt: string;
   updatedAt: string;
 }

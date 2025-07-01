@@ -10,6 +10,7 @@ import { LawPostDto } from '../../types/dto/LawPostDto';
 import { LawPostReportingResponse } from '../../types/responses/LawPostReportingResponse';
 import { IUser } from '../../types/interfaces/IUser';
 import { ILawPostReporting } from '../../types/interfaces/ILawPostReporting';
+import { LawPostService } from '../../services/LawPostService';
 
 export const addLawReaction = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
@@ -165,9 +166,12 @@ export const reportLawPost = async (req: AuthenticatedRequest, res: Response): P
       description,
     }) as ILawPostReporting;
 
+    // Utiliser le service pour incrémenter le compteur de réévaluation
+    const updatedLawPost = await LawPostService.incrementReevaluation(lawPostId);
+
     const response: LawPostReportingResponse = {
       id: newReport._id.toString(),
-      lawPost: await LawPostDto.toResponse(lawPost),
+      lawPost: await LawPostDto.toResponse(updatedLawPost),
       reason: newReport.reason,
       description: newReport.description,
       createdAt: newReport.createdAt.toISOString(),

@@ -31,10 +31,8 @@ export const createLawPost = async (req: AuthenticatedRequest, res: Response): P
     });
 
     const savedLawPost = await lawPost.save();
-    const populatedLawPost = await LawPost.findById(savedLawPost._id).populate(
-      'userId',
-      'firstName lastName email',
-    );
+    const populatedLawPost = await LawPost.findById(savedLawPost._id)
+      .populate('userId', 'firstName lastName email hasOnBoarding');
 
     if (!populatedLawPost) {
       throw new Error('Erreur lors de la récupération de la loi créée');
