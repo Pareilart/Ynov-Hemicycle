@@ -50,34 +50,29 @@ export class MainLayoutHeaderComponent {
    */
   public readonly items: Signal<MegaMenuItem[]> = signal<MegaMenuItem[]>([
     {
-      label: "Overview",
+      label: "Les projets de lois",
       icon: PrimeIcons.USER,
       items: [
         [
           {
-
-            label: "Test",
+            label: "Les projets de lois",
             items: [
-              { label: 'Test', subtext: 'Test', icon: PrimeIcons.ANDROID },
+              { label: 'Liste des projets de loi', icon: PrimeIcons.ANDROID, routerLink: '/legislation/laws' },
+            ]
+          },
+          {
+            label: "Les projets de lois",
+            items: [
+              { label: 'Circonscription', icon: PrimeIcons.ANDROID, routerLink: '/legislation/circonscription' },
             ]
           },
         ],
       ]
     },
     {
-      label: "Nouvel Élément",
+      label: "Les partis politiques",
       icon: PrimeIcons.PLUS,
-      items: [
-        [
-          {
-            label: 'Test',
-            items: [
-              { label: 'Test', subtext: 'Test', icon: PrimeIcons.CHECK },
-              { label: 'Test', subtext: 'Test', icon: PrimeIcons.CHECK }
-            ]
-          }
-        ]
-      ]
+      routerLink: '/partis-politiques'
     }
   ]);
 
