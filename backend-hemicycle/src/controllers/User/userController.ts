@@ -34,37 +34,37 @@ export const userOnboarding = async (
     if (userDoc.hasOnBoarding) {
       ResponseHandler.badRequest(
         res,
-        'L\'utilisateur a déjà complété le onboarding'
+        'L\'utilisateur a déjà complété le onboarding',
       );
       return;
     }
 
     if (
-      !req.body.voting_frequency ||
-      !Object.values(VotingFrequencyEnum).includes(req.body.voting_frequency)
+      !req.body.voting_frequency
+      || !Object.values(VotingFrequencyEnum).includes(req.body.voting_frequency)
     ) {
       ResponseHandler.badRequest(res, 'Fréquence de vote invalide');
       return;
     }
     if (
-      !req.body.electoral_registration ||
-      !Object.values(ElectoralRegistrationEnum).includes(
-        req.body.electoral_registration
+      !req.body.electoral_registration
+      || !Object.values(ElectoralRegistrationEnum).includes(
+        req.body.electoral_registration,
       )
     ) {
       ResponseHandler.badRequest(res, 'Inscription électorale invalide');
       return;
     }
     if (
-      !req.body.positioning ||
-      !Object.values(PoliticalPositioningEnum).includes(req.body.positioning)
+      !req.body.positioning
+      || !Object.values(PoliticalPositioningEnum).includes(req.body.positioning)
     ) {
       ResponseHandler.badRequest(res, 'Positionnement politique invalide');
       return;
     }
     if (
-      !req.body.proximity ||
-      !Object.values(PoliticalProximityEnum).includes(req.body.proximity)
+      !req.body.proximity
+      || !Object.values(PoliticalProximityEnum).includes(req.body.proximity)
     ) {
       ResponseHandler.badRequest(res, 'Proximité politique invalide');
       return;
@@ -93,12 +93,12 @@ export const userOnboarding = async (
       ResponseHandler.success(
         res,
         UserDto.toResponse(updatedUser as unknown as IUserDocument),
-        'Onboarding complété avec succès'
+        'Onboarding complété avec succès',
       );
     } else {
       ResponseHandler.error(
         res,
-        'Erreur lors de la mise à jour de l\'utilisateur'
+        'Erreur lors de la mise à jour de l\'utilisateur',
       );
     }
   } catch (error) {
@@ -108,7 +108,7 @@ export const userOnboarding = async (
 
 export const updateProfile = async (
   req: AuthenticatedRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     if (!req.user?._id) {
@@ -118,7 +118,7 @@ export const updateProfile = async (
 
     const { user, message } = await UserService.updateProfile(
       req.user._id.toString(),
-      req.body
+      req.body,
     );
     ResponseHandler.success(res, user, message);
   } catch (error) {
@@ -128,7 +128,7 @@ export const updateProfile = async (
 
 export const getProfile = async (
   req: AuthenticatedRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const user = await User.findById(req.user?._id)
@@ -144,7 +144,7 @@ export const getProfile = async (
     ResponseHandler.success(
       res,
       UserDto.toResponse(user as unknown as IUserDocument),
-      'Profil récupéré avec succès'
+      'Profil récupéré avec succès',
     );
   } catch (error) {
     ResponseHandler.error(res, (error as Error).message);
@@ -153,7 +153,7 @@ export const getProfile = async (
 
 export const deleteUser = async (
   req: AuthenticatedRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const user = await User.findById(req.user?._id).populate('role');
@@ -176,7 +176,7 @@ export const deleteUser = async (
       if (adminCount <= 1) {
         ResponseHandler.forbidden(
           res,
-          'Impossible de supprimer votre compte car vous êtes le dernier administrateur du système'
+          'Impossible de supprimer votre compte car vous êtes le dernier administrateur du système',
         );
         return;
       }
@@ -191,7 +191,7 @@ export const deleteUser = async (
 
 export const exportProfile = async (
   req: AuthenticatedRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const {
@@ -231,23 +231,20 @@ export const exportProfile = async (
           type_reaction: reaction.reaction_type,
           emoji_reaction: reaction.reaction_emoji || '',
           date_reaction: new Date(reaction.created_at).toLocaleDateString(
-            'fr-FR'
+            'fr-FR',
           ),
         };
       });
     }
 
-    switch (exportFormat) {
-    case 'JSON':
+    if (exportFormat === 'JSON') {
       res.setHeader(
         'Content-Disposition',
-        'attachment; filename=profile.json'
+        'attachment; filename=profile.json',
       );
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify(exportData, null, 2));
-      break;
-
-    case 'CSV':
+    } else if (exportFormat === 'CSV') {
       let csvData: any[] = [];
 
       if (includeProfile) {
@@ -257,15 +254,15 @@ export const exportProfile = async (
           nom: exportData.profile.lastName,
           date_naissance: exportData.profile.birthday
             ? new Date(exportData.profile.birthday).toLocaleDateString(
-                'fr-FR'
-              )
+              'fr-FR',
+            )
             : '',
           sexe: exportData.profile.sexe || '',
           email: exportData.profile.email,
           email_verifie_le: exportData.profile.emailVerifiedAt
             ? new Date(exportData.profile.emailVerifiedAt).toLocaleDateString(
-                'fr-FR'
-              )
+              'fr-FR',
+            )
             : '',
           onboarding_complete: exportData.profile.hasOnBoarding
             ? 'Oui'
@@ -278,39 +275,38 @@ export const exportProfile = async (
           region: exportData.profile.addresses?.state || '',
           pays: exportData.profile.addresses?.country || '',
           frequence_vote:
-            exportData.profile.votingSurvey?.voting_frequency || '',
+          exportData.profile.votingSurvey?.voting_frequency || '',
           inscription_electorale:
-            exportData.profile.votingSurvey?.electoral_registration || '',
+          exportData.profile.votingSurvey?.electoral_registration || '',
           positionnement_politique:
-            exportData.profile.votingSurvey?.positioning || '',
+          exportData.profile.votingSurvey?.positioning || '',
           proximite_politique:
-            exportData.profile.votingSurvey?.proximity || '',
+          exportData.profile.votingSurvey?.proximity || '',
         };
 
         if (!includeLawReaction) {
           csvData.push(profileData);
         } else {
           const reactions = exportData.lawReactions || [];
-          csvData =
-            reactions.length === 0
-              ? [
-                  {
-                    ...profileData,
-                    reaction_id: '',
-                    loi_titre: '',
-                    type_reaction: '',
-                    emoji_reaction: '',
-                    date_reaction: '',
-                  },
-                ]
-              : reactions.map((reaction: any) => ({
-                  ...profileData,
-                  reaction_id: reaction.reaction_id,
-                  loi_titre: reaction.loi_titre,
-                  type_reaction: reaction.type_reaction,
-                  emoji_reaction: reaction.emoji_reaction,
-                  date_reaction: reaction.date_reaction,
-                }));
+          csvData = reactions.length === 0
+            ? [
+              {
+                ...profileData,
+                reaction_id: '',
+                loi_titre: '',
+                type_reaction: '',
+                emoji_reaction: '',
+                date_reaction: '',
+              },
+            ]
+            : reactions.map((reaction: any) => ({
+              ...profileData,
+              reaction_id: reaction.reaction_id,
+              loi_titre: reaction.loi_titre,
+              type_reaction: reaction.type_reaction,
+              emoji_reaction: reaction.emoji_reaction,
+              date_reaction: reaction.date_reaction,
+            }));
         }
       } else if (includeLawReaction) {
         csvData = exportData.lawReactions;
@@ -319,41 +315,41 @@ export const exportProfile = async (
       const fields = [
         ...(includeProfile
           ? [
-              { label: 'ID', value: 'id' },
-              { label: 'Prénom', value: 'prenom' },
-              { label: 'Nom', value: 'nom' },
-              { label: 'Date de naissance', value: 'date_naissance' },
-              { label: 'Sexe', value: 'sexe' },
-              { label: 'Email', value: 'email' },
-              { label: 'Email vérifié le', value: 'email_verifie_le' },
-              { label: 'Onboarding complété', value: 'onboarding_complete' },
-              { label: 'Rôle', value: 'role' },
-              { label: 'Adresse ligne 1', value: 'adresse_ligne1' },
-              { label: 'Adresse ligne 2', value: 'adresse_ligne2' },
-              { label: 'Code postal', value: 'code_postal' },
-              { label: 'Ville', value: 'ville' },
-              { label: 'État/Région', value: 'region' },
-              { label: 'Pays', value: 'pays' },
-              { label: 'Fréquence de vote', value: 'frequence_vote' },
-              {
-                label: 'Inscription électorale',
-                value: 'inscription_electorale',
-              },
-              {
-                label: 'Positionnement politique',
-                value: 'positionnement_politique',
-              },
-              { label: 'Proximité politique', value: 'proximite_politique' },
-            ]
+            { label: 'ID', value: 'id' },
+            { label: 'Prénom', value: 'prenom' },
+            { label: 'Nom', value: 'nom' },
+            { label: 'Date de naissance', value: 'date_naissance' },
+            { label: 'Sexe', value: 'sexe' },
+            { label: 'Email', value: 'email' },
+            { label: 'Email vérifié le', value: 'email_verifie_le' },
+            { label: 'Onboarding complété', value: 'onboarding_complete' },
+            { label: 'Rôle', value: 'role' },
+            { label: 'Adresse ligne 1', value: 'adresse_ligne1' },
+            { label: 'Adresse ligne 2', value: 'adresse_ligne2' },
+            { label: 'Code postal', value: 'code_postal' },
+            { label: 'Ville', value: 'ville' },
+            { label: 'État/Région', value: 'region' },
+            { label: 'Pays', value: 'pays' },
+            { label: 'Fréquence de vote', value: 'frequence_vote' },
+            {
+              label: 'Inscription électorale',
+              value: 'inscription_electorale',
+            },
+            {
+              label: 'Positionnement politique',
+              value: 'positionnement_politique',
+            },
+            { label: 'Proximité politique', value: 'proximite_politique' },
+          ]
           : []),
         ...(includeLawReaction
           ? [
-              { label: 'ID Réaction', value: 'reaction_id' },
-              { label: 'Titre de la loi', value: 'loi_titre' },
-              { label: 'Type de réaction', value: 'type_reaction' },
-              { label: 'Emoji de réaction', value: 'emoji_reaction' },
-              { label: 'Date de réaction', value: 'date_reaction' },
-            ]
+            { label: 'ID Réaction', value: 'reaction_id' },
+            { label: 'Titre de la loi', value: 'loi_titre' },
+            { label: 'Type de réaction', value: 'type_reaction' },
+            { label: 'Emoji de réaction', value: 'emoji_reaction' },
+            { label: 'Date de réaction', value: 'date_reaction' },
+          ]
           : []),
       ];
 
@@ -361,13 +357,11 @@ export const exportProfile = async (
       const csv = json2csvParser.parse(csvData);
       res.setHeader(
         'Content-Disposition',
-        'attachment; filename=profile.csv'
+        'attachment; filename=profile.csv',
       );
       res.setHeader('Content-Type', 'text/csv');
       res.send(csv);
-      break;
-
-    default:
+    } else {
       ResponseHandler.badRequest(res, 'Format d\'exportation non supporté');
     }
   } catch (error) {
