@@ -7,7 +7,7 @@ import {
   userOnboarding,
   exportProfile,
 } from "../../controllers/User/userController";
-import { updateProfileValidator } from "../../middleware/validators/User/userValidator";
+import { exportDataProfileValidator, updateProfileValidator } from "../../middleware/validators/User/userValidator";
 import { validateRequest } from "../../middleware/validators/validationMiddleware";
 
 const router = express.Router();
@@ -27,6 +27,6 @@ router.put(
 );
 router.get("/profile", auth, getProfile);
 router.delete("/profile/delete", auth, deleteUser);
-router.get("/profile/export-data", auth, exportProfile);
+router.post("/profile/export-data", auth, exportDataProfileValidator, validateRequest, exportProfile);
 
 export default router;
