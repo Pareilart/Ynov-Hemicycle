@@ -128,3 +128,35 @@ export const updateProfileValidator = [
       }
     }),
 ];
+
+interface ExportDataProfile {
+  profile: boolean;
+  lawReaction: boolean;
+  exportFormat: string;
+}
+
+export const exportDataProfileValidator = [
+  body("exportFormat")
+    .isString()
+    .trim()
+    .notEmpty()
+    .withMessage("Le format d'export ne peut pas être vide")
+    .isIn(["CSV", "JSON"])
+    .withMessage("Le format d'export doit être CSV, JSON ou XML"),
+
+  body("profile")
+    .isBoolean()
+    .withMessage("Le champ profile doit être un booléen"),
+
+  body("lawReaction")
+    .isBoolean()
+    .withMessage("Le champ lawReaction doit être un booléen"),
+
+  body()
+    .custom((value: ExportDataProfile) => {
+      if (!value.profile && !value.lawReaction) {
+        throw new Error("Au moins un type de données doit être sélectionné pour l'export");
+      }
+      return true;
+    })
+];
