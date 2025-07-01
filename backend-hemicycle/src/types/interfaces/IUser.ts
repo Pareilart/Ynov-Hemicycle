@@ -15,6 +15,7 @@ export interface IUser extends Document {
   role: Types.ObjectId | IRole;
   votingSurvey?: Types.ObjectId | IVotingSurvey;
   hasOnBoarding: boolean;
+  twoFactorEnabled: boolean;
 }
 
 export interface IUserPopulated extends Omit<IUser, 'role' | 'addresses'> {

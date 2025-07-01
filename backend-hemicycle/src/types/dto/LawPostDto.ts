@@ -17,6 +17,7 @@ export class LawPostDto {
       lastName: user.lastName,
       email: user.email,
       hasOnBoarding: user.hasOnBoarding || false,
+      twoFactorEnabled: user.twoFactorEnabled || false,
     };
   }
 

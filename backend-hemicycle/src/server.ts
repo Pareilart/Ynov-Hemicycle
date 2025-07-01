@@ -30,7 +30,6 @@ import deputyLawPostRoutes from './routes/Deputy/lawPostRoutes';
  */
 import userLawPostRoutes from './routes/User/lawPostRoutes';
 import userRoutes from './routes/User/userRoutes';
-import emailRoutes from './routes/emailRoutes';
 
 /**
  * HEALTH
@@ -64,7 +63,6 @@ app.use('/api/users', userRoutes);
 app.use('/api/users/law-posts', userLawPostRoutes);
 
 app.use('/api/auth', authRoutes);
-app.use('/api/email', emailRoutes);
 app.use('/api/health', healthRoutes);
 
 // Route de base

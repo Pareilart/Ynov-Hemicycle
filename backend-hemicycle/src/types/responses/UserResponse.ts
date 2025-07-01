@@ -31,4 +31,5 @@ export interface UserResponse {
   };
   votingSurvey?: VotingSurveyResponse;
   hasOnBoarding: boolean;
+  twoFactorEnabled: boolean;
 }
