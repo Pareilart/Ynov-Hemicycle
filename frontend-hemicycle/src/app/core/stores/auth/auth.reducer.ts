@@ -95,6 +95,22 @@ export const authReducer = createReducer(
         message: status.message
       }
     }
+  })),
+  on(AuthActions.refreshSuccess, (state, { token }) => ({
+    ...state,
+    token: token,
+    isAuthenticated: true
+  })),
+  on(AuthActions.refreshFailure, (state, { status }) => ({
+    ...state,
+    operation: {
+      loading: false,
+      status: {
+        code: status.code,
+        label: status.label,
+        message: status.message
+      }
+    }
   }))
 );
 

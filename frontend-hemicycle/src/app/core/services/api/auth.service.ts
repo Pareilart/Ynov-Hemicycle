@@ -6,6 +6,7 @@ import { UserCredentials } from "@app/core/models/user/user-credentials.model";
 import { UserRegistration } from "@app/core/models/user/user-registration.model";
 import { User } from "@app/core/models/user/user.model";
 import { environment } from "@environments/environment";
+import { LocalStorageService } from "ngx-webstorage";
 import { Observable } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
@@ -59,11 +60,31 @@ export class AuthService {
    *
    * @param {UserCredentials} credentials - Identifiants de connexion
    *
-   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne un Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
    */
   public login(credentials: UserCredentials): Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>> {
     const url: string = `${AuthService.API_URL}/login`;
     return this.httpClient.post<ApiReponse<User & { token: JwtToken }>>(url, credentials, {
+      observe: 'response'
+    });
+  }
+
+  /**
+   * Méthode me
+   * @method me
+   *
+   * @description
+   * Méthode me pour récupérer les informations de l'utilisateur
+   *
+   * @access public
+   * @memberof AuthService
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User>>>} - Retourne la réponse de l'API
+   */
+  public me(): Observable<HttpResponse<ApiReponse<User>>> {
+    const url: string = `${AuthService.API_URL}/me`;
+    return this.httpClient.get<ApiReponse<User>>(url, {
       observe: 'response'
     });
   }
@@ -81,7 +102,7 @@ export class AuthService {
    *
    * @param {UserRegistration} payload - Identifiants d'inscription
    *
-   * @returns {Observable<HttpResponse<ApiReponse<User>>>} - Retourne un Observable<HttpResponse<ApiReponse<User>>>
+   * @returns {Observable<HttpResponse<ApiReponse<User>>>} - Retourne la réponse de l'API
    */
   public register(payload: UserRegistration): Observable<HttpResponse<ApiReponse<User>>> {
     const url: string = `${AuthService.API_URL}/register`;
@@ -92,6 +113,30 @@ export class AuthService {
       email: payload.email,
       password: payload.password,
       birthday: payload.birthday,
+    }, {
+      observe: 'response'
+    });
+  }
+
+  /**
+   * Méthode refreshToken
+   * @method refreshToken
+   *
+   * @description
+   * Méthode refreshToken pour rafraîchir le token
+   *
+   * @access public
+   * @memberof AuthService
+   * @since 1.0.0
+   *
+   * @param {string} refreshToken - Token de rafraîchissement
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<JwtToken>>>} - Retourne la réponse de l'API
+   */
+  public refreshToken(refreshToken: string): Observable<HttpResponse<ApiReponse<JwtToken>>> {
+    const url: string = `${AuthService.API_URL}/refresh-token`;
+    return this.httpClient.post<ApiReponse<JwtToken>>(url, {
+      refreshToken: refreshToken
     }, {
       observe: 'response'
     });

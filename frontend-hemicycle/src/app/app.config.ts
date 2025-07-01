@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, ApplicationRef, inject, PLATFORM_ID, provideAppInitializer, provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { HttpInterceptorFn } from '@angular/common/http';
 import { APP_ROUTES } from '@app/app.routes';
@@ -16,6 +16,14 @@ import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { authReducer } from './core/stores/auth/auth.reducer';
 import { AuthEffects } from './core/stores/auth/auth.effects';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { AUTH_FEATURE_KEY } from './core/stores/auth/auth.state';
+import { LocalStorageService } from 'ngx-webstorage';
+import { isPlatformBrowser } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { REFRESH_TOKEN_KEY } from './core/constants/sotrage-keys.constant';
+import { refresh } from './core/stores/auth/auth.actions';
+import { first, tap } from 'rxjs';
 
 /**
  * Interceptors
@@ -28,7 +36,7 @@ import { AuthEffects } from './core/stores/auth/auth.effects';
  *
  * @see https://angular.dev/guide/http
  */
-const interceptors: HttpInterceptorFn[] = [];
+const interceptors: HttpInterceptorFn[] = [authInterceptor];
 
 /**
  * Configuration client
@@ -44,10 +52,14 @@ const interceptors: HttpInterceptorFn[] = [];
 export const appConfig: ApplicationConfig = {
   providers: [
     provideExperimentalZonelessChangeDetection(),
-    provideHttpClient(withFetch(), withInterceptors(interceptors), withXsrfConfiguration({
-      cookieName: 'csrftoken',
-      headerName: 'X-CSRFToken'
-    })),
+    provideHttpClient(
+      withFetch(),
+      withInterceptors(interceptors),
+      withXsrfConfiguration({
+        cookieName: 'csrftoken',
+        headerName: 'X-CSRFToken'
+      })
+    ),
     provideRouter(APP_ROUTES, withComponentInputBinding()),
     provideClientHydration(withEventReplay(), withIncrementalHydration()),
     provideAnimationsAsync(),
@@ -73,7 +85,7 @@ export const appConfig: ApplicationConfig = {
     withSessionStorage()),
     DialogService,
     provideStore({
-      auth: authReducer
+      [AUTH_FEATURE_KEY]: authReducer
     }),
     provideEffects([AuthEffects])
   ]

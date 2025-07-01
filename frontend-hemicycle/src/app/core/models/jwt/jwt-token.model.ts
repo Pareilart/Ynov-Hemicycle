@@ -40,6 +40,21 @@ export interface JwtToken {
   readonly token: string;
 
   /**
+   * Propriété refreshToken
+   * @readonly
+   *
+   * @description
+   * Token de rafraîchissement JWT
+   *
+   * @access public
+   * @memberof JwtToken
+   * @since 1.0.0
+   *
+   * @type {string} refreshToken
+   */
+  readonly refreshToken: string;
+
+  /**
    * Propriété expiresIn
    * @readonly
    *

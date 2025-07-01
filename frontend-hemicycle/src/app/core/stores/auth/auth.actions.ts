@@ -49,3 +49,34 @@ export const logoutFailure = createAction(
   props<{ status: StoreOperationStatus }>()
 );
 
+export const refresh = createAction(
+  '[Auth] Refresh Token',
+  props<{ refreshToken: string }>()
+);
+
+export const refreshSuccess = createAction(
+  '[Auth] Refresh Token Success',
+  props<{ token: JwtToken, status: StoreOperationStatus }>()
+);
+
+export const refreshFailure = createAction(
+  '[Auth] Refresh Token Failure',
+  props<{ status: StoreOperationStatus }>()
+);
+
+export const fetchMe = createAction(
+  '[Auth] Fetch Me'
+);
+
+export const fetchMeSuccess = createAction(
+  '[Auth] Fetch Me Success',
+  props<{ user: User, status: StoreOperationStatus }>()
+);
+
+export const fetchMeFailure = createAction(
+  '[Auth] Fetch Me Failure',
+  props<{ status: StoreOperationStatus }>()
+);
+
+
+

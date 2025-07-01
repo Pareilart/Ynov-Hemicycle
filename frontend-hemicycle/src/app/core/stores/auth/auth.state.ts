@@ -1,7 +1,7 @@
 import { StoreOperation } from "@core/models/store/store-operation.model";
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 import { User } from "@core/models/user/user.model";
-import { JwtToken } from "@app/core/models/jwt/jwt-token.model";
+import { JwtToken } from "@core/models/jwt/jwt-token.model";
 
 /**
  * Constante AUTH_FEATURE_KEY
