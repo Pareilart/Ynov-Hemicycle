@@ -3,6 +3,7 @@ import { inject, Injectable } from "@angular/core";
 import { ApiReponse } from "@app/core/models/api/api-response.model";
 import { JwtToken } from "@app/core/models/jwt/jwt-token.model";
 import { UserCredentials } from "@app/core/models/user/user-credentials.model";
+import { UserGender } from "@app/core/models/user/user-gender.enum";
 import { UserRegistration } from "@app/core/models/user/user-registration.model";
 import { User } from "@app/core/models/user/user.model";
 import { environment } from "@environments/environment";
@@ -106,8 +107,11 @@ export class AuthService {
    */
   public register(payload: UserRegistration): Observable<HttpResponse<ApiReponse<User>>> {
     const url: string = `${AuthService.API_URL}/register`;
+
+    const sexe: string = payload.gender === UserGender.MALE ? 'Homme' : 'Femme';
+
     return this.httpClient.post<ApiReponse<User>>(url, {
-      sexe: payload.gender,
+      sexe,
       lastName: payload.lastName,
       firstName: payload.firstName,
       email: payload.email,
