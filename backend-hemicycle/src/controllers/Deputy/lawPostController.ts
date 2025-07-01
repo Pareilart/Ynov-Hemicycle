@@ -22,7 +22,7 @@ export const createLawPost = async (req: AuthenticatedRequest, res: Response): P
     const lawPost = new LawPost({
       ...req.body,
       userId: req.user._id,
-      adopted: false, // Par défaut, une nouvelle proposition n'est pas adoptée
+      adopted: false,
       voteYes: 0,
       voteNo: 0,
       voteAbstention: 0,
@@ -30,23 +30,16 @@ export const createLawPost = async (req: AuthenticatedRequest, res: Response): P
       reevaluableCount: 0,
     });
 
-    console.log('Données de la loi avant sauvegarde:', lawPost);
     const savedLawPost = await lawPost.save();
-    console.log('Données de la loi après sauvegarde:', savedLawPost);
-    
     const populatedLawPost = await LawPost.findById(savedLawPost._id).populate('userId', 'firstName lastName email');
-    console.log('Données de la loi après population:', populatedLawPost);
 
     if (!populatedLawPost) {
       throw new Error('Erreur lors de la récupération de la loi créée');
     }
 
     const response = await LawPostDto.toResponse(populatedLawPost);
-    console.log('Données après transformation DTO:', response);
-    
     ResponseHandler.success(res, response, 'Proposition de loi créée avec succès', 201);
   } catch (error: unknown) {
-    console.error('Erreur complète:', error);
     ResponseHandler.error(res, 'Erreur lors de la création de la proposition de loi', error as Error);
   }
 };
