@@ -50,7 +50,10 @@ export class LawPostDto {
     };
   }
 
-  private static async transformReporting(reporting: ILawPostReporting, lawPost: ILawPost): Promise<LawPostReportingResponse> {
+  private static async transformReporting(
+    reporting: ILawPostReporting,
+    lawPost: ILawPost,
+  ): Promise<LawPostReportingResponse> {
     const user = await User.findById(reporting.userId);
     if (!user) throw new Error('User not found');
 
