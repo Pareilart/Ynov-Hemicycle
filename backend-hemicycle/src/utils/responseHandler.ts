@@ -1,10 +1,10 @@
 import { Response } from 'express';
 
-interface ApiResponse<T = any> {
+interface ApiResponse<T = unknown> {
   success: boolean;
   message: string;
   data?: T;
-  error?: any;
+  error?: Error | Record<string, unknown>;
 }
 
 export class ResponseHandler {
@@ -17,7 +17,12 @@ export class ResponseHandler {
     res.status(statusCode).json(response);
   }
 
-  static error(res: Response, message: string = 'Une erreur est survenue', error?: any, statusCode: number = 500): void {
+  static error(
+    res: Response,
+    message: string = 'Une erreur est survenue',
+    error?: Error | Record<string, unknown>,
+    statusCode: number = 500,
+  ): void {
     const response: ApiResponse = {
       success: false,
       message,
@@ -26,19 +31,35 @@ export class ResponseHandler {
     res.status(statusCode).json(response);
   }
 
-  static badRequest(res: Response, message: string = 'Requête invalide', error?: any): void {
+  static badRequest(
+    res: Response,
+    message: string = 'Requête invalide',
+    error?: Error | Record<string, unknown>,
+  ): void {
     this.error(res, message, error, 400);
   }
 
-  static unauthorized(res: Response, message: string = 'Non autorisé', error?: any): void {
+  static unauthorized(
+    res: Response,
+    message: string = 'Non autorisé',
+    error?: Error | Record<string, unknown>,
+  ): void {
     this.error(res, message, error, 401);
   }
 
-  static forbidden(res: Response, message: string = 'Accès interdit', error?: any): void {
+  static forbidden(
+    res: Response,
+    message: string = 'Accès interdit',
+    error?: Error | Record<string, unknown>,
+  ): void {
     this.error(res, message, error, 403);
   }
 
-  static notFound(res: Response, message: string = 'Ressource non trouvée', error?: any): void {
+  static notFound(
+    res: Response,
+    message: string = 'Ressource non trouvée',
+    error?: Error | Record<string, unknown>,
+  ): void {
     this.error(res, message, error, 404);
   }
 }

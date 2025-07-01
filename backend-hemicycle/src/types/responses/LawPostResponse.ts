@@ -37,6 +37,6 @@ export interface LawPostResponse {
   user: UserResponse;
   reactions?: LawReactionResponse[];
   reactions_stats: ReactionStats;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }

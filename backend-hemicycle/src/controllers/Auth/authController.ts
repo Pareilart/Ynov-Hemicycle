@@ -16,7 +16,6 @@ export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
-    // Vérifier si l'utilisateur existe
     const user = await User.findOne({ email })
       .select('+password')
       .populate('role')
@@ -27,14 +26,12 @@ export const login = async (req: Request, res: Response) => {
       return ResponseHandler.unauthorized(res, 'Email ou mot de passe incorrect');
     }
 
-    // Vérifier le mot de passe
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return ResponseHandler.unauthorized(res, 'Email ou mot de passe incorrect');
     }
 
     const token = generateToken(user._id, user.role.name);
-    console.log(token);
     const userResponse = UserDto.toResponse(user);
     userResponse.token = {
       token: token.token,
@@ -44,7 +41,6 @@ export const login = async (req: Request, res: Response) => {
 
     return ResponseHandler.success(res, userResponse);
   } catch (error: any) {
-    console.error('Erreur de connexion:', error);
     return ResponseHandler.error(res, 'Erreur lors de la connexion', error.message);
   }
 };

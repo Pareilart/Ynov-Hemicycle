@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import User from '../../models/User';
 import { UserDto } from '../../types/dto/UserDto';
 import { IUserDocument } from '../../types/interfaces/IUserDocument';
@@ -44,7 +44,11 @@ export const getUserById = async (req: AuthenticatedRequest, res: Response): Pro
       .populate('votingSurvey');
 
     if (user) {
-      ResponseHandler.success(res, UserDto.toResponse(user as unknown as IUserDocument), 'Utilisateur trouvé avec succès');
+      ResponseHandler.success(
+        res,
+        UserDto.toResponse(user as unknown as IUserDocument),
+        'Utilisateur trouvé avec succès',
+      );
     } else {
       ResponseHandler.notFound(res, 'Utilisateur non trouvé');
     }
@@ -56,7 +60,6 @@ export const getUserById = async (req: AuthenticatedRequest, res: Response): Pro
 export const createUser = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const isAdmin = await AuthUtils.checkIsAdmin(req, res);
-    console.log(req.body);
     if (!isAdmin) {
       ResponseHandler.forbidden(res, 'Accès refusé. Droits administrateur requis');
       return;
@@ -112,9 +115,7 @@ export const deleteUser = async (req: AuthenticatedRequest, res: Response): Prom
       return;
     }
 
-    // Vérifier si l'utilisateur à supprimer est un admin
     if (userToDelete.role && (userToDelete.role as any).name === RoleEnum.ADMIN) {
-      // Compter le nombre total d'administrateurs
       const adminRole = await Role.findOne({ name: RoleEnum.ADMIN });
       if (!adminRole) {
         ResponseHandler.error(res, 'Erreur: rôle administrateur non trouvé');

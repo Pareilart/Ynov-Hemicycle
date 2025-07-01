@@ -1,8 +1,8 @@
-import { Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
-import { AuthenticatedRequest } from '../middleware/auth';
+import { IAuthenticatedRequest } from '../types/interfaces/IAuthenticatedRequest';
 import User from '../models/User';
 import { RoleEnum } from '../enum/RoleEnum';
+import { IRole } from '../types/interfaces/IRole';
 
 export class AuthUtils {
   private static readonly SALT_ROUNDS = 10;
@@ -11,28 +11,28 @@ export class AuthUtils {
     return bcrypt.hash(password, this.SALT_ROUNDS);
   }
 
-  public static async checkIsAdmin(req: AuthenticatedRequest, res: Response): Promise<boolean> {
+  public static async checkIsAdmin(req: IAuthenticatedRequest): Promise<boolean> {
     if (!req.user) {
       return false;
     }
 
     const user = await User.findById(req.user._id).populate('role');
 
-    if (!user || !user.role || (user.role as any).name !== RoleEnum.ADMIN) {
+    if (!user || !user.role || (user.role as IRole).name !== RoleEnum.ADMIN) {
       return false;
     }
 
     return true;
   }
 
-  public static async checkIsDeputy(req: AuthenticatedRequest, res: Response): Promise<boolean> {
+  public static async checkIsDeputy(req: IAuthenticatedRequest): Promise<boolean> {
     if (!req.user) {
       return false;
     }
 
     const user = await User.findById(req.user._id).populate('role');
 
-    if (!user || !user.role || (user.role as any).name !== RoleEnum.DEPUTY) {
+    if (!user || !user.role || (user.role as IRole).name !== RoleEnum.DEPUTY) {
       return false;
     }
 

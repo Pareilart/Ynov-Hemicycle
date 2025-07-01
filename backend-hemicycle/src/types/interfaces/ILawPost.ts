@@ -2,6 +2,7 @@ import { Types } from 'mongoose';
 import { IUserDocument } from './IUserDocument';
 
 export interface ILawPost {
+  _id: Types.ObjectId;
   legislature: number;
   title: string;
   article_constitutionnel: number;
@@ -15,4 +16,6 @@ export interface ILawPost {
   has_reevaluable: boolean;
   reevaluable_count: number;
   user_id: Types.ObjectId | IUserDocument;
+  createdAt: Date;
+  updatedAt: Date;
 }
