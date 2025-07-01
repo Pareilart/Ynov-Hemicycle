@@ -39,6 +39,10 @@ export const APP_ROUTES: Routes = [
             canActivate: [AuthGuard],
             loadChildren: () => import('@features/legislation/legislation.routes').then(m => m.LEGISLATION_ROUTES)
           },
+          {
+            path: 'legal',
+            loadChildren: () => import('@features/legal/legal.routes').then(m => m.LEGAL_ROUTES)
+          },
         ]
       },
     ]
