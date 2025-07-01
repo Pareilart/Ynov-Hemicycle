@@ -21,7 +21,8 @@ export const {
 export const selectCurrentUser = createSelector(
   selectAuthState,
   selectUserEntities,
-  (state: AuthState, entities: Dictionary<User>) => state.selectedUserId ? entities[state.selectedUserId] : null
+  (state: AuthState, entities: Dictionary<User>) =>
+    state.selectedUserId ? (entities[state.selectedUserId] || null) : null
 );
 
 export const selectIsAuthenticated = createSelector(

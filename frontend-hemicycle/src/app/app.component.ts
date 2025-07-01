@@ -1,4 +1,4 @@
-import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { Component, inject, PLATFORM_ID, Signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CookieSettingsComponent } from '@shared/components/cookie-settings/cookie-settings.component';
 import { MetaService } from '@core/services/meta.service';
@@ -9,6 +9,8 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { REFRESH_TOKEN_KEY } from './core/constants/sotrage-keys.constant';
 import { refresh } from './core/stores/auth/auth.actions';
 import { OnInit } from '@angular/core';
+import { selectCurrentUser } from './core/stores/auth/auth.selectors';
+import { User } from './core/models/user/user.model';
 
 @Component({
   selector: 'app-root',
@@ -71,6 +73,9 @@ export class AppComponent implements OnInit {
 
   private readonly platformId: Object =
     inject<Object>(PLATFORM_ID);
+
+  private readonly user: Signal<User | null> =
+    this.store.selectSignal<User | null>(selectCurrentUser);
   //#endregion
 
   //#region Méthodes
