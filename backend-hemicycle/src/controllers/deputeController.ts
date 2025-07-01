@@ -19,7 +19,7 @@ export const getDeputeById = async (req: Request, res: Response): Promise<void> 
     if (depute) {
       res.json(depute);
     } else {
-      res.status(404).json({ message: "Député non trouvé" });
+      res.status(404).json({ message: 'Député non trouvé' });
     }
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
@@ -46,7 +46,7 @@ export const updateDepute = async (req: Request, res: Response): Promise<void> =
       const deputeMisAJour = await depute.save();
       res.json(deputeMisAJour);
     } else {
-      res.status(404).json({ message: "Député non trouvé" });
+      res.status(404).json({ message: 'Député non trouvé' });
     }
   } catch (error) {
     res.status(400).json({ message: (error as Error).message });
@@ -59,9 +59,9 @@ export const deleteDepute = async (req: Request, res: Response): Promise<void> =
     const depute = await Depute.findById(req.params.id);
     if (depute) {
       await depute.deleteOne();
-      res.json({ message: "Député supprimé" });
+      res.json({ message: 'Député supprimé' });
     } else {
-      res.status(404).json({ message: "Député non trouvé" });
+      res.status(404).json({ message: 'Député non trouvé' });
     }
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });

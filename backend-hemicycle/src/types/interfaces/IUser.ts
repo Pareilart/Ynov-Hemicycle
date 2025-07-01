@@ -21,4 +21,4 @@ export interface IUserPopulated extends Omit<IUser, 'role' | 'addresses'> {
   _id: Types.ObjectId;
   role: IRole;
   addresses?: IAddresses;
-} 
+}

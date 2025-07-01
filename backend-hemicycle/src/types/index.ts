@@ -10,4 +10,4 @@ export * from './interfaces/ILawPost';
 export * from './responses/AddressesResponse';
 export * from './responses/PermissionResponse';
 export * from './responses/RoleResponse';
-export * from './responses/UserResponse'; 
+export * from './responses/UserResponse';
