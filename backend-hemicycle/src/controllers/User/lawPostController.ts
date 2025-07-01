@@ -73,13 +73,17 @@ export const addLawReaction = async (req: AuthenticatedRequest, res: Response): 
 
     // Transformer la réponse en utilisant LawPostDto sans les réactions
     const response = LawPostDto.toResponse(lawPost, []);
-    ResponseHandler.success(res, response, existingReaction ? 'Réaction mise à jour avec succès' : 'Réaction ajoutée avec succès', existingReaction ? 200 : 201);
-  } catch (error: any) {
+    ResponseHandler.success(
+      res,
+      response,
+      existingReaction ? 'Réaction mise à jour avec succès' : 'Réaction ajoutée avec succès',
+      existingReaction ? 200 : 201,
+    );
+  } catch (error: unknown) {
     if (error instanceof mongoose.Error.ValidationError) {
-      ResponseHandler.badRequest(res, 'Données de réaction invalides', error.message);
+      ResponseHandler.badRequest(res, 'Données de réaction invalides', error as Error);
     } else {
-      console.error('Erreur lors de l\'ajout de la réaction:', error);
-      ResponseHandler.error(res, 'Erreur lors de l\'ajout de la réaction', error.message);
+      ResponseHandler.error(res, 'Erreur lors de l\'ajout de la réaction', error as Error);
     }
   }
 };
@@ -114,8 +118,7 @@ export const getLawPost = async (req: AuthenticatedRequest, res: Response): Prom
 
     const response = LawPostDto.toResponse(lawPost, reactions);
     ResponseHandler.success(res, response, 'Loi récupérée avec succès');
-  } catch (error: any) {
-    console.error('Erreur lors de la récupération de la loi:', error);
-    ResponseHandler.error(res, 'Erreur lors de la récupération de la loi', error.message);
+  } catch (error: unknown) {
+    ResponseHandler.error(res, 'Erreur lors de la récupération de la loi', error as Error);
   }
 };

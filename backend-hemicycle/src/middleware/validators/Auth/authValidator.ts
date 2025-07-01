@@ -73,3 +73,10 @@ export const loginValidator = [
     .notEmpty()
     .withMessage('Le mot de passe ne peut pas être vide'),
 ];
+
+export const refreshTokenValidator = [
+  body('refreshToken')
+    .isString()
+    .notEmpty()
+    .withMessage('Le refresh token est requis'),
+];

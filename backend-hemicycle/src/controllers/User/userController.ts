@@ -227,7 +227,7 @@ export const exportProfile = async (
       exportData.lawReactions = userReactions.map((reaction) => {
         const lawPost = reaction.law_post_id as Document<unknown, {}, ILawPost>;
         return {
-          reaction_id: (reaction as ILawReaction)._id.toString(),
+          reaction_id: ((reaction as unknown) as ILawReaction)._id.toString(),
           loi_titre: lawPost.get('title') || '',
           type_reaction: reaction.reaction_type,
           emoji_reaction: reaction.reaction_emoji || '',

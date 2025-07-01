@@ -2,6 +2,14 @@ import { IUserDocument } from '../interfaces/IUserDocument';
 import { UserResponse } from '../responses/UserResponse';
 import { RoleResponse } from '../responses/RoleResponse';
 import { AddressesResponse } from '../responses/AddressesResponse';
+import { VotingSurveyResponse } from '../responses/VotingSurveyResponse';
+
+interface TokenResponse {
+  token: string;
+  refreshToken: string;
+  expiresIn: number;
+  exp: number;
+}
 
 export class UserDto {
   public static toResponse(userDoc: IUserDocument): UserResponse {
@@ -45,7 +53,7 @@ export class UserDto {
         electoral_registration: userDoc.votingSurvey.electoral_registration,
         positioning: userDoc.votingSurvey.positioning,
         proximity: userDoc.votingSurvey.proximity,
-      };
+      } as VotingSurveyResponse;
     }
 
     return response;

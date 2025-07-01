@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { IUser } from '../types';
 import User from '../models/User';
 import { AuthUtils } from '../utils/authUtils';
+import { ResponseHandler } from '../utils/responseHandler';
 
 export interface AuthenticatedRequest extends Request {
   user?: IUser;
@@ -13,47 +14,47 @@ export const auth = async (req: AuthenticatedRequest, res: Response, next: NextF
     const token = req.header('Authorization')?.replace('Bearer ', '');
 
     if (!token) {
-      return res.status(401).json({ message: 'Authentification requise' });
+      return ResponseHandler.unauthorized(res, 'Authentification requise');
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string };
     const user = await User.findById(decoded.userId).populate('role');
 
     if (!user) {
-      return res.status(401).json({ message: 'Utilisateur non trouvé' });
+      return ResponseHandler.unauthorized(res, 'Utilisateur non trouvé');
     }
 
     req.user = user;
     next();
   } catch (error) {
-    res.status(401).json({ message: 'Token invalide' });
+    ResponseHandler.unauthorized(res, 'Token invalide');
   }
 };
 
 export const isAdmin = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
-    const isAdmin = await AuthUtils.checkIsAdmin(req, res);
+    const hasAdminRole = await AuthUtils.checkIsAdmin(req);
 
-    if (!isAdmin) {
-      return res.status(403).json({ message: 'Accès refusé. Droits administrateur requis' });
+    if (!hasAdminRole) {
+      return ResponseHandler.forbidden(res, 'Accès refusé. Droits administrateur requis');
     }
 
     next();
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la vérification des droits' });
+    ResponseHandler.error(res, 'Erreur lors de la vérification des droits');
   }
 };
 
 export const isDeputy = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
-    const isDeputy = await AuthUtils.checkIsDeputy(req, res);
+    const hasDeputyRole = await AuthUtils.checkIsDeputy(req);
 
-    if (!isDeputy) {
-      return res.status(403).json({ message: 'Accès refusé. Droits de député requis' });
+    if (!hasDeputyRole) {
+      return ResponseHandler.forbidden(res, 'Accès refusé. Droits de député requis');
     }
 
     next();
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la vérification des droits' });
+    ResponseHandler.error(res, 'Erreur lors de la vérification des droits');
   }
 };

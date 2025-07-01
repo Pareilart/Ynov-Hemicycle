@@ -9,10 +9,11 @@ import { UserService } from '../../services/userService';
 import { IUserCreate } from '../../types/interfaces/IUserCreate';
 import Role from '../../models/Role';
 import { RoleEnum } from '../../enum/RoleEnum';
+import { IRole } from '../../types/interfaces/IRole';
 
 export const getAllUsers = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const isAdmin = await AuthUtils.checkIsAdmin(req, res);
+    const isAdmin = await AuthUtils.checkIsAdmin(req);
     if (!isAdmin) {
       ResponseHandler.forbidden(res, 'Accès refusé. Droits administrateur requis');
       return;
@@ -32,7 +33,7 @@ export const getAllUsers = async (req: AuthenticatedRequest, res: Response): Pro
 
 export const getUserById = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const isAdmin = await AuthUtils.checkIsAdmin(req, res);
+    const isAdmin = await AuthUtils.checkIsAdmin(req);
     if (!isAdmin) {
       ResponseHandler.forbidden(res, 'Accès refusé. Droits administrateur requis');
       return;
@@ -59,7 +60,7 @@ export const getUserById = async (req: AuthenticatedRequest, res: Response): Pro
 
 export const createUser = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const isAdmin = await AuthUtils.checkIsAdmin(req, res);
+    const isAdmin = await AuthUtils.checkIsAdmin(req);
     if (!isAdmin) {
       ResponseHandler.forbidden(res, 'Accès refusé. Droits administrateur requis');
       return;
@@ -88,7 +89,7 @@ export const createUser = async (req: AuthenticatedRequest, res: Response): Prom
 
 export const updateUser = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const isAdmin = await AuthUtils.checkIsAdmin(req, res);
+    const isAdmin = await AuthUtils.checkIsAdmin(req);
     if (!isAdmin) {
       ResponseHandler.forbidden(res, 'Accès refusé. Droits administrateur requis');
       return;
@@ -103,7 +104,7 @@ export const updateUser = async (req: AuthenticatedRequest, res: Response): Prom
 
 export const deleteUser = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const isAdmin = await AuthUtils.checkIsAdmin(req, res);
+    const isAdmin = await AuthUtils.checkIsAdmin(req);
     if (!isAdmin) {
       ResponseHandler.forbidden(res, 'Accès refusé. Droits administrateur requis');
       return;
@@ -115,7 +116,7 @@ export const deleteUser = async (req: AuthenticatedRequest, res: Response): Prom
       return;
     }
 
-    if (userToDelete.role && (userToDelete.role as any).name === RoleEnum.ADMIN) {
+    if (userToDelete.role && (userToDelete.role as IRole).name === RoleEnum.ADMIN) {
       const adminRole = await Role.findOne({ name: RoleEnum.ADMIN });
       if (!adminRole) {
         ResponseHandler.error(res, 'Erreur: rôle administrateur non trouvé');

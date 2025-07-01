@@ -25,6 +25,7 @@ export interface UserResponse {
   addresses?: AddressesResponse;
   token? : {
     token : string;
+    refreshToken : string;
     expiresIn : number;
     exp : number;
   };

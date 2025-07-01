@@ -5,7 +5,7 @@ import User from '../../models/User';
 import Role from '../../models/Role';
 import { RoleEnum } from '../../enum/RoleEnum';
 import { AuthenticatedRequest } from '../../middleware/auth';
-import { generateToken } from '../../utils/jwtUtils';
+import { generateToken, refreshAccessToken } from '../../utils/jwtUtils';
 import { IUserDocument } from '../../types/interfaces/IUserDocument';
 import { IUserCreate } from '../../types/interfaces/IUserCreate';
 import { ResponseHandler } from '../../utils/responseHandler';
@@ -31,17 +31,42 @@ export const login = async (req: Request, res: Response) => {
       return ResponseHandler.unauthorized(res, 'Email ou mot de passe incorrect');
     }
 
-    const token = generateToken(user._id, user.role.name);
+    const tokens = generateToken(user._id, user.role.name);
     const userResponse = UserDto.toResponse(user);
     userResponse.token = {
-      token: token.token,
-      expiresIn: token.expiresIn,
-      exp: token.expiresAt.getTime(),
+      token: tokens.token,
+      refreshToken: tokens.refreshToken,
+      expiresIn: tokens.expiresIn,
+      exp: tokens.expiresAt.getTime(),
     };
 
     return ResponseHandler.success(res, userResponse);
   } catch (error: any) {
     return ResponseHandler.error(res, 'Erreur lors de la connexion', error.message);
+  }
+};
+
+export const refreshToken = async (req: Request, res: Response) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return ResponseHandler.badRequest(res, 'Refresh token manquant');
+    }
+
+    const newTokens = refreshAccessToken(refreshToken);
+    if (!newTokens) {
+      return ResponseHandler.unauthorized(res, 'Refresh token invalide ou expiré');
+    }
+
+    return ResponseHandler.success(res, {
+      token: newTokens.token,
+      refreshToken: newTokens.refreshToken,
+      expiresIn: newTokens.expiresIn,
+      exp: newTokens.expiresAt.getTime(),
+    });
+  } catch (error: any) {
+    return ResponseHandler.error(res, 'Erreur lors du rafraîchissement du token', error.message);
   }
 };
 
@@ -62,6 +87,7 @@ export const register = async (req: Request, res: Response) => {
 
     createdUser.token = {
       token: token.token,
+      refreshToken: token.refreshToken,
       expiresIn: token.expiresIn,
       exp: token.expiresAt.getTime(),
     };
