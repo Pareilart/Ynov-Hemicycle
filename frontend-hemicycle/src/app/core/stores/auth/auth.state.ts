@@ -47,7 +47,7 @@ export const userAdapter: EntityAdapter<User> = createEntityAdapter<User>({
  *
  * @author Valentin FORTIN <contact@valentin-fortin.pro>
  */
-export interface AuthState extends EntityState<User> {
+export interface AuthState {
   //#region Propriétés
   /**
    * Propriété operation
@@ -63,17 +63,17 @@ export interface AuthState extends EntityState<User> {
   operation: StoreOperation;
 
   /**
-   * Propriété selectedUserId
+   * Propriété user
    *
    * @description
-   * Identifiant de l'utilisateur sélectionné
+   * Utilisateur connecté
    *
    * @memberof AuthState
    * @since 1.0.0
    *
-   * @type {string | null} selectedUserId
+   * @type {User | null} user
    */
-  selectedUserId: string | null;
+  user: User | null;
 
   /**
    * Propriété token
@@ -114,12 +114,12 @@ export interface AuthState extends EntityState<User> {
  *
  * @author Valentin FORTIN <contact@valentin-fortin.pro>
  */
-export const initialAuthState: AuthState = userAdapter.getInitialState({
+export const initialAuthState: AuthState = {
   operation: {
     loading: false,
     status: null
   },
-  selectedUserId: null,
+  user: null,
   token: null,
   isAuthenticated: false
-});
+};

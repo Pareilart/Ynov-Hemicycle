@@ -22,7 +22,7 @@ export const authReducer = createReducer(
         message: status.message
       }
     },
-    selectedUserId: user.id,
+    user: user,
     token: token,
     isAuthenticated: true
   })),
@@ -54,7 +54,7 @@ export const authReducer = createReducer(
         message: status.message
       }
     },
-    selectedUserId: user.id,
+    user: user,
     isAuthenticated: false
   })),
   on(AuthActions.registerFailure, (state, { status }) => ({
@@ -81,7 +81,7 @@ export const authReducer = createReducer(
       loading: false,
       status: null
     },
-    selectedUserId: null,
+    user: null,
     token: null,
     isAuthenticated: false
   })),
@@ -102,6 +102,22 @@ export const authReducer = createReducer(
     isAuthenticated: true
   })),
   on(AuthActions.refreshFailure, (state, { status }) => ({
+    ...state,
+    operation: {
+      loading: false,
+      status: {
+        code: status.code,
+        label: status.label,
+        message: status.message
+      }
+    }
+  })),
+  on(AuthActions.fetchMeSuccess, (state, { user }) => ({
+    ...state,
+    user: user,
+    isAuthenticated: true
+  })),
+  on(AuthActions.fetchMeFailure, (state, { status }) => ({
     ...state,
     operation: {
       loading: false,
