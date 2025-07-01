@@ -16,6 +16,7 @@ import Role from '../../models/Role';
 import { RoleEnum } from '../../enum/RoleEnum';
 import LawReaction from '../../models/LawReaction';
 import { ILawPost } from '../../types/interfaces/ILawPost';
+import { ILawReaction } from '../../types/interfaces/ILawReaction';
 
 export const userOnboarding = async (
   req: AuthenticatedRequest,
@@ -226,11 +227,11 @@ export const exportProfile = async (
       exportData.lawReactions = userReactions.map((reaction) => {
         const lawPost = reaction.law_post_id as Document<unknown, {}, ILawPost>;
         return {
-          reaction_id: (reaction as any)._id.toString(),
+          reaction_id: (reaction as ILawReaction)._id.toString(),
           loi_titre: lawPost.get('title') || '',
           type_reaction: reaction.reaction_type,
           emoji_reaction: reaction.reaction_emoji || '',
-          date_reaction: new Date(reaction.created_at).toLocaleDateString(
+          date_reaction: new Date(reaction.createdAt).toLocaleDateString(
             'fr-FR',
           ),
         };
