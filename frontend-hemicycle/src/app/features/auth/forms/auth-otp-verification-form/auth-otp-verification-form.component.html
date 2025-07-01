@@ -1,4 +1,4 @@
-<form class="flex flex-col gap-5 w-full" [formGroup]="form" (ngSubmit)="onSubmit()">
+<form class="flex flex-col gap-5 w-full h-full" [formGroup]="form" (ngSubmit)="onSubmit()">
   <section class="flex flex-col gap-5">
     <h1 class="font-bold text-primary-500 text-3xl">Confirmation OTP</h1>
     <p class="text-sm text-surface-500 dark:text-surface-400">
@@ -17,7 +17,6 @@
         [integerOnly]="true"
       />
     </div>
-
   </section>
 
   <section class="flex flex-row gap-3">
@@ -30,9 +29,9 @@
     />
   </section>
 
-  <p class="text-center text-sm text-surface-500 dark:text-surface-400">
+  <p class="mt-auto text-center text-sm text-surface-500 dark:text-surface-400">
     Vous n'avez pas reçu de code ?
-    <a [routerLink]="['/auth', 'login']" class="text-primary-500 hover:underline focus:underline focus:outline-none">
+    <a [routerLink]="['/auth', 'login']" class="font-semibold text-primary-500 hover:underline focus:underline focus:outline-none">
       Envoyer un nouveau code
     </a>
   </p>

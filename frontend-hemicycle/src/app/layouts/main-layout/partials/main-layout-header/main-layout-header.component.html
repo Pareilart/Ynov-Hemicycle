@@ -1,1 +1,83 @@
-<header></header>
+<header>
+  <p-megamenu
+    [model]="items()"
+    orientation="horizontal"
+    class="bg-transparent container mx-auto flex w-full [&_.p-megamenu]:bg-transparent [&_.p-megamenu-submenu-label]:text-sm [&_.p-megamenu-end]:ml-0 [&_.p-megamenu-start]:mr-auto"
+    styleClass="flex w-full py-8 px-4 md:px-0 border-0"
+  >
+    <!-- Début du menu (partie à gauche) -->
+    <ng-template #start>
+      <section class="flex items-center gap-2">
+        <a class="flex items-center gap-3" [routerLink]="['/']">
+          <div class="flex items-center">
+            <img [src]="logo" alt="Logo" class="h-10 rounded-sm"/>
+          </div>
+
+          <div class="flex flex-col justify-center">
+            <h1 class="text-lg font-medium text-surface-0">{{ appName }}</h1>
+            <span class="text-xs text-surface-400"></span>
+          </div>
+        </a>
+      </section>
+    </ng-template>
+
+    <!-- Élément du menu -->
+    <ng-template #item let-item>
+      @let root = item.items && item.items.length > 0;
+
+      @if (root) {
+        @if (item.routerLink || item.url) {
+          <a [routerLink]="item.routerLink" [href]="item.url" class="flex">
+            <ng-container [ngTemplateOutlet]="rootItemContent"/>
+          </a>
+        }
+
+        @if (!item.routerLink || !item.url) {
+          <button class="flex h-full" type="button">
+            <ng-container [ngTemplateOutlet]="rootItemContent"/>
+          </button>
+        }
+
+        <ng-template #rootItemContent>
+          <div class="cursor-pointer overflow-hidden relative px-5 py-1 flex gap-3 items-center hover:bg-surface-100 rounded-md transition-colors">
+            <section class="flex items-center flex-row gap-4">
+              <span class="font-medium text-surface-950">{{ item.label }}</span>
+            </section>
+
+            <section class="flex items-center">
+              <i class="pi pi-chevron-down text-xs text-surface-400"></i>
+            </section>
+          </div>
+        </ng-template>
+      }
+
+
+      @if (!root && !item.image) {
+        @if (item.routerLink || item.url) {
+          <a [routerLink]="item.routerLink" [href]="item.url" class="flex cursor-pointer">
+            <ng-container [ngTemplateOutlet]="itemContent"/>
+          </a>
+        }
+
+        @if (!item.routerLink || !item.url) {
+          <div class="flex">
+            <ng-container [ngTemplateOutlet]="itemContent"/>
+          </div>
+        }
+
+        <ng-template #itemContent>
+          <div class="select-none flex flex-row gap-4 items-center px-4 py-2 overflow-hidden relative w-full hover:bg-surface-100 rounded-md transition-colors">
+            <section class="flex items-center flex-row gap-2">
+              @if (item.icon; as icon) { <i [class]="icon" class="text-xl text-surface-500"></i> }
+            </section>
+
+            <section class="flex item-center flex-col">
+              <span class="font-semibold">{{ item.label }}</span>
+              <p class="text-sm text-surface-500">{{ item.subtext }}</p>
+            </section>
+          </div>
+        </ng-template>
+      }
+    </ng-template>
+  </p-megamenu>
+</header>

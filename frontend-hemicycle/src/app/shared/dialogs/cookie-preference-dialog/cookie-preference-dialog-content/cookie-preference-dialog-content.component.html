@@ -1,0 +1,12 @@
+<div class="flex flex-col gap-3">
+  <section class="flex flex-col">
+    <p class="text-surface-700 mb-4">
+      Notre site utilise des cookies pour améliorer votre expérience.
+      Vous pouvez personnaliser vos préférences ci-dessous.
+    </p>
+  </section>
+
+  <section class="flex flex-col">
+    <app-cookie-preference-form (submit)="onPreferenceSubmitted()"/>
+  </section>
+</div>

@@ -1,0 +1,106 @@
+<form class="flex flex-col gap-2" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <section class="flex flex-col">
+    <p-accordion>
+      <p-accordion-panel value="necessary">
+        <p-accordion-header>
+          <div class="flex flex-row justify-between items-center w-full mr-5">
+            <div class="flex flex-row items-center gap-2">
+              <span class="font-semibold text-surface-700">Cookies Essentiels</span>
+              <span class="hidden sm:inline text-xs font-normal text-surface-500">(Toujours actifs)</span>
+            </div>
+
+            <p-toggleswitch
+              appStopPropagation
+              formControlName="necessary"
+            />
+          </div>
+        </p-accordion-header>
+
+        <p-accordion-content>
+          <p class="text-surface-700">
+            Ces cookies sont indispensables pour assurer les fonctionnalités de base du site, comme la navigation et
+            l'accès aux zones sécurisées. Le site ne peut pas fonctionner correctement sans ces cookies.
+          </p>
+        </p-accordion-content>
+      </p-accordion-panel>
+
+      <p-accordion-panel value="analytics">
+        <p-accordion-header>
+          <div class="flex flex-row justify-between items-center w-full mr-5">
+            <div class="flex flex-row items-center gap-2">
+              <span class="font-semibold text-surface-700">Analyse d'Audience</span>
+            </div>
+            <p-toggleswitch
+              appStopPropagation
+              formControlName="analytics"
+            />
+          </div>
+        </p-accordion-header>
+
+        <p-accordion-content>
+          <p class="text-surface-700">
+            Ces cookies nous aident à comprendre comment les visiteurs interagissent avec notre site en collectant des
+            informations de manière anonyme. Les données récoltées nous permettent d'améliorer continuellement notre
+            site et son contenu.
+          </p>
+        </p-accordion-content>
+      </p-accordion-panel>
+
+      <p-accordion-panel value="marketing">
+        <p-accordion-header>
+          <div class="flex flex-row justify-between items-center w-full mr-5">
+            <div class="flex flex-row items-center gap-2">
+              <span class="font-semibold text-surface-700">Publicité Ciblée</span>
+            </div>
+            <p-toggleswitch
+              appStopPropagation
+              formControlName="marketing"
+            />
+          </div>
+        </p-accordion-header>
+
+        <p-accordion-content>
+          <p class="text-surface-700">
+            Ces cookies sont utilisés pour vous proposer des publicités plus pertinentes en fonction de vos centres
+            d'intérêt. Ils permettent également de limiter le nombre d'affichages d'une même publicité et d'évaluer
+            l'efficacité des campagnes publicitaires.
+          </p>
+        </p-accordion-content>
+      </p-accordion-panel>
+
+      <p-accordion-panel value="functionality">
+        <p-accordion-header>
+          <div class="flex flex-row justify-between items-center w-full mr-5">
+            <div class="flex flex-row items-center gap-2">
+              <span class="font-semibold text-surface-700">Fonctionnalités Avancées</span>
+            </div>
+            <p-toggleswitch
+              appStopPropagation
+              formControlName="functionality"
+            />
+          </div>
+        </p-accordion-header>
+
+        <p-accordion-content>
+          <p class="text-surface-700">
+            Ces cookies permettent d'activer des fonctionnalités avancées comme la mémorisation de vos préférences, la
+            lecture de vidéos intégrées et l'accès à des outils personnalisés. Leur désactivation peut affecter
+            certaines fonctionnalités du site.
+          </p>
+        </p-accordion-content>
+      </p-accordion-panel>
+    </p-accordion>
+  </section>
+
+  <section class="flex flex-col mt-10">
+    <div class="flex flex-row gap-3">
+      <p-button
+        class="flex-1"
+        styleClass="w-full"
+        label="Enregistrer mes préférences"
+        severity="primary"
+        type="submit"
+      />
+    </div>
+  </section>
+</form>

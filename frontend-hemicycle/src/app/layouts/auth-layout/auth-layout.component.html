@@ -1,7 +1,13 @@
-<div class="grid place-content-center h-dvh bg-surface-50">
+<div class="flex flex-row h-dvh">
+  <section class="bg-gradient-to-b from-primary-500 to-tertiary-500 flex-1 py-10 sm:py-15 md:py-5 px-10 sm:px-15 md:px-[10%] bg-primary-500 hidden lg:flex">
+
+  </section>
+
   <!-- Contenu -->
-  <app-auth-layout-content class="w-full">
-    <router-outlet/>
-  </app-auth-layout-content>
+  <section class="flex-1 py-10 sm:py-15 md:py-25 px-10 sm:px-15 md:px-[10%]">
+    <app-auth-layout-content>
+      <router-outlet/>
+    </app-auth-layout-content>
+  </section>
 </div>
 

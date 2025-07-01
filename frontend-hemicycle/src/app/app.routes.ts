@@ -27,7 +27,16 @@ export const APP_ROUTES: Routes = [
       {
         path: '',
         component: MainLayoutComponent,
-        loadChildren: () => import('@features/main/main.routes').then(m => m.MAIN_ROUTES)
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('@features/main/main.routes').then(m => m.MAIN_ROUTES)
+          },
+          {
+            path: 'legislation',
+            loadChildren: () => import('@features/legislation/legislation.routes').then(m => m.LEGISLATION_ROUTES)
+          },
+        ]
       },
     ]
   },

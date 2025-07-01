@@ -11,6 +11,7 @@ import { provideNgxWebstorage, withLocalStorage, withNgxWebstorageConfig, withSe
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
+import { DialogService } from 'primeng/dynamicdialog';
 
 /**
  * Interceptors
@@ -78,5 +79,6 @@ export const appConfig: ApplicationConfig = {
       withLocalStorage(),
       withSessionStorage()
     ),
+    DialogService
   ]
 };

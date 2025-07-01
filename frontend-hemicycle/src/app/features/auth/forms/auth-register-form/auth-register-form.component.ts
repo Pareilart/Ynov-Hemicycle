@@ -96,7 +96,7 @@ type GenderOption = {
     SelectModule
   ],
   templateUrl: './auth-register-form.component.html',
-  styleUrl: './auth-register-form.component.css'
+  styleUrl: './auth-register-form.component.css',
 })
 export class AuthRegisterFormComponent {
   //#region Propriétés

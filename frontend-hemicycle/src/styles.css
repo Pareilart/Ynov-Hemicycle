@@ -29,6 +29,20 @@
   --p-surface-950: var(--color-gray-950); */
 }
 
+@theme {
+  --color-tertiary-50: #f9e6f8;
+  --color-tertiary-100: #f2c0ef;
+  --color-tertiary-200: #e996e5;
+  --color-tertiary-300: #e06bdb;
+  --color-tertiary-400: #d847d3;
+  --color-tertiary-500: #d026c9;
+  --color-tertiary-600: #b31fa9;
+  --color-tertiary-700: #93278F;
+  --color-tertiary-800: #6d1c6a;
+  --color-tertiary-900: #4a1248;
+  --color-tertiary-950: #2a0a28;
+}
+
 router-outlet {
   display: none;
 }

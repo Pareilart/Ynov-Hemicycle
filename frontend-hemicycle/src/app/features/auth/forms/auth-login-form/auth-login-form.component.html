@@ -1,11 +1,35 @@
-<form class="flex flex-col gap-5 w-full" [formGroup]="form" (ngSubmit)="onSubmit()">
-  <section class="flex flex-col gap-5">
+<form class="flex flex-col gap-5 w-full h-full" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <section class="flex flex-col gap-5 mb-5">
     <h1 class="font-bold text-primary-500 text-3xl">Connexion</h1>
     <p class="text-sm text-surface-500 dark:text-surface-400">Connectez-vous pour accéder à votre compte</p>
   </section>
 
+  <section class="flex flex-col gap-5">
+    <div class="flex flex-row gap-3 justify-center flex-wrap">
+      @for (provider of providers(); track $index) {
+        <p-button
+          class="flex-1"
+          type="button"
+          severity="secondary"
+          [outlined]="true"
+          [fluid]="true"
+          [icon]="provider.icon"
+          [label]="provider.name"
+        />
+      }
+    </div>
+
+    <p-divider styleClass="m-0" layout="horizontal">
+      <span>OU</span>
+    </p-divider>
+  </section>
+
   <section class="flex flex-col gap-1">
-    <label for="email">Email</label>
+    <label for="email" class="flex flex-row gap-1">
+      <span class="font-medium">Adresse e-mail</span>
+      <span class="text-red-500">*</span>
+    </label>
+
     <input
       id="email"
       formControlName="email"
@@ -18,32 +42,20 @@
   </section>
 
   <section class="flex flex-col gap-1">
-    <label for="password">Mot de passe</label>
+    <label for="password" class="flex flex-row gap-1">
+      <span class="font-medium">Mot de passe</span>
+      <span class="text-red-500">*</span>
+    </label>
+
     <p-password
-      weakLabel="Faible"
-      strongLabel="Fort"
-      mediumLabel="Moyen"
       formControlName="password"
       autocomplete="current-password"
       placeholder="Votre mot de passe"
       inputId="password"
       [fluid]="true"
       [toggleMask]="true"
-    >
-      <ng-template #header>
-        <div class="font-semibold text-xm mb-4">Saisissez votre mot de passe</div>
-      </ng-template>
-
-      <ng-template #footer>
-        <p-divider />
-        <ul class="pl-2 ml-2 my-0 leading-normal">
-          <li>Contient au moins une minuscule</li>
-          <li>Contient au moins une majuscule</li>
-          <li>Contient au moins un chiffre</li>
-          <li>Contient au moins 8 caractères</li>
-        </ul>
-      </ng-template>
-    </p-password>
+      [feedback]="false"
+    />
   </section>
 
   <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
@@ -71,29 +83,9 @@
     />
   </section>
 
-  <section class="flex flex-col gap-5">
-    <p-divider styleClass="m-0" layout="horizontal">
-      <span>OU</span>
-    </p-divider>
-
-    <div class="flex flex-row gap-3 justify-center flex-wrap">
-      @for (provider of providers(); track $index) {
-        <p-button
-          class="flex-1"
-          type="button"
-          severity="secondary"
-          [outlined]="true"
-          [fluid]="true"
-          [icon]="provider.icon"
-          [label]="provider.name"
-        />
-      }
-    </div>
-  </section>
-
-  <p class="text-center text-sm text-surface-500 dark:text-surface-400">
+  <p class="mt-auto text-center text-sm text-surface-500 dark:text-surface-400">
     Vous n'avez pas de compte ?
-    <a [routerLink]="['/auth', 'register']" class="text-primary-500 hover:underline focus:underline focus:outline-none">
+    <a [routerLink]="['/auth', 'register']" class="font-semibold text-primary-500 hover:underline focus:underline focus:outline-none">
       Créez-en un
     </a>
   </p>

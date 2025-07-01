@@ -1,0 +1,48 @@
+<div class="flex flex-col gap-3">
+  <section class="flex flex-col gap-2">
+    <p class="text-surface-700">
+      Nous utilisons des cookies pour vous offrir la meilleure expérience
+      sur notre site. Certains sont nécessaires au bon fonctionnement
+      du site, d'autres nous aident à améliorer nos services.
+    </p>
+
+    <p class="text-sm text-surface-500">
+      En cliquant sur "Accepter les cookies", vous acceptez l'utilisation de
+      l'ensemble des cookies. Vous pouvez personnaliser
+      vos préférences ou consulter notre politique de
+      confidentialité pour plus d'informations.
+    </p>
+  </section>
+
+  <section class="flex gap-3 w-full mt-5 flex-wrap">
+    <p-button
+      class="flex-1"
+      styleClass="w-full whitespace-nowrap"
+      label="Accepter les cookies"
+      severity="primary"
+      size="small"
+      [outlined]="false"
+      (click)="onAcceptAll()"
+    />
+
+    <p-button
+      class="flex-1"
+      styleClass="w-full whitespace-nowrap"
+      label="Refuser les cookies"
+      severity="primary"
+      size="small"
+      [outlined]="false"
+      (click)="onRejectAll()"
+    />
+
+    <p-button
+      class="flex-1"
+      styleClass="w-full whitespace-nowrap"
+      label="Personnaliser les cookies"
+      severity="secondary"
+      size="small"
+      [outlined]="true"
+      (click)="onPreference()"
+    />
+  </section>
+</div>
