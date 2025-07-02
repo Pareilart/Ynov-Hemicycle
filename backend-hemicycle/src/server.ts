@@ -8,6 +8,10 @@ import { log, createServiceLogger } from './utils/logger';
 import { requestLogger } from './middleware/requestLogger';
 import { logRoutes } from './utils/routeLogger';
 
+// Cron jobs
+import { scheduleScrutinsScraping } from './cron/AssembleeNationale/scrutinsCronJob';
+import { scheduleDeputesScraping } from './cron/AssembleeNationale/deputesCronJob';
+
 // Routes
 
 /**
@@ -23,7 +27,6 @@ import authRoutes from './routes/Auth/authRoutes';
 /**
  * DEPUTY
  */
-import deputyDeputeRoutes from './routes/Deputy/deputeRoutes';
 import deputyLawPostRoutes from './routes/Deputy/lawPostRoutes';
 
 /**
@@ -31,6 +34,7 @@ import deputyLawPostRoutes from './routes/Deputy/lawPostRoutes';
  */
 import userLawPostRoutes from './routes/User/lawPostRoutes';
 import userRoutes from './routes/User/userRoutes';
+import userAssembleeNationaleRoutes from './routes/User/assembleeNationaleRoutes';
 
 /**
  * HEALTH
@@ -51,17 +55,22 @@ app.use(requestLogger);
 // MongoDB connection
 const mongoLogger = createServiceLogger('mongodb');
 mongoose.connect(process.env.MONGODB_URI || '')
-  .then(() => mongoLogger.info('Connecté à MongoDB'))
+  .then(() => {
+    mongoLogger.info('Connecté à MongoDB');
+    // Démarrer les tâches cron après la connexion à MongoDB
+    scheduleScrutinsScraping();
+    scheduleDeputesScraping();
+  })
   .catch((err) => mongoLogger.error('Erreur de connexion à MongoDB', { error: err.message, stack: err.stack }));
 
 // Routes
 app.use('/api/admin/users', adminUserRoutes);
 
-app.use('/api/deputy', deputyDeputeRoutes);
 app.use('/api/deputy/lawPosts', deputyLawPostRoutes);
 
 app.use('/api/users', userRoutes);
 app.use('/api/users/lawPosts', userLawPostRoutes);
+app.use('/api/users/assembleeNationale', userAssembleeNationaleRoutes);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/health', healthRoutes);
