@@ -1,5 +1,5 @@
 import { Routes } from '@core/models/route/route.model';
-import { ProfilDeputeComponent } from "@app/features/profil/pages/profil-depute/profil-depute.component";
+import { ProfilUserComponent } from "@app/features/profil/pages/profil-user/profil-user.component";
 /**
  * Routes PROFIL_ROUTES
  * @const PROFIL_ROUTES
@@ -13,8 +13,8 @@ import { ProfilDeputeComponent } from "@app/features/profil/pages/profil-depute/
  */
 export const PROFIL_ROUTES: Routes = [
   {
-    path: 'depute',
-    title: 'Profil député',
-    component: ProfilDeputeComponent,
+    path: 'user',
+    title: 'Profil utilisateur',
+    component: ProfilUserComponent,
   },
 ];

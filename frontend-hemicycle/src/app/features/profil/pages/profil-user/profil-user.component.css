@@ -1,0 +1,14 @@
+.decor {
+    position: relative;
+    padding-left: 0.8rem;
+}
+
+.decor::before {
+    content: '';
+    background: linear-gradient(to bottom, #93278F, #D4145A);
+    height: 1.5rem;
+    width: 0.3rem;
+    position: absolute;
+    top: 0;
+    left: 0
+}

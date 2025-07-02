@@ -16,6 +16,7 @@ import { UserRole } from "./user-role.model";
  * @property {string} image - Image de l'utilisateur
  * @property {string} firstName - Prénom de l'utilisateur
  * @property {string} lastName - Nom de l'utilisateur
+ * @property {string} birthday - Nom de l'utilisateur
  *
  * @author Valentin FORTIN <contact@valentin-fortin.pro>
  */
