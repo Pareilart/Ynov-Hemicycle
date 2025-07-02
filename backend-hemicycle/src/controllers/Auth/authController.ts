@@ -13,6 +13,7 @@ import { UserDto } from '../../types/dto/UserDto';
 import { UserService } from '../../services/userService';
 import { SecurityCodeService } from '../../services/SecurityCodeService';
 import { sendEmail } from '../../services/EmailService';
+import { IRole } from '../../types/interfaces/IRole';
 
 export const login = async (req: Request, res: Response) => {
   try {
@@ -183,17 +184,16 @@ export const me = async (req: AuthenticatedRequest, res: Response) => {
 export const verify2FACode = async (req: Request, res: Response) => {
   try {
     const { code, email } = req.body;
-    const user = await User.findOne({ email })
-      .populate('role')
-      .populate('address')
-      .populate('votingSurvey') as unknown as IUserDocument;
+    const emailLowerCase = email.toLowerCase();
+
+    const user = await User.findOne({ email: emailLowerCase })
+      .exec() as IUserDocument | null;
 
     if (!user) {
       return ResponseHandler.notFound(res, 'Utilisateur non trouvé');
     }
 
     const isValid = await SecurityCodeService.verifyCode(user, User as Model<IUserDocument>, code);
-    console.log(isValid);
     if (!isValid) {
       return ResponseHandler.badRequest(res, 'Code invalide');
     }
@@ -213,6 +213,7 @@ export const verify2FACode = async (req: Request, res: Response) => {
 
     return ResponseHandler.success(res, userResponse, 'Code vérifié avec succès');
   } catch (error: any) {
+    console.error('Erreur 2FA:', error);
     return ResponseHandler.error(res, 'Erreur lors de la vérification du code', error);
   }
 };
@@ -223,7 +224,11 @@ export const verify2FACode = async (req: Request, res: Response) => {
 export const verifyEmail = async (req: Request, res: Response) => {
   try {
     const { code, email } = req.body;
-    const user = await User.findOne({ email }) as IUserDocument | null;
+    const emailLowerCase = email.toLowerCase();
+
+    const user = await User.findOne({ email: emailLowerCase })
+      .exec() as IUserDocument | null;
+    console.log(user);
 
     if (!user) {
       return ResponseHandler.notFound(res, 'Utilisateur non trouvé');
