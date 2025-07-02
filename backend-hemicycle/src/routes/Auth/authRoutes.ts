@@ -5,13 +5,15 @@ import {
   me,
   refreshToken,
   verify2FACode,
+  verifyEmail,
 } from '../../controllers/Auth/authController';
-import { auth } from '../../middleware/auth';
+import { auth, isEmailVerified } from '../../middleware/auth';
 import {
   loginValidator,
   registerValidator,
   refreshTokenValidator,
   verify2FACodeValidator,
+  verifyEmailValidator,
 } from '../../middleware/validators/Auth/authValidator';
 import { validateRequest } from '../../middleware/validators/validationMiddleware';
 
@@ -21,7 +23,8 @@ const router = express.Router();
 router.post('/login', loginValidator, validateRequest, login);
 router.post('/register', registerValidator, validateRequest, register);
 router.post('/refresh-token', refreshTokenValidator, validateRequest, refreshToken);
-router.get('/me', auth, me);
+router.get('/me', auth, isEmailVerified, me);
 router.post('/verify-2fa-code', verify2FACodeValidator, validateRequest, verify2FACode);
+router.post('/verify-email', verifyEmailValidator, validateRequest, verifyEmail);
 
 export default router;

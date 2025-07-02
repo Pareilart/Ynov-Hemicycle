@@ -31,14 +31,15 @@ const userSchema = new Schema<IUser>(
       unique: true,
       match: /.+\@.+\..+/,
     },
+    emailVerifiedAt: {
+      type: Date,
+      default: null,
+      required: false,
+    },
     password: {
       type: String,
       required: true,
       select: false,
-    },
-    emailVerifiedAt: {
-      type: Date,
-      required: false,
     },
     role: {
       type: Schema.Types.ObjectId,
