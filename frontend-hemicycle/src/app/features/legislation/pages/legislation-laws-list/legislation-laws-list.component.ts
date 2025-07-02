@@ -1,6 +1,11 @@
-import { Component, signal, Signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, inject, input, InputSignal, Signal } from '@angular/core';
+import { fetchAllLaws } from '@app/core/stores/law/law.actions';
+import { selectAllLaws } from '@app/core/stores/law/law.selectors';
+import { LawState } from '@app/core/stores/law/law.state';
 import { Law } from '@core/models/law/law.model';
 import { LegislationLawCardComponent } from "@features/legislation/components/legislation-law-card/legislation-law-card.component";
+import { Store } from '@ngrx/store';
 import { LazyLoadEvent } from 'primeng/api';
 import { ScrollerModule } from 'primeng/scroller';
 
@@ -8,13 +13,30 @@ import { ScrollerModule } from 'primeng/scroller';
   selector: 'app-legislation-laws-list',
   imports: [
     LegislationLawCardComponent,
-    ScrollerModule
+    ScrollerModule,
+    CommonModule
   ],
   templateUrl: './legislation-laws-list.component.html',
   styleUrl: './legislation-laws-list.component.css'
 })
 export class LegislationLawsListComponent {
   //#region Propriétés
+  /**
+   * Propriété store
+   * @readonly
+   *
+   * @description
+   * Représente le store de la liste des lois
+   *
+   * @access private
+   * @memberof LegislationLawsListComponent
+   * @since 1.0.0
+   *
+   * @type {Store<LawState>} store
+   */
+  private readonly store: Store<LawState> =
+    inject<Store<LawState>>(Store<LawState>);
+
   /**
    * Propriété laws
    * @readonly
@@ -28,21 +50,25 @@ export class LegislationLawsListComponent {
    *
    * @type {Signal<Law[]>} laws
    */
-  public readonly laws: Signal<Law[]> = signal<Law[]>([
-    ...Array.from({ length: 100 }, (_, index) => ({
-      id: `${index + 5}eac456`,
-      title: `Loi sur la protection des animaux ${index + 5}`,
-      resume: `Loi sur la protection des animaux ${index + 5}`,
-      content: `Loi sur la protection des animaux ${index + 5}`,
-      adopted: false,
-      accountability: 1 as const,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    })),
-  ]);
+  public readonly laws: Signal<Law[]> =
+    this.store.selectSignal(selectAllLaws);
   //#endregion
 
   //#region Méthodes
+  /**
+   * Méthode ngOnInit
+   *
+   * @description
+   * Initialisation du composant
+   *
+   * @access public
+   * @memberof LegislationLawsListComponent
+   * @since 1.0.0
+   */
+  public ngOnInit(): void {
+    this.store.dispatch(fetchAllLaws());
+  }
+
   /**
    * Méthode onLazyLoad
    * @param event

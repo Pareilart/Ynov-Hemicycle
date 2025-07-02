@@ -38,21 +38,6 @@ export class AuthEffects {
     inject<Actions>(Actions);
 
   /**
-   * Propriété store
-   * @readonly
-   *
-   * @description
-   * Store de l'effet
-   *
-   * @memberof AuthEffects
-   * @since 1.0.0
-   *
-   * @type {Store<AuthState>} store
-   */
-  private readonly store: Store<AuthState> =
-    inject<Store<AuthState>>(Store<AuthState>);
-
-  /**
    * Propriété authService
    * @readonly
    *
@@ -198,7 +183,15 @@ export class AuthEffects {
   public loginSuccess$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.loginSuccess),
     tap(({ user, token }: { user: User, token: JwtToken }) => {
-      this.router.navigate(['/']);
+      if (!user.emailVerifiedAt) {
+        this.router.navigate(['/auth/email-verification'], {
+          queryParams: {
+            email: user.email
+          }
+        });
+      } else {
+        this.router.navigate(['/']);
+      }
 
       this.localStorageService.store(
         REFRESH_TOKEN_KEY,
@@ -593,7 +586,13 @@ export class AuthEffects {
   public fetchMeSuccess$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.fetchMeSuccess),
     tap(({ user }: { user: User }) => {
-      console.log(user);
+      if (!user.emailVerifiedAt) {
+        this.router.navigate(['/auth/email-verification'], {
+          queryParams: {
+            email: user.email
+          }
+        });
+      }
     })
   ), { dispatch: false });
 

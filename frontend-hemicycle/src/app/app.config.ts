@@ -19,6 +19,9 @@ import { AuthEffects } from '@core/stores/auth/auth.effects';
 import { AUTH_FEATURE_KEY } from '@core/stores/auth/auth.state';
 import { jwtInterceptor } from '@core/interceptors/jwt.interceptor';
 import { refreshInterceptor } from '@core/interceptors/refresh.interceptor';
+import { LAW_FEATURE_KEY } from './core/stores/law/law.state';
+import { lawReducer } from './core/stores/law/law.reducer';
+import { LawEffects } from './core/stores/law/law.effects';
 
 /**
  * Interceptors
@@ -87,8 +90,9 @@ export const appConfig: ApplicationConfig = {
     withSessionStorage()),
     DialogService,
     provideStore({
-      [AUTH_FEATURE_KEY]: authReducer
+      auth: authReducer,
+      law: lawReducer
     }),
-    provideEffects([AuthEffects])
+    provideEffects([AuthEffects, LawEffects])
   ]
 };

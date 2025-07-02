@@ -1,18 +1,18 @@
 import { inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, MaybeAsync, RedirectCommand, Resolve, Router, RouterStateSnapshot } from "@angular/router";
-import { fetchLaw } from "@app/core/stores/law/law.actions";
-import { selectEntities } from "@app/core/stores/law/law.selectors";
+import { fetchAllLaws } from "@app/core/stores/law/law.actions";
+import { selectAllLaws } from "@app/core/stores/law/law.selectors";
 import { LawState } from "@app/core/stores/law/law.state";
 import { Law } from "@core/models/law/law.model";
 import { Store } from "@ngrx/store";
-import { filter, first, map, Observable, of } from "rxjs";
+import { catchError, filter, first, tap } from 'rxjs/operators';
 
 /**
- * Resolver LegislationLawResolver
- * @class LegislationLawResolver
+ * Resolver LegislationLawsResolver
+ * @class LegislationLawsResolver
  *
  * @description
- * Resolver pour obtenir une loi spécifique par son ID
+ * Resolver pour obtenir une liste de lois
  *
  * @version 1.0.0
  *
@@ -21,7 +21,7 @@ import { filter, first, map, Observable, of } from "rxjs";
  * @see https://angular.dev/api/router/Resolve
  */
 @Injectable({ providedIn: 'root' })
-export class LegislationLawResolver implements Resolve<Law | null> {
+export class LegislationLawsResolver implements Resolve<Law[]> {
   //#region Propriétés
   /**
    * Propriété router
@@ -36,7 +36,8 @@ export class LegislationLawResolver implements Resolve<Law | null> {
    *
    * @type {Router} router
    */
-  private readonly router: Router = inject<Router>(Router);
+  private readonly router: Router =
+    inject<Router>(Router);
 
   /**
    * Propriété store
@@ -46,12 +47,13 @@ export class LegislationLawResolver implements Resolve<Law | null> {
    * Store injecté
    *
    * @access private
-   * @memberof LegislationLawResolver
+   * @memberof LegislationLawsResolver
    * @since 1.0.0
    *
    * @type {Store<LawState>} store
    */
-  private readonly store: Store<LawState> = inject<Store<LawState>>(Store<LawState>);
+  private readonly store: Store<LawState> =
+    inject<Store<LawState>>(Store<LawState>);
   //#endregion
 
   //#region Méthodes
@@ -60,7 +62,7 @@ export class LegislationLawResolver implements Resolve<Law | null> {
    * @method resolve
    *
    * @description
-   * Permet d'obtenir une loi spécifique par son ID
+   * Permet d'obtenir une loi
    *
    * @access public
    * @memberof LegislationLawResolver
@@ -69,26 +71,15 @@ export class LegislationLawResolver implements Resolve<Law | null> {
    * @param {ActivatedRouteSnapshot} route Route actuelle
    * @param {RouterStateSnapshot} state État de la route
    *
-   * @returns {Observable<Law | null>} La loi trouvée ou null si non trouvée
+   * @returns {Law[]} La loi trouvée
    */
   public resolve(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): MaybeAsync<Law | null | RedirectCommand> {
-    const id: string | null = route.paramMap.get('id');
-
-    if (!id) {
-      return new RedirectCommand(this.router.createUrlTree(['/legislation/laws']));
-    }
-
-    this.store.dispatch(fetchLaw({ id }));
-
-    return this.store.select(selectEntities).pipe(
-      map(entities => entities[id]),
-      filter(law => law !== undefined),
-      first(),
-      map(law => law || new RedirectCommand(this.router.createUrlTree(['/legislation/laws'])))
+  ): MaybeAsync<Law[]> {
+    this.store.dispatch(fetchAllLaws());
+    return this.store.select(selectAllLaws).pipe(
+      tap((laws) => console.log(laws))
     );
   }
-  //#endregion
 }

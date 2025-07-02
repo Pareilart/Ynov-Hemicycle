@@ -13,9 +13,19 @@ import { Timestampable } from "../timestampable/timestampable.model";
  */
 export interface Law extends Timestampable {
   readonly id: string;
+  readonly legislature: number;
   readonly title: string;
-  readonly resume: string;
-  readonly content: string;
   readonly adopted: boolean;
-  readonly accountability: 1 | 2 | 3 | 4;
+  readonly dateProposition: Date;
+  readonly dateAdoption: Date;
+  readonly voteYes: number;
+  readonly voteNo: number;
+  readonly voteAbstention: number;
+  readonly hasReevaluable: boolean;
+  readonly reevaluableCount: number;
+  readonly reactionsStats: {
+    readonly total: number;
+    readonly types: Record<string, number>,
+    readonly emojis: Record<string, number>
+  }
 }
