@@ -99,11 +99,24 @@ export class LawPostDto {
       voteAbstention: lawPost.voteAbstention,
       hasReevaluable: lawPost.hasReevaluable,
       reevaluableCount: lawPost.reevaluableCount,
-      user: this.createUserResponse(lawPost.userId as IUserDocument),
       createdAt: lawPost.createdAt?.toISOString() || new Date().toISOString(),
       updatedAt: lawPost.updatedAt?.toISOString() || new Date().toISOString(),
       reactionsStats: this.initializeReactionStats(),
     };
+
+    console.log('lawPost test', lawPost);
+
+    if (lawPost.userId) {
+      if (typeof lawPost.userId === 'object') {
+        console.log('lawPost.userId', lawPost.userId);
+        response.user = this.createUserResponse(lawPost.userId as IUserDocument);
+      } else {
+        const user = await User.findById(lawPost.userId);
+        if (user) {
+          response.user = this.createUserResponse(user as IUserDocument);
+        }
+      }
+    }
 
     if (reactions.length > 0) {
       response.reactionsStats.total = reactions.length;
@@ -135,7 +148,6 @@ export class LawPostDto {
         response.reports = await Promise.all(reports.map((r) => this.transformReporting(r, lawPost)));
       }
     }
-
     return response;
   }
 }
