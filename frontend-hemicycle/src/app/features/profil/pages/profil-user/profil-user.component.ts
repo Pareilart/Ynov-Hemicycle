@@ -3,7 +3,6 @@ import { Store } from '@ngrx/store';
 import { AuthState } from '@core/stores/auth/auth.state';
 import { selectAuthCurrentUser } from '@core/stores/auth/auth.selectors';
 import { User} from '@core/models/user/user.model'
-import { selectCurrentUser } from '@core/stores/auth/auth.selectors'
 import { MessageModule } from 'primeng/message';
 import { CommonModule } from '@angular/common';
 import { CheckboxModule } from 'primeng/checkbox';

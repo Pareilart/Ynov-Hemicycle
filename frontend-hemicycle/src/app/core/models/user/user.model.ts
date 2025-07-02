@@ -93,6 +93,20 @@ export interface User extends Timestampable {
   readonly role: UserRole;
 
   /**
+   * Propriété birthday
+   * @readonly
+   *
+   * @description
+   * Date de naissance de l'utilisateur
+   *
+   * @memberof User
+   * @since 1.0.0
+   *
+   * @type {Date} birthday
+   */
+  readonly birthday: Date;
+
+  /**
    * Propriété hasOnBoarding
    * @readonly
    *
