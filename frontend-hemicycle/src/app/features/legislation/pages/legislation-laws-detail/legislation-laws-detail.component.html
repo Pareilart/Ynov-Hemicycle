@@ -39,20 +39,20 @@
     </section>
 
     <section class="flex flex-col">
-      <p class="text-surface-600">
+      <p class="text-black">
         {{ law().resume }}
       </p>
 
       <p-tabs [value]="0">
         <p-tablist>
-          <p-tab [value]="0" class="[_.p-tab-active]:border-blue-400">Résumé</p-tab>
-          <p-tab [value]="1">Vote</p-tab>
-          <p-tab [value]="2">Redevabilité</p-tab>
+          <p-tab [value]="0" class=" hover:text-tertiary-700 hover:border-tertiary-700 ease-linear">Résumé</p-tab>
+          <p-tab [value]="1" class=" hover:text-tertiary-700 hover:border-tertiary-700 ease-linear">Vote</p-tab>
+          <p-tab [value]="2" class=" hover:text-tertiary-700 hover:border-tertiary-700 ease-linear">Redevabilité</p-tab>
         </p-tablist>
 
         <p-tabpanels>
           <p-tabpanel [value]="0">
-            <p class="text-surface-600">
+            <p class="text-black">
               {{ law().content }}
             </p>
           </p-tabpanel>
@@ -63,7 +63,7 @@
     </section>
 
     <section class="flex flex-row gap-4 items-center justify-between">
-      <div class="text-surface-600 text-sm flex items-center gap-1">
+      <div class="text-black text-sm flex items-center gap-1">
         <i class="pi pi-calendar"></i>
         <span>{{ law().createdAt | date: 'dd/MM/yyyy' }}</span>
       </div>
