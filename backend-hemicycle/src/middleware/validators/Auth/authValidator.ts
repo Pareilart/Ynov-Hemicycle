@@ -6,7 +6,7 @@ export const registerValidator = [
     .withMessage('L\'email doit être une adresse email valide')
     .normalizeEmail(),
 
-  body('firstName')
+  body('firstname')
     .isString()
     .trim()
     .notEmpty()
@@ -14,7 +14,7 @@ export const registerValidator = [
     .isLength({ min: 2, max: 50 })
     .withMessage('Le prénom doit contenir entre 2 et 50 caractères'),
 
-  body('lastName')
+  body('lastname')
     .isString()
     .trim()
     .notEmpty()
@@ -43,7 +43,7 @@ export const registerValidator = [
       try {
         const date = new Date(value);
         const now = new Date();
-        if (isNaN(date.getTime())) {
+        if (Number.isNaN(date.getTime())) {
           throw new Error(
             'Format de date invalide. Utilisez le format YYYY-MM-DD (exemple: 2000-12-31)',
           );
@@ -60,6 +60,10 @@ export const registerValidator = [
         );
       }
     }),
+
+  body('twoFactorEnabled')
+    .isBoolean()
+    .withMessage('La 2FA doit être un booléen'),
 ];
 
 export const loginValidator = [
@@ -79,4 +83,15 @@ export const refreshTokenValidator = [
     .isString()
     .notEmpty()
     .withMessage('Le refresh token est requis'),
+];
+
+export const verify2FACodeValidator = [
+  body('code')
+    .isString()
+    .notEmpty()
+    .withMessage('Le code est requis'),
+  body('email')
+    .isEmail()
+    .notEmpty()
+    .withMessage('L\'email est requis'),
 ];

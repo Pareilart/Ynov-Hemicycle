@@ -25,7 +25,7 @@ export const userOnboarding = async (
   try {
     const userDoc = await User.findById(req.user?._id)
       .populate('role')
-      .populate('addresses');
+      .populate('address');
 
     if (!userDoc) {
       ResponseHandler.notFound(res, 'Utilisateur non trouvé');
@@ -87,7 +87,7 @@ export const userOnboarding = async (
 
     const updatedUser = await User.findById(userDoc._id)
       .populate('role')
-      .populate('addresses')
+      .populate('address')
       .populate('votingSurvey');
 
     if (updatedUser) {
@@ -134,7 +134,7 @@ export const getProfile = async (
   try {
     const user = await User.findById(req.user?._id)
       .populate('role')
-      .populate('addresses')
+      .populate('address')
       .populate('votingSurvey');
 
     if (!user) {
@@ -203,7 +203,7 @@ export const exportProfile = async (
 
     const user = await User.findById(req.user?._id)
       .populate('role')
-      .populate('addresses')
+      .populate('address')
       .populate('votingSurvey');
 
     if (!user) {
@@ -220,17 +220,17 @@ export const exportProfile = async (
 
     // Ajouter les réactions aux lois si demandé
     if (includeLawReaction) {
-      const userReactions = await LawReaction.find({ user_id: req.user?._id })
-        .populate<{ law_post_id: Document<unknown, {}, ILawPost> }>('law_post_id')
-        .sort({ created_at: -1 });
+      const userReactions = await LawReaction.find({ userId: req.user?._id })
+        .populate<{ lawPostId: Document<unknown, {}, ILawPost> }>('lawPostId')
+        .sort({ createdAt: -1 });
 
       exportData.lawReactions = userReactions.map((reaction) => {
-        const lawPost = reaction.law_post_id as Document<unknown, {}, ILawPost>;
+        const lawPost = reaction.lawPostId as Document<unknown, {}, ILawPost>;
         return {
           reaction_id: ((reaction as unknown) as ILawReaction)._id.toString(),
           loi_titre: lawPost.get('title') || '',
-          type_reaction: reaction.reaction_type,
-          emoji_reaction: reaction.reaction_emoji || '',
+          type_reaction: reaction.reactionType,
+          emoji_reaction: reaction.reactionEmoji || '',
           date_reaction: new Date(reaction.createdAt).toLocaleDateString(
             'fr-FR',
           ),
@@ -251,8 +251,8 @@ export const exportProfile = async (
       if (includeProfile) {
         const profileData = {
           id: exportData.profile.id,
-          prenom: exportData.profile.firstName,
-          nom: exportData.profile.lastName,
+          prenom: exportData.profile.firstname,
+          nom: exportData.profile.lastname,
           date_naissance: exportData.profile.birthday
             ? new Date(exportData.profile.birthday).toLocaleDateString(
               'fr-FR',
@@ -269,16 +269,16 @@ export const exportProfile = async (
             ? 'Oui'
             : 'Non',
           role: exportData.profile.role?.name || '',
-          adresse_ligne1: exportData.profile.addresses?.line1 || '',
-          adresse_ligne2: exportData.profile.addresses?.line2 || '',
-          code_postal: exportData.profile.addresses?.postalCode || '',
-          ville: exportData.profile.addresses?.city || '',
-          region: exportData.profile.addresses?.state || '',
-          pays: exportData.profile.addresses?.country || '',
+          adresse_ligne1: exportData.profile.address?.line1 || '',
+          adresse_ligne2: exportData.profile.address?.line2 || '',
+          code_postal: exportData.profile.address?.postalCode || '',
+          ville: exportData.profile.address?.city || '',
+          region: exportData.profile.address?.state || '',
+          pays: exportData.profile.address?.country || '',
           frequence_vote:
-          exportData.profile.votingSurvey?.voting_frequency || '',
+          exportData.profile.votingSurvey?.votingFrequency || '',
           inscription_electorale:
-          exportData.profile.votingSurvey?.electoral_registration || '',
+          exportData.profile.votingSurvey?.electoralRegistration || '',
           positionnement_politique:
           exportData.profile.votingSurvey?.positioning || '',
           proximite_politique:
@@ -302,11 +302,11 @@ export const exportProfile = async (
             ]
             : reactions.map((reaction: any) => ({
               ...profileData,
-              reaction_id: reaction.reaction_id,
-              loi_titre: reaction.loi_titre,
-              type_reaction: reaction.type_reaction,
-              emoji_reaction: reaction.emoji_reaction,
-              date_reaction: reaction.date_reaction,
+              reaction_id: reaction.reactionId,
+              loi_titre: reaction.loiTitre,
+              type_reaction: reaction.typeReaction,
+              emoji_reaction: reaction.emojiReaction,
+              date_reaction: reaction.dateReaction,
             }));
         }
       } else if (includeLawReaction) {

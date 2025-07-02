@@ -4,11 +4,11 @@ import { LawReactionType, LawReactionEmoji } from '../../enum/LawReactionTypeEnu
 export interface ILawReaction extends Document {
   _id: Types.ObjectId;
   user: Types.ObjectId;
-  user_id: Types.ObjectId;
+  userId: Types.ObjectId;
   lawPost: Types.ObjectId;
-  law_post_id: Types.ObjectId;
-  reaction_type: LawReactionType;
-  reaction_emoji?: LawReactionEmoji;
+  lawPostId: Types.ObjectId;
+  reactionType: LawReactionType;
+  reactionEmoji?: LawReactionEmoji;
   createdAt: Date;
   updatedAt: Date;
 }

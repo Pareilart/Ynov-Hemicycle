@@ -34,24 +34,24 @@ export const seedUsers = async () => {
     // Créer les utilisateurs
     const users = [
       {
-        firstName: 'User',
-        lastName: 'Test',
+        firstname: 'User',
+        lastname: 'Test',
         email: 'user@test.com',
         password: hashedPassword,
         role: userRole._id,
         hasOnBoarding: true,
       },
       {
-        firstName: 'Admin',
-        lastName: 'Test',
+        firstname: 'Admin',
+        lastname: 'Test',
         email: 'admin@test.com',
         password: hashedPassword,
         role: adminRole._id,
         hasOnBoarding: true,
       },
       {
-        firstName: 'Deputy',
-        lastName: 'Test',
+        firstname: 'Deputy',
+        lastname: 'Test',
         email: 'deputy@test.com',
         password: hashedPassword,
         role: deputyRole._id,

@@ -32,7 +32,7 @@ import { SelectModule } from 'primeng/select';
  * @see UserRegistration
  */
 type AuthRegisterFormValues = {
-  infos: Pick<UserRegistration, 'firstName' | 'lastName' | 'gender' | 'city' | 'postalCode'>;
+  infos: Pick<UserRegistration, 'firstname' | 'lastname' | 'gender' | 'city' | 'postalCode'>;
   credentials: Pick<UserRegistration, 'email' | 'password'> & {
     passwordConfirmation: string;
     terms: boolean;
@@ -159,11 +159,11 @@ export class AuthRegisterFormComponent {
    */
   public readonly form: FormGroup<AuthRegisterFormControls> = this.formBuilder.group({
     infos: this.formBuilder.group({
-      firstName: this.formBuilder.control<string>({
+      firstname: this.formBuilder.control<string>({
         value: '',
         disabled: false
       }),
-      lastName: this.formBuilder.control<string>({
+      lastname: this.formBuilder.control<string>({
         value: '',
         disabled: false
       }),

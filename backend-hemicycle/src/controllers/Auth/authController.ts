@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import { Types } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import User from '../../models/User';
 import Role from '../../models/Role';
 import { RoleEnum } from '../../enum/RoleEnum';
@@ -11,6 +11,8 @@ import { IUserCreate } from '../../types/interfaces/IUserCreate';
 import { ResponseHandler } from '../../utils/responseHandler';
 import { UserDto } from '../../types/dto/UserDto';
 import { UserService } from '../../services/userService';
+import { SecurityCodeService } from '../../services/SecurityCodeService';
+import { sendEmail } from '../../services/EmailService';
 
 export const login = async (req: Request, res: Response) => {
   try {
@@ -19,7 +21,7 @@ export const login = async (req: Request, res: Response) => {
     const user = await User.findOne({ email })
       .select('+password')
       .populate('role')
-      .populate('addresses')
+      .populate('address')
       .populate('votingSurvey') as IUserDocument | null;
 
     if (!user) {
@@ -31,6 +33,34 @@ export const login = async (req: Request, res: Response) => {
       return ResponseHandler.unauthorized(res, 'Email ou mot de passe incorrect');
     }
 
+    // Si l'utilisateur a activé la 2FA
+    if (user.twoFactorEnabled) {
+      // Génère un nouveau code de sécurité valide pendant 5 minutes
+      const securityCode = await SecurityCodeService.createSecurityCode(user, User as Model<IUserDocument>, 5);
+
+      // Envoyer le code par email
+      await sendEmail({
+        to: user.email,
+        template_uuid: 'c2f0396e-2cd1-4e0d-821a-7de1a8638176',
+        template_variables: {
+          company_info_name: 'Hemicycle',
+          firstname: user.firstname,
+          lastname: user.lastname,
+          security_code: securityCode.plainCode,
+          company_info_address: '123 Rue de la Paix, 75000 Paris, France',
+          company_info_city: 'Paris',
+          company_info_zip_code: '75000',
+          company_info_country: 'France',
+        },
+      });
+
+      return ResponseHandler.success(res, {
+        requiresTwoFactor: true,
+        expiresAt: securityCode.expireAt,
+      }, 'Code de sécurité envoyé par email');
+    }
+
+    // Si pas de 2FA, on procède normalement
     const tokens = generateToken(user._id, user.role.name);
     const userResponse = UserDto.toResponse(user);
     userResponse.token = {
@@ -107,7 +137,7 @@ export const me = async (req: AuthenticatedRequest, res: Response) => {
 
     const user = await User.findById(req.user._id)
       .populate('role')
-      .populate('addresses')
+      .populate('address')
       .populate('votingSurvey')
       .select('-password') as IUserDocument;
 
@@ -120,5 +150,45 @@ export const me = async (req: AuthenticatedRequest, res: Response) => {
   } catch (error: any) {
     console.error('Erreur lors de la récupération du profil:', error);
     ResponseHandler.error(res, 'Erreur lors de la récupération du profil', error.message);
+  }
+};
+
+/**
+ * Vérifie un code de sécurité pour l'authentification à deux facteurs
+ */
+export const verify2FACode = async (req: Request, res: Response) => {
+  try {
+    const { code, email } = req.body;
+    const user = await User.findOne({ email })
+      .populate('role')
+      .populate('address')
+      .populate('votingSurvey') as unknown as IUserDocument;
+
+    if (!user) {
+      return ResponseHandler.notFound(res, 'Utilisateur non trouvé');
+    }
+
+    const isValid = await SecurityCodeService.verifyCode(user, User as Model<IUserDocument>, code);
+    console.log(isValid);
+    if (!isValid) {
+      return ResponseHandler.badRequest(res, 'Code invalide');
+    }
+
+    // Le code est valide, on le supprime
+    await SecurityCodeService.deleteSecurityCode(user, User as Model<IUserDocument>);
+
+    // Génération du token JWT
+    const tokens = generateToken(user._id, user.role.name);
+    const userResponse = UserDto.toResponse(user);
+    userResponse.token = {
+      token: tokens.token,
+      refreshToken: tokens.refreshToken,
+      expiresIn: tokens.expiresIn,
+      exp: tokens.expiresAt.getTime(),
+    };
+
+    return ResponseHandler.success(res, userResponse, 'Code vérifié avec succès');
+  } catch (error: any) {
+    return ResponseHandler.error(res, 'Erreur lors de la vérification du code', error);
   }
 };

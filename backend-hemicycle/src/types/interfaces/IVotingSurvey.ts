@@ -5,8 +5,8 @@ import { PoliticalPositioningEnum } from '../../enum/PoliticalPositioningEnum';
 import { PoliticalProximityEnum } from '../../enum/PoliticalProximityEnum';
 
 export interface IVotingSurvey extends Document {
-  voting_frequency: VotingFrequencyEnum;
-  electoral_registration: ElectoralRegistrationEnum;
+  votingFrequency: VotingFrequencyEnum;
+  electoralRegistration: ElectoralRegistrationEnum;
   positioning: PoliticalPositioningEnum;
   proximity: PoliticalProximityEnum;
   created_at: Date;

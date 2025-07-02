@@ -9,16 +9,16 @@ import { User } from "./user.model";
  *
  * @version 1.0.0
  *
- * @property {string} firstName - Prénom de l'utilisateur
- * @property {string} lastName - Nom de l'utilisateur
+ * @property {string} firstname - Prénom de l'utilisateur
+ * @property {string} lastname - Nom de l'utilisateur
  * @property {Email} email - Email de l'utilisateur
  *
  * @example
  * ```typescript
  * const userRegistration: UserRegistration = {
  *   email: "contact@valentin-fortin.pro",
- *   firstName: "Valentin",
- *   lastName: "FORTIN"
+ *   firstname: "Valentin",
+ *   lastname: "FORTIN"
  * };
  * ```
  *
@@ -26,8 +26,8 @@ import { User } from "./user.model";
  */
 export type UserRegistration = {
   -readonly [K in keyof Pick<User,
-    | 'firstName'
-    | 'lastName'
+    | 'firstname'
+    | 'lastname'
     | 'email'
     | 'gender'
     | 'city'

@@ -5,17 +5,17 @@ export interface ILawPost {
   _id: Types.ObjectId;
   legislature: number;
   title: string;
-  article_constitutionnel: number;
-  vote_type: string;
+  articleConstitutionnel: number;
+  voteType: string;
   adopted: boolean;
-  date_proposition: Date;
-  date_adoption: Date;
-  vote_yes: number;
-  vote_no: number;
-  vote_abstention: number;
-  has_reevaluable: boolean;
-  reevaluable_count: number;
-  user_id: Types.ObjectId | IUserDocument;
+  dateProposition: Date;
+  dateAdoption: Date;
+  voteYes: number;
+  voteNo: number;
+  voteAbstention: number;
+  hasReevaluable: boolean;
+  reevaluableCount: number;
+  userId: Types.ObjectId | IUserDocument;
   createdAt: Date;
   updatedAt: Date;
 }

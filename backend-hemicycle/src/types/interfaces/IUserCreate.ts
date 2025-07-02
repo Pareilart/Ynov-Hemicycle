@@ -3,7 +3,9 @@ import { Types } from 'mongoose';
 export interface IUserCreate {
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
+  sexe: string;
+  birthday: Date;
   role: Types.ObjectId;
 }

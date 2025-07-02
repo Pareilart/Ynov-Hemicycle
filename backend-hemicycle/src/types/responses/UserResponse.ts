@@ -1,5 +1,5 @@
 import { RoleResponse } from './RoleResponse';
-import { AddressesResponse } from './AddressesResponse';
+import { AddressResponse } from './AddressResponse';
 import { VotingFrequencyEnum } from '../../enum/VotingFrequencyEnum';
 import { ElectoralRegistrationEnum } from '../../enum/ElectoralRegistrationEnum';
 import { PoliticalPositioningEnum } from '../../enum/PoliticalPositioningEnum';
@@ -7,22 +7,22 @@ import { PoliticalProximityEnum } from '../../enum/PoliticalProximityEnum';
 
 export interface VotingSurveyResponse {
   id: string;
-  voting_frequency: VotingFrequencyEnum;
-  electoral_registration: ElectoralRegistrationEnum;
+  votingFrequency: VotingFrequencyEnum;
+  electoralRegistration: ElectoralRegistrationEnum;
   positioning: PoliticalPositioningEnum;
   proximity: PoliticalProximityEnum;
 }
 
 export interface UserResponse {
   id: string;
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   birthday?: Date;
   sexe?: 'Homme' | 'Femme' | 'Autre';
   email: string;
   emailVerifiedAt?: Date;
   role?: RoleResponse;
-  addresses?: AddressesResponse;
+  address?: AddressResponse;
   token? : {
     token : string;
     refreshToken : string;
@@ -31,4 +31,5 @@ export interface UserResponse {
   };
   votingSurvey?: VotingSurveyResponse;
   hasOnBoarding: boolean;
+  twoFactorEnabled: boolean;
 }

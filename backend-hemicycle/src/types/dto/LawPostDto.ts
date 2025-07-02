@@ -1,34 +1,37 @@
 import { LawPostResponse } from '../responses/LawPostResponse';
 import { UserResponse } from '../responses/UserResponse';
-import { LawReactionEmoji, LawReactionType } from '../../enum/LawReactionTypeEnum';
+import { LawReactionEmoji, LawReactionType, LawPostReport } from '../../enum/LawReactionTypeEnum';
 import { ILawPost } from '../interfaces/ILawPost';
 import { ILawReaction } from '../interfaces/ILawReaction';
 import { IUserDocument } from '../interfaces/IUserDocument';
+import { ILawPostReporting } from '../interfaces/ILawPostReporting';
 import User from '../../models/User';
 import { LawReactionResponse } from '../responses/LawReactionResponse';
+import { LawPostReportingResponse } from '../responses/LawPostReportingResponse';
 
 export class LawPostDto {
   private static createUserResponse(user: IUserDocument): UserResponse {
     return {
       id: user._id.toString(),
-      firstName: user.firstName,
-      lastName: user.lastName,
+      firstname: user.firstname,
+      lastname: user.lastname,
       email: user.email,
       hasOnBoarding: user.hasOnBoarding || false,
+      twoFactorEnabled: user.twoFactorEnabled || false,
     };
   }
 
   private static async transformReaction(reaction: ILawReaction): Promise<LawReactionResponse> {
-    const user = await User.findById(reaction.user_id);
+    const user = await User.findById(reaction.userId);
     if (!user) throw new Error('User not found');
 
     return {
       id: reaction._id.toString(),
       user: this.createUserResponse(user as IUserDocument),
-      reaction_type: reaction.reaction_type,
-      reaction_emoji: reaction.reaction_emoji,
-      created_at: reaction.createdAt?.toISOString() || new Date().toISOString(),
-      updated_at: reaction.updatedAt?.toISOString() || new Date().toISOString(),
+      reactionType: reaction.reactionType,
+      reactionEmoji: reaction.reactionEmoji,
+      createdAt: reaction.createdAt?.toISOString() || new Date().toISOString(),
+      updatedAt: reaction.updatedAt?.toISOString() || new Date().toISOString(),
     };
   }
 
@@ -48,40 +51,88 @@ export class LawPostDto {
     };
   }
 
-  public static async toResponse(lawPost: ILawPost, reactions: ILawReaction[] = []): Promise<LawPostResponse> {
+  private static async transformReporting(
+    reporting: ILawPostReporting,
+    lawPost: ILawPost,
+  ): Promise<LawPostReportingResponse> {
+    const user = await User.findById(reporting.userId);
+    if (!user) throw new Error('User not found');
+
+    return {
+      id: reporting._id.toString(),
+      user: this.createUserResponse(user as IUserDocument),
+      lawPost: await this.toResponse(lawPost),
+      reason: reporting.reason,
+      description: reporting.description,
+      createdAt: reporting.createdAt?.toISOString() || new Date().toISOString(),
+      updatedAt: reporting.updatedAt?.toISOString() || new Date().toISOString(),
+    };
+  }
+
+  private static initializeReportStats() {
+    return {
+      total: 0,
+      reasons: {
+        [LawPostReport.MISINFORMATION]: 0,
+        [LawPostReport.IRRELEVANT]: 0,
+        [LawPostReport.UNCONSTRUCTIVE]: 0,
+      },
+    };
+  }
+
+  public static async toResponse(
+    lawPost: ILawPost,
+    reactions: ILawReaction[] = [],
+    reports: ILawPostReporting[] = [],
+  ): Promise<LawPostResponse> {
     const response: LawPostResponse = {
       id: lawPost._id.toString(),
       legislature: lawPost.legislature,
       title: lawPost.title,
-      article_constitutionnel: lawPost.article_constitutionnel,
-      vote_type: lawPost.vote_type,
+      articleConstitutionnel: lawPost.articleConstitutionnel,
+      voteType: lawPost.voteType,
       adopted: lawPost.adopted,
-      date_proposition: lawPost.date_proposition?.toISOString() || new Date().toISOString(),
-      date_adoption: lawPost.date_adoption?.toISOString() || new Date().toISOString(),
-      vote_yes: lawPost.vote_yes,
-      vote_no: lawPost.vote_no,
-      vote_abstention: lawPost.vote_abstention,
-      has_reevaluable: lawPost.has_reevaluable,
-      reevaluable_count: lawPost.reevaluable_count,
-      user: this.createUserResponse(lawPost.user_id as IUserDocument),
+      dateProposition: lawPost.dateProposition?.toISOString() || new Date().toISOString(),
+      dateAdoption: lawPost.dateAdoption?.toISOString() || new Date().toISOString(),
+      voteYes: lawPost.voteYes,
+      voteNo: lawPost.voteNo,
+      voteAbstention: lawPost.voteAbstention,
+      hasReevaluable: lawPost.hasReevaluable,
+      reevaluableCount: lawPost.reevaluableCount,
+      user: this.createUserResponse(lawPost.userId as IUserDocument),
       createdAt: lawPost.createdAt?.toISOString() || new Date().toISOString(),
       updatedAt: lawPost.updatedAt?.toISOString() || new Date().toISOString(),
-      reactions_stats: this.initializeReactionStats(),
+      reactionsStats: this.initializeReactionStats(),
     };
 
     if (reactions.length > 0) {
-      response.reactions_stats.total = reactions.length;
+      response.reactionsStats.total = reactions.length;
       reactions.forEach((reaction) => {
-        if (reaction.reaction_type) {
-          response.reactions_stats.types[reaction.reaction_type as keyof typeof LawReactionType]++;
+        if (reaction.reactionType) {
+          response.reactionsStats.types[reaction.reactionType as keyof typeof LawReactionType]++;
         }
-        if (reaction.reaction_emoji) {
-          response.reactions_stats.emojis[reaction.reaction_emoji as keyof typeof LawReactionEmoji]++;
+        if (reaction.reactionEmoji) {
+          response.reactionsStats.emojis[reaction.reactionEmoji as keyof typeof LawReactionEmoji]++;
         }
       });
 
       if (reactions.length === 1) {
         response.reactions = await Promise.all(reactions.map((r) => this.transformReaction(r)));
+      }
+    }
+
+    if (reports.length > 0) {
+      const reportStats = this.initializeReportStats();
+      reportStats.total = reports.length;
+      reports.forEach((report) => {
+        if (report.reason) {
+          reportStats.reasons[report.reason as keyof typeof LawPostReport]++;
+        }
+      });
+      response.reportsStats = reportStats;
+
+      if (reports.length === 1) {
+        response.reports = await Promise.all(reports.map((r) => this.transformReporting(r, lawPost)));
       }
     }
 
