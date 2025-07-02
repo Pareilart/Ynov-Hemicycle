@@ -45,9 +45,9 @@
 
       <p-tabs [value]="0">
         <p-tablist>
-          <p-tab [value]="0" class="[_.p-tab-active]:border-blue-400">Résumé</p-tab>
-          <p-tab [value]="1">Vote</p-tab>
-          <p-tab [value]="2">Redevabilité</p-tab>
+          <p-tab [value]="0" class=" hover:text-tertiary-700 hover:border-tertiary-700 ease-linear">Résumé</p-tab>
+          <p-tab [value]="1" class=" hover:text-tertiary-700 hover:border-tertiary-700 ease-linear">Vote</p-tab>
+          <p-tab [value]="2" class=" hover:text-tertiary-700 hover:border-tertiary-700 ease-linear">Redevabilité</p-tab>
         </p-tablist>
 
         <p-tabpanels>
@@ -63,12 +63,12 @@
     </section>
 
     <section class="flex flex-row gap-4 items-center justify-between">
-      <div class="text-surface-600 text-sm flex items-center gap-1">
+      <div class="text-black text-sm flex items-center gap-1">
         <i class="pi pi-calendar"></i>
         <span>{{ law().createdAt | date: 'dd/MM/yyyy' }}</span>
       </div>
 
-      <div class="flex gap-3">
+      <div class="flex gap-2 sm:gap-3">
         <img *ngFor="let icon of icons" [src]="icon.src" [alt]="icon.alt"
           class="w-6 h-6 cursor-pointer hover:scale-110 transition-transform duration-200" />
       </div>
@@ -76,5 +76,5 @@
   </div>
 
   <!-- Bordure bas -->
-  <div class="h-[2px] w-full bg-gradient-to-r from-tertiary-700 to-primary-500 rounded-b-md"></div>
+  <div class="h-[2px] w-full bg-gradient-to-r from-tertiary-700 to-primary-500 rounded-b-md mb-20"></div>
 </div>
