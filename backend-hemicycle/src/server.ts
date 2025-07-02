@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 // Logging
 import { log, createServiceLogger } from './utils/logger';
 import { requestLogger } from './middleware/requestLogger';
+import { logRoutes } from './utils/routeLogger';
 
 // Routes
 
@@ -89,4 +90,7 @@ app.listen(PORT, () => {
     environment: process.env.NODE_ENV || 'development',
     timestamp: new Date().toISOString(),
   });
+  
+  // Display available route
+  logRoutes(app);
 });
