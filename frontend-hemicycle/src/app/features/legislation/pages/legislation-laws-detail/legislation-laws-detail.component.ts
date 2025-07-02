@@ -18,6 +18,11 @@ import { TabsModule } from 'primeng/tabs';
 })
 export class LegislationLawsDetailComponent {
   //#region Propriétés
+  public icons = [
+    { src: '@/assets/images/emoji-check.svg', alt: 'Résumé' },
+    { src: '@/assets/images/emoji-check.svg', alt: 'Paramètres' },
+    { src: '@/assets/images/emoji-check.svg', alt: 'Profil' }
+  ];
   /**
    * Propriété law
    * @readonly
