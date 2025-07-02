@@ -110,20 +110,20 @@ export const getLawPosts = async (req: AuthenticatedRequest, res: Response): Pro
 
 export const getLawPost = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const { lawId } = req.params;
-    if (!lawId) {
+    const { lawPostId } = req.params;
+    if (!lawPostId) {
       ResponseHandler.badRequest(res, 'L\'ID de la loi est requis');
       return;
     }
 
     // Vérifier si l'ID est un ObjectId MongoDB valide
-    if (!mongoose.Types.ObjectId.isValid(lawId)) {
+    if (!mongoose.Types.ObjectId.isValid(lawPostId)) {
       ResponseHandler.badRequest(res, 'ID de loi invalide');
       return;
     }
 
     // Récupérer la loi avec les informations de l'utilisateur
-    const lawPost = await LawPost.findById(lawId)
+    const lawPost = await LawPost.findById(lawPostId)
       .populate('userId', 'firstname lastname email hasOnBoarding');
 
     if (!lawPost) {
@@ -136,7 +136,7 @@ export const getLawPost = async (req: AuthenticatedRequest, res: Response): Prom
       .populate('userId', 'firstname lastname email hasOnBoarding')
       .sort({ createdAt: -1 }); // Trier par date de création décroissante
 
-    const response = LawPostDto.toResponse(lawPost, reactions);
+    const response = await LawPostDto.toResponse(lawPost, reactions);
     ResponseHandler.success(res, response, 'Loi récupérée avec succès');
   } catch (error: unknown) {
     ResponseHandler.error(res, 'Erreur lors de la récupération de la loi', error as Error);
