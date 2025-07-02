@@ -48,6 +48,11 @@ export const APP_ROUTES: Routes = [
             canActivate: [AuthGuard],
             loadChildren: () => import('@features/profil/profil.routes').then(m => m.PROFIL_ROUTES)
           },
+          {
+            path: 'account',
+            canActivate: [AuthGuard],
+            loadChildren: () => import('@features/account/account.routes').then(m => m.ACCOUNT_ROUTES)
+          },
         ]
       },
     ]

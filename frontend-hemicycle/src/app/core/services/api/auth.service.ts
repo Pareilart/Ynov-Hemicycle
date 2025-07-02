@@ -133,8 +133,8 @@ export class AuthService {
 
     return this.httpClient.post<ApiReponse<User>>(url, {
       sexe: payload.gender,
-      lastName: payload.lastname,
-      firstName: payload.firstname,
+      lastname: payload.lastname,
+      firstname: payload.firstname,
       email: payload.email,
       password: payload.password,
       birthday: payload.birthday,

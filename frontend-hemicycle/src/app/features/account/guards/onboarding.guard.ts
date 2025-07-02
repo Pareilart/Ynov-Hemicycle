@@ -1,8 +1,10 @@
-import { Injectable } from "@angular/core";
+import { Injectable, Signal } from "@angular/core";
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, MaybeAsync, GuardResult, Router } from "@angular/router";
 import { AuthState } from "@app/core/stores/auth/auth.state";
 import { Store } from "@ngrx/store";
 import { inject } from "@angular/core";
+import { selectAuthCurrentUser } from "@app/core/stores/auth/auth.selectors";
+import { User } from "@app/core/models/user/user.model";
 
 @Injectable({ providedIn: "root" })
 export class OnBoardingGuard implements CanActivate {
@@ -38,6 +40,22 @@ export class OnBoardingGuard implements CanActivate {
    */
   private readonly router: Router =
     inject<Router>(Router);
+
+  /**
+   * Propriété user
+   * @readonly
+   *
+   * @description
+   * Utilisateur connecté
+   *
+   * @access private
+   * @memberof OnBoardingGuard
+   * @since 1.0.0
+   *
+   * @type {Signal<User | null>} user
+   */
+  private readonly user: Signal<User | null> =
+    this.store.selectSignal(selectAuthCurrentUser);
   //#endregion
 
   //#region Méthodes
@@ -61,7 +79,14 @@ export class OnBoardingGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): MaybeAsync<GuardResult> {
-    return true;
+    const user: User | null = this.user();
+    console.log(user);
+
+    if (user) {
+      return true;
+    }
+
+    return this.router.createUrlTree(['/']);
   }
   //#endregion
 }

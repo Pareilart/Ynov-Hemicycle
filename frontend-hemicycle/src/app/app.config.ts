@@ -1,5 +1,5 @@
 import { ApplicationConfig, ApplicationRef, inject, PLATFORM_ID, provideAppInitializer, provideExperimentalZonelessChangeDetection } from '@angular/core';
-import { provideRouter, withComponentInputBinding, withEnabledBlockingInitialNavigation } from '@angular/router';
+import { provideRouter, withComponentInputBinding, withDebugTracing, withEnabledBlockingInitialNavigation } from '@angular/router';
 import { HttpInterceptorFn } from '@angular/common/http';
 import { APP_ROUTES } from '@app/app.routes';
 import { provideClientHydration, withEventReplay, withIncrementalHydration } from '@angular/platform-browser';
@@ -58,6 +58,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       APP_ROUTES,
       withComponentInputBinding(),
+      withDebugTracing()
     ),
     provideClientHydration(
       withEventReplay(),
