@@ -68,7 +68,7 @@
         <span>{{ law().createdAt | date: 'dd/MM/yyyy' }}</span>
       </div>
 
-      <div class="flex gap-3">
+      <div class="flex gap-2 sm:gap-3">
         <img *ngFor="let icon of icons" [src]="icon.src" [alt]="icon.alt"
           class="w-6 h-6 cursor-pointer hover:scale-110 transition-transform duration-200" />
       </div>
