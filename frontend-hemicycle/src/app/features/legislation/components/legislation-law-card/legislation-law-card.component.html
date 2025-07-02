@@ -45,13 +45,25 @@
       <span>{{ law().createdAt | date: 'dd/MM/yyyy' }}</span>
     </div>
 
-    <p-button
-      label="Voir la loi"
-      severity="secondary"
-      icon="pi pi-eye"
-      [outlined]="true"
-      size="small"
-      [routerLink]="['/legislation/laws', law().id]"
-    />
+    <div class="p-[2px] rounded-md bg-gradient-to-r from-tertiary-700 to-primary-500 cursor-pointer">
+      <div class="bg-white rounded-md transition group hover:bg-gradient-to-r hover:from-tertiary-700 hover:to-primary-500">
+        <p-button
+          label="Voir la loi"
+          severity="secondary"
+          icon="pi pi-eye"
+          [outlined]="true"
+          size="small"
+          [routerLink]="['/legislation/laws', law().id]"
+          class="
+            [&_.p-button-outlined.p-button-secondary]:outline-transparent
+            [&_.p-button]:bg-transparent
+            [&_.p-button-wrapper]:bg-transparent
+            [&_.p-button]:text-black
+            group-hover:[&_.p-button]:text-white
+            group-hover:[&_.p-button-icon]:text-white
+          "
+        />
+      </div>
+    </div>
   </section>
 </div>
