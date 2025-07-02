@@ -6,6 +6,7 @@ import {
   refreshToken,
   verify2FACode,
   verifyEmail,
+  resendVerificationEmail,
 } from '../../controllers/Auth/authController';
 import { auth, isEmailVerified } from '../../middleware/auth';
 import {
@@ -14,6 +15,7 @@ import {
   refreshTokenValidator,
   verify2FACodeValidator,
   verifyEmailValidator,
+  resendVerificationEmailValidator,
 } from '../../middleware/validators/Auth/authValidator';
 import { validateRequest } from '../../middleware/validators/validationMiddleware';
 
@@ -26,5 +28,6 @@ router.post('/refresh-token', refreshTokenValidator, validateRequest, refreshTok
 router.get('/me', auth, isEmailVerified, me);
 router.post('/verify-2fa-code', verify2FACodeValidator, validateRequest, verify2FACode);
 router.post('/verify-email', verifyEmailValidator, validateRequest, verifyEmail);
+router.post('/resend-verification-email', auth, resendVerificationEmailValidator, validateRequest, resendVerificationEmail);
 
 export default router;

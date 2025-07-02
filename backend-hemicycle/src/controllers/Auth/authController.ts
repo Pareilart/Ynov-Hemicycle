@@ -12,8 +12,7 @@ import { ResponseHandler } from '../../utils/responseHandler';
 import { UserDto } from '../../types/dto/UserDto';
 import { UserService } from '../../services/userService';
 import { SecurityCodeService } from '../../services/SecurityCodeService';
-import { sendEmail } from '../../services/EmailService';
-import { IRole } from '../../types/interfaces/IRole';
+import { sendEmailWrapper } from '../../services/EmailService';
 
 export const login = async (req: Request, res: Response) => {
   try {
@@ -40,7 +39,7 @@ export const login = async (req: Request, res: Response) => {
       const securityCode = await SecurityCodeService.createSecurityCode(user, User as Model<IUserDocument>, 5);
 
       // Envoyer le code par email
-      await sendEmail({
+      await sendEmailWrapper({
         to: user.email,
         template_uuid: 'c2f0396e-2cd1-4e0d-821a-7de1a8638176',
         template_variables: {
@@ -123,7 +122,7 @@ export const register = async (req: Request, res: Response) => {
     );
 
     // Envoyer le code par email
-    await sendEmail({
+    await sendEmailWrapper({
       to: createdUser.email,
       template_uuid: '13a6e90c-236b-4d8a-a49d-bf4554ab1aa5',
       template_variables: {
@@ -228,7 +227,6 @@ export const verifyEmail = async (req: Request, res: Response) => {
 
     const user = await User.findOne({ email: emailLowerCase })
       .exec() as IUserDocument | null;
-    console.log(user);
 
     if (!user) {
       return ResponseHandler.notFound(res, 'Utilisateur non trouvé');
@@ -252,5 +250,54 @@ export const verifyEmail = async (req: Request, res: Response) => {
     return ResponseHandler.success(res, null, 'Email vérifié avec succès');
   } catch (error: any) {
     return ResponseHandler.error(res, 'Erreur lors de la vérification de l\'email', error);
+  }
+};
+
+/**
+ * Renvoie un email de vérification à l'utilisateur
+ */
+export const resendVerificationEmail = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    if (!req.user) {
+      return ResponseHandler.unauthorized(res, 'Utilisateur non authentifié');
+    }
+
+    const user = await User.findById(req.user._id)
+      .exec() as IUserDocument | null;
+
+    if (!user) {
+      return ResponseHandler.notFound(res, 'Utilisateur non trouvé');
+    }
+
+    // Si l'email est déjà vérifié
+    if (user.emailVerifiedAt) {
+      return ResponseHandler.badRequest(res, 'L\'email a déjà été vérifié');
+    }
+
+    // Supprime l'ancien code de vérification s'il existe
+    await SecurityCodeService.deleteSecurityCode(user, User as Model<IUserDocument>);
+
+    // Génère un nouveau code de vérification d'email valide pendant 30 minutes
+    const securityCode = await SecurityCodeService.createSecurityCode(user, User as Model<IUserDocument>, 30);
+
+    // Envoyer le code par email
+    await sendEmailWrapper({
+      to: user.email,
+      template_uuid: '13a6e90c-236b-4d8a-a49d-bf4554ab1aa5',
+      template_variables: {
+        company_info_name: 'Hemicycle',
+        firstname: user.firstname,
+        lastname: user.lastname,
+        security_code: securityCode.plainCode,
+        company_info_address: '123 Rue de la Paix, 75000 Paris, France',
+        company_info_city: 'Paris',
+        company_info_zip_code: '75000',
+        company_info_country: 'France',
+      },
+    });
+
+    return ResponseHandler.success(res, null, 'Un nouveau code de vérification a été envoyé à votre adresse email');
+  } catch (error: any) {
+    return ResponseHandler.error(res, 'Erreur lors du renvoi de l\'email de vérification', error.message);
   }
 };

@@ -106,3 +106,5 @@ export const verifyEmailValidator = [
     .notEmpty()
     .withMessage('L\'email est requis'),
 ];
+
+export const resendVerificationEmailValidator = [];
