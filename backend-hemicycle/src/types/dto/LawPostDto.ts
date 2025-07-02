@@ -13,8 +13,8 @@ export class LawPostDto {
   private static createUserResponse(user: IUserDocument): UserResponse {
     return {
       id: user._id.toString(),
-      firstName: user.firstName,
-      lastName: user.lastName,
+      firstname: user.firstname,
+      lastname: user.lastname,
       email: user.email,
       hasOnBoarding: user.hasOnBoarding || false,
       twoFactorEnabled: user.twoFactorEnabled || false,

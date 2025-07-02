@@ -12,7 +12,6 @@ import { ResponseHandler } from '../../utils/responseHandler';
 import { UserDto } from '../../types/dto/UserDto';
 import { UserService } from '../../services/userService';
 import { SecurityCodeService } from '../../services/SecurityCodeService';
-import { IAuthenticatedRequest } from '../../types/interfaces/IAuthenticatedRequest';
 import { sendEmail } from '../../services/EmailService';
 
 export const login = async (req: Request, res: Response) => {
@@ -22,7 +21,7 @@ export const login = async (req: Request, res: Response) => {
     const user = await User.findOne({ email })
       .select('+password')
       .populate('role')
-      .populate('addresses')
+      .populate('address')
       .populate('votingSurvey') as IUserDocument | null;
 
     if (!user) {
@@ -45,8 +44,8 @@ export const login = async (req: Request, res: Response) => {
         template_uuid: 'c2f0396e-2cd1-4e0d-821a-7de1a8638176',
         template_variables: {
           company_info_name: 'Hemicycle',
-          firstname: user.firstName,
-          lastname: user.lastName,
+          firstname: user.firstname,
+          lastname: user.lastname,
           security_code: securityCode.plainCode,
           company_info_address: '123 Rue de la Paix, 75000 Paris, France',
           company_info_city: 'Paris',
@@ -138,7 +137,7 @@ export const me = async (req: AuthenticatedRequest, res: Response) => {
 
     const user = await User.findById(req.user._id)
       .populate('role')
-      .populate('addresses')
+      .populate('address')
       .populate('votingSurvey')
       .select('-password') as IUserDocument;
 
@@ -162,7 +161,7 @@ export const verify2FACode = async (req: Request, res: Response) => {
     const { code, email } = req.body;
     const user = await User.findOne({ email })
       .populate('role')
-      .populate('addresses')
+      .populate('address')
       .populate('votingSurvey') as unknown as IUserDocument;
 
     if (!user) {

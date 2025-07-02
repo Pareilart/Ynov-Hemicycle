@@ -1,5 +1,5 @@
 import { RoleResponse } from './RoleResponse';
-import { AddressesResponse } from './AddressesResponse';
+import { AddressResponse } from './AddressResponse';
 import { VotingFrequencyEnum } from '../../enum/VotingFrequencyEnum';
 import { ElectoralRegistrationEnum } from '../../enum/ElectoralRegistrationEnum';
 import { PoliticalPositioningEnum } from '../../enum/PoliticalPositioningEnum';
@@ -15,14 +15,14 @@ export interface VotingSurveyResponse {
 
 export interface UserResponse {
   id: string;
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   birthday?: Date;
   sexe?: 'Homme' | 'Femme' | 'Autre';
   email: string;
   emailVerifiedAt?: Date;
   role?: RoleResponse;
-  addresses?: AddressesResponse;
+  address?: AddressResponse;
   token? : {
     token : string;
     refreshToken : string;

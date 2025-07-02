@@ -3,24 +3,24 @@ import { IUser } from '../types';
 
 const userSchema = new Schema<IUser>(
   {
-    firstName: {
+    firstname: {
       type: String,
       required: true,
     },
-    lastName: {
+    lastname: {
       type: String,
       required: true,
     },
     birthday: {
       type: Date,
-      required: false,
+      required: true,
     },
     sexe: {
       type: String,
       enum: ['Homme', 'Femme', 'Autre'],
-      required: false,
+      required: true,
     },
-    addresses: {
+    address: {
       type: Schema.Types.ObjectId,
       ref: 'Addresses',
       required: false,

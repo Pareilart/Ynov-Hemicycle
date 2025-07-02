@@ -7,7 +7,7 @@ export * from './interfaces/IUser';
 export * from './interfaces/ILawPost';
 
 // Export des types de réponse
-export * from './responses/AddressesResponse';
+export * from './responses/AddressResponse';
 export * from './responses/PermissionResponse';
 export * from './responses/RoleResponse';
 export * from './responses/UserResponse';

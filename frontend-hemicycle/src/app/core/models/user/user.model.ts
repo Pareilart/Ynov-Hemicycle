@@ -15,16 +15,16 @@ import { UserGender } from "./user-gender.enum";
  * @property {Uuid} id - Identifiant unique de l'utilisateur
  * @property {Email} email - Email de l'utilisateur
  * @property {string} image - Image de l'utilisateur
- * @property {string} firstName - Prénom de l'utilisateur
- * @property {string} lastName - Nom de l'utilisateur
+ * @property {string} firstname - Prénom de l'utilisateur
+ * @property {string} lastname - Nom de l'utilisateur
  *
  * @example
  * ```typescript
  * const user: User = {
  *   id: "123e4567-e89b-12d3-a456-426614174000",
  *   email: "contact@valentin-fortin.pro",
- *   firstName: "Valentin",
- *   lastName: "FORTIN",
+ *   firstname: "Valentin",
+ *   lastname: "FORTIN",
  *   createdAt: new Date(),
  *   updatedAt: new Date(),
  *   deletedAt: undefined
@@ -64,7 +64,7 @@ export interface User extends Timestampable {
   readonly email: Email;
 
   /**
-   * Propriété firstName
+   * Propriété firstname
    * @readonly
    *
    * @description
@@ -73,12 +73,12 @@ export interface User extends Timestampable {
    * @memberof User
    * @since 1.0.0
    *
-   * @type {string} firstName
+   * @type {string} firstname
    */
-  readonly firstName: string;
+  readonly firstname: string;
 
   /**
-   * Propriété lastName
+   * Propriété lastname
    * @readonly
    *
    * @description
@@ -87,9 +87,9 @@ export interface User extends Timestampable {
    * @memberof User
    * @since 1.0.0
    *
-   * @type {string} lastName
+   * @type {string} lastname
    */
-  readonly lastName: string;
+  readonly lastname: string;
 
   /**
    * Propriété gender

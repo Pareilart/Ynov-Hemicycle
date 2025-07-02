@@ -6,7 +6,7 @@ export const registerValidator = [
     .withMessage('L\'email doit être une adresse email valide')
     .normalizeEmail(),
 
-  body('firstName')
+  body('firstname')
     .isString()
     .trim()
     .notEmpty()
@@ -14,7 +14,7 @@ export const registerValidator = [
     .isLength({ min: 2, max: 50 })
     .withMessage('Le prénom doit contenir entre 2 et 50 caractères'),
 
-  body('lastName')
+  body('lastname')
     .isString()
     .trim()
     .notEmpty()

@@ -25,7 +25,7 @@ export const userOnboarding = async (
   try {
     const userDoc = await User.findById(req.user?._id)
       .populate('role')
-      .populate('addresses');
+      .populate('address');
 
     if (!userDoc) {
       ResponseHandler.notFound(res, 'Utilisateur non trouvé');
@@ -87,7 +87,7 @@ export const userOnboarding = async (
 
     const updatedUser = await User.findById(userDoc._id)
       .populate('role')
-      .populate('addresses')
+      .populate('address')
       .populate('votingSurvey');
 
     if (updatedUser) {
@@ -134,7 +134,7 @@ export const getProfile = async (
   try {
     const user = await User.findById(req.user?._id)
       .populate('role')
-      .populate('addresses')
+      .populate('address')
       .populate('votingSurvey');
 
     if (!user) {
@@ -203,7 +203,7 @@ export const exportProfile = async (
 
     const user = await User.findById(req.user?._id)
       .populate('role')
-      .populate('addresses')
+      .populate('address')
       .populate('votingSurvey');
 
     if (!user) {
@@ -251,8 +251,8 @@ export const exportProfile = async (
       if (includeProfile) {
         const profileData = {
           id: exportData.profile.id,
-          prenom: exportData.profile.firstName,
-          nom: exportData.profile.lastName,
+          prenom: exportData.profile.firstname,
+          nom: exportData.profile.lastname,
           date_naissance: exportData.profile.birthday
             ? new Date(exportData.profile.birthday).toLocaleDateString(
               'fr-FR',
@@ -269,12 +269,12 @@ export const exportProfile = async (
             ? 'Oui'
             : 'Non',
           role: exportData.profile.role?.name || '',
-          adresse_ligne1: exportData.profile.addresses?.line1 || '',
-          adresse_ligne2: exportData.profile.addresses?.line2 || '',
-          code_postal: exportData.profile.addresses?.postalCode || '',
-          ville: exportData.profile.addresses?.city || '',
-          region: exportData.profile.addresses?.state || '',
-          pays: exportData.profile.addresses?.country || '',
+          adresse_ligne1: exportData.profile.address?.line1 || '',
+          adresse_ligne2: exportData.profile.address?.line2 || '',
+          code_postal: exportData.profile.address?.postalCode || '',
+          ville: exportData.profile.address?.city || '',
+          region: exportData.profile.address?.state || '',
+          pays: exportData.profile.address?.country || '',
           frequence_vote:
           exportData.profile.votingSurvey?.votingFrequency || '',
           inscription_electorale:

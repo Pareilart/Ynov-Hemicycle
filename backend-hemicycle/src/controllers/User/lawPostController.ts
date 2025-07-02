@@ -36,7 +36,7 @@ export const addLawReaction = async (req: AuthenticatedRequest, res: Response): 
 
     const lawPost = await LawPost.findById(lawPostId).populate(
       'userId',
-      'firstName lastName email hasOnBoarding',
+      'firstname lastname email hasOnBoarding',
     );
     if (!lawPost) {
       ResponseHandler.notFound(res, 'Loi non trouvée');
@@ -112,7 +112,7 @@ export const getLawPost = async (req: AuthenticatedRequest, res: Response): Prom
 
     // Récupérer la loi avec les informations de l'utilisateur
     const lawPost = await LawPost.findById(lawId)
-      .populate('userId', 'firstName lastName email hasOnBoarding');
+      .populate('userId', 'firstname lastname email hasOnBoarding');
 
     if (!lawPost) {
       ResponseHandler.notFound(res, 'Loi non trouvée');
@@ -121,7 +121,7 @@ export const getLawPost = async (req: AuthenticatedRequest, res: Response): Prom
 
     // Récupérer toutes les réactions pour cette loi avec les informations des utilisateurs
     const reactions = await LawReaction.find({ lawPostId: lawPost._id })
-      .populate('userId', 'firstName lastName email hasOnBoarding')
+      .populate('userId', 'firstname lastname email hasOnBoarding')
       .sort({ createdAt: -1 }); // Trier par date de création décroissante
 
     const response = LawPostDto.toResponse(lawPost, reactions);

@@ -4,11 +4,11 @@ import { IAddresses } from './IAddresses';
 import { IVotingSurvey } from './IVotingSurvey';
 
 export interface IUser extends Document {
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   birthday?: Date;
   sexe?: string;
-  addresses?: Types.ObjectId | IAddresses;
+  address?: Types.ObjectId | IAddresses;
   password: string;
   email: string;
   emailVerifiedAt?: Date;
@@ -18,8 +18,8 @@ export interface IUser extends Document {
   twoFactorEnabled: boolean;
 }
 
-export interface IUserPopulated extends Omit<IUser, 'role' | 'addresses'> {
+export interface IUserPopulated extends Omit<IUser, 'role' | 'address'> {
   _id: Types.ObjectId;
   role: IRole;
-  addresses?: IAddresses;
+  address?: IAddresses;
 }
