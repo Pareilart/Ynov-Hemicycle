@@ -1,10 +1,18 @@
-name: CI Pipeline
+name: Backend CI
 
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'backend-hemicycle/**'
   pull_request:
     branches: [ main ]
+    paths:
+      - 'backend-hemicycle/**'
+
+defaults:
+  run:
+    working-directory: backend-hemicycle
 
 jobs:
   test:
@@ -23,6 +31,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: backend-hemicycle/package-lock.json
     
     - name: Install dependencies
       run: npm ci
@@ -37,6 +46,6 @@ jobs:
       if: matrix.node-version == '20.x'
       uses: codecov/codecov-action@v3
       with:
-        file: ./coverage/lcov.info
-        flags: unittests
-        name: codecov-umbrella
+        file: ./backend-hemicycle/coverage/lcov.info
+        flags: backend
+        name: codecov-backend
