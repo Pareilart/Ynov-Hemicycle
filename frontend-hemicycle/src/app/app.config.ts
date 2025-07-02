@@ -1,5 +1,5 @@
 import { ApplicationConfig, ApplicationRef, inject, PLATFORM_ID, provideAppInitializer, provideExperimentalZonelessChangeDetection } from '@angular/core';
-import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { provideRouter, withComponentInputBinding, withEnabledBlockingInitialNavigation } from '@angular/router';
 import { HttpInterceptorFn } from '@angular/common/http';
 import { APP_ROUTES } from '@app/app.routes';
 import { provideClientHydration, withEventReplay, withIncrementalHydration } from '@angular/platform-browser';
@@ -7,23 +7,18 @@ import { provideHttpClient, withFetch, withInterceptors, withXsrfConfiguration }
 import { TitleStrategy } from '@core/strategies/title.strategy';
 import { environment } from '@environments/environment';
 import { provideTitleStrategy } from '@core/providers/title-strategy.provider';
-import { provideNgxWebstorage, withLocalStorage, withNgxWebstorageConfig, withSessionStorage } from 'ngx-webstorage';
+import { LocalStorageService, provideNgxWebstorage, withLocalStorage, withNgxWebstorageConfig, withSessionStorage } from 'ngx-webstorage';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { DialogService } from 'primeng/dynamicdialog';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
-import { authReducer } from './core/stores/auth/auth.reducer';
-import { AuthEffects } from './core/stores/auth/auth.effects';
-import { authInterceptor } from './core/interceptors/auth.interceptor';
-import { AUTH_FEATURE_KEY } from './core/stores/auth/auth.state';
-import { LocalStorageService } from 'ngx-webstorage';
-import { isPlatformBrowser } from '@angular/common';
-import { Store } from '@ngrx/store';
-import { REFRESH_TOKEN_KEY } from './core/constants/sotrage-keys.constant';
-import { refresh } from './core/stores/auth/auth.actions';
-import { first, tap } from 'rxjs';
+import { authReducer } from '@core/stores/auth/auth.reducer';
+import { AuthEffects } from '@core/stores/auth/auth.effects';
+import { AUTH_FEATURE_KEY } from '@core/stores/auth/auth.state';
+import { jwtInterceptor } from '@core/interceptors/jwt.interceptor';
+import { refreshInterceptor } from '@core/interceptors/refresh.interceptor';
 
 /**
  * Interceptors
@@ -36,7 +31,7 @@ import { first, tap } from 'rxjs';
  *
  * @see https://angular.dev/guide/http
  */
-const interceptors: HttpInterceptorFn[] = [authInterceptor];
+const interceptors: HttpInterceptorFn[] = [jwtInterceptor, refreshInterceptor];
 
 /**
  * Configuration client
@@ -60,8 +55,14 @@ export const appConfig: ApplicationConfig = {
         headerName: 'X-CSRFToken'
       })
     ),
-    provideRouter(APP_ROUTES, withComponentInputBinding()),
-    provideClientHydration(withEventReplay(), withIncrementalHydration()),
+    provideRouter(
+      APP_ROUTES,
+      withComponentInputBinding(),
+    ),
+    provideClientHydration(
+      withEventReplay(),
+      withIncrementalHydration()
+    ),
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {

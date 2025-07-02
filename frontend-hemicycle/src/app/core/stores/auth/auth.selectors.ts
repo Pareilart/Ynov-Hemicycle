@@ -7,17 +7,17 @@ export const selectAuthState: MemoizedSelector<
   DefaultProjectorFn<AuthState>
 > = createFeatureSelector<AuthState>(AUTH_FEATURE_KEY);
 
-export const selectCurrentUser = createSelector(
+export const selectAuthCurrentUser = createSelector(
   selectAuthState,
   (state: AuthState) => state.user
 );
 
-export const selectIsAuthenticated = createSelector(
+export const selectAuthIsAuthenticated = createSelector(
   selectAuthState,
   (state: AuthState) => state.isAuthenticated
 );
 
-export const selectAuthToken = createSelector(
+export const selectAuthAuthToken = createSelector(
   selectAuthState,
   (state: AuthState) => state.token
 );
@@ -45,4 +45,9 @@ export const selectAuthLoading = createSelector(
 export const selectAuthStatus = createSelector(
   selectAuthState,
   (state: AuthState) => state.operation.status
+);
+
+export const selectAuthIsRefreshing = createSelector(
+  selectAuthState,
+  (state: AuthState) => state.isRefreshing
 );

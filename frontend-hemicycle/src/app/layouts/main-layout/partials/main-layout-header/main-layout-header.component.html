@@ -1,86 +1,91 @@
 <header>
-    <p-megamenu
-      [model]="items()"
-      orientation="horizontal"
-      class="bg-transparent container mx-auto flex w-full 
-      [&_.p-megamenu]:bg-transparent 
-      [&_.p-megamenu-submenu-label]:text-sm 
-      [&_.p-megamenu-end]:ml-0 
-      [&_.p-megamenu-start]:mr-auto 
-      [&_.p-megamenu-root-list]:border-t-tertiary-700"
-      styleClass="flex w-full py-8 px-4 md:px-0 border-0"
-    >
-  
-      <!-- Début du menu (partie à gauche) -->
-      <ng-template pTemplate="start">
-        <section class="flex items-center gap-2">
-          <a class="flex items-center gap-3" [routerLink]="['/']">
-            <div class="flex items-center">
-              <img [src]="logo" alt="Logo" class="h-10 rounded-sm"/>
-            </div>
-  
-            <div class="flex flex-col justify-center">
-              <h1 class="text-lg font-medium text-surface-0">{{ appName }}</h1>
-              <span class="text-xs text-surface-400"></span>
-            </div>
-          </a>
-        </section>
-      </ng-template>
-  
-      <!-- Élément du menu -->
-      <ng-template pTemplate="item" let-item>
-        @let root = item.items && item.items.length > 0;
-  
-        @if (root) {
-          @if (item.routerLink || item.url) {
-            <a [routerLink]="item.routerLink" [href]="item.url" class="flex">
-              <div class="cursor-pointer overflow-hidden relative px-5 py-1 flex gap-3 items-center hover-gradient-bg rounded-md transition-colors">
-                <section class="flex items-center flex-row gap-4">
-                  <span class="font-medium">{{ item.label }}</span>
-                </section>
-              </div>
-            </a>
-          }
-  
-          @if (!item.routerLink && !item.url) {
-            <button class="flex h-full" type="button">
-              <div class="cursor-pointer overflow-hidden relative px-5 py-2 flex gap-3 items-center hover-gradient-bg rounded-md transition-colors">
-                <section class="flex items-center flex-row gap-4">
-                  <span class="font-medium">{{ item.label }}</span>
-                </section>
+  <p-megamenu [model]="items()" orientation="horizontal" class="bg-transparent container mx-auto flex w-full
+      [&_.p-megamenu]:bg-transparent
+      [&_.p-megamenu-submenu-label]:text-sm
+      [&_.p-megamenu-end]:ml-0
+      [&_.p-megamenu-start]:mr-auto
+      [&_.p-megamenu-root-list]:border-t-tertiary-700" styleClass="flex w-full py-5 px-4 md:px-0 border-0">
 
-                <section class="flex items-center">
-                    <i class="pi pi-chevron-down text-xs"></i>
-                </section>
-              </div>
-            </button>
-          }
-        }
-  
-        @if (!root && !item.image) {
-          @if (item.routerLink || item.url) {
-            <a [routerLink]="item.routerLink" [href]="item.url" class="flex cursor-pointer">
-              <div class="select-none flex flex-row gap-4 items-center px-4 py-2 overflow-hidden relative w-full hover-gradient-bg rounded-md">
-                <section class="flex item-center flex-col">
-                  <span class="font-semibold">{{ item.label }}</span>
-                  <p class="text-sm text-surface-500">{{ item.subtext }}</p>
-                </section>
-              </div>
-            </a>
-          }
-  
-          @if (!item.routerLink && !item.url) {
-            <div class="flex">
-              <div class="select-none flex flex-row gap-4 items-center px-4 py-2 overflow-hidden relative w-full hover-gradient-bg rounded-md">
-                <section class="flex item-center flex-col">
-                  <span class="font-semibold">{{ item.label }}</span>
-                  <p class="text-sm text-surface-500">{{ item.subtext }}</p>
-                </section>
-              </div>
-            </div>
-          }
-        }
-      </ng-template>
-  
-    </p-megamenu>
-  </header>
+    <!-- Début du menu (partie à gauche) -->
+    <ng-template pTemplate="start">
+      <section class="flex items-center gap-2">
+        <a class="flex items-center gap-3" [routerLink]="['/']">
+          <div class="flex items-center">
+            <img [src]="logo" alt="Logo" class="h-10 rounded-sm" />
+          </div>
+
+          <div class="flex flex-col justify-center">
+            <h1 class="text-lg font-medium text-surface-0">{{ appName }}</h1>
+            <span class="text-xs text-surface-400"></span>
+          </div>
+        </a>
+      </section>
+    </ng-template>
+
+    <!-- Élément du menu -->
+    <ng-template pTemplate="item" let-item>
+      @let root = item.items && item.items.length > 0;
+
+      @if (root) {
+      @if (item.routerLink || item.url) {
+      <a [routerLink]="item.routerLink" [href]="item.url" class="flex">
+        <div
+          class="cursor-pointer overflow-hidden relative px-5 py-1 flex gap-3 items-center hover-gradient-bg rounded-md transition-colors">
+          <section class="flex items-center flex-row gap-4">
+            <span class="font-medium">{{ item.label }}</span>
+          </section>
+        </div>
+      </a>
+      }
+
+      @if (!item.routerLink && !item.url) {
+      <button class="flex h-full" type="button">
+        <div
+          class="cursor-pointer overflow-hidden relative px-5 py-2 flex gap-3 items-center hover-gradient-bg rounded-md transition-colors">
+          <section class="flex items-center flex-row gap-4">
+            <span class="font-medium">{{ item.label }}</span>
+          </section>
+
+          <section class="flex items-center">
+            <i class="pi pi-chevron-down text-xs"></i>
+          </section>
+        </div>
+      </button>
+      }
+      }
+
+      @if (!root && !item.image) {
+      @if (item.routerLink || item.url) {
+      <a [routerLink]="item.routerLink" [href]="item.url" class="flex cursor-pointer">
+        <div
+          class="select-none flex flex-row gap-4 items-center px-4 py-2 overflow-hidden relative w-full hover-gradient-bg rounded-md">
+          <section class="flex item-center flex-col">
+            <span class="font-semibold">{{ item.label }}</span>
+            <p class="text-sm text-surface-500">{{ item.subtext }}</p>
+          </section>
+        </div>
+      </a>
+      }
+
+      @if (!item.routerLink && !item.url) {
+      <div class="flex">
+        <div
+          class="select-none flex flex-row gap-4 items-center px-4 py-2 overflow-hidden relative w-full hover-gradient-bg rounded-md">
+          <section class="flex item-center flex-col">
+            <span class="font-semibold">{{ item.label }}</span>
+            <p class="text-sm text-surface-500">{{ item.subtext }}</p>
+          </section>
+        </div>
+      </div>
+      }
+      }
+    </ng-template>
+
+  </p-megamenu>
+</header>
+
+<section class="border-y border-y-surface-200 bg-surface-50">
+  <div class="container mx-auto py-5 flex justify-center items-center">
+    <h1>{{ title.getTitle() }}</h1>
+  </div>
+</section>

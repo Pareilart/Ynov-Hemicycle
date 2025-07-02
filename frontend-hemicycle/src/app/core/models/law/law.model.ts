@@ -12,6 +12,10 @@ import { Timestampable } from "../timestampable/timestampable.model";
  * @author Valentin FORTIN <contact@valentin-fortin.pro>
  */
 export interface Law extends Timestampable {
+  readonly id: string;
   readonly title: string;
-
+  readonly resume: string;
+  readonly content: string;
+  readonly adopted: boolean;
+  readonly accountability: 1 | 2 | 3 | 4;
 }

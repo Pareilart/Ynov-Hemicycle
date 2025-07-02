@@ -108,10 +108,8 @@ export class AuthService {
   public register(payload: UserRegistration): Observable<HttpResponse<ApiReponse<User>>> {
     const url: string = `${AuthService.API_URL}/register`;
 
-    const sexe: string = payload.gender === UserGender.MALE ? 'Homme' : 'Femme';
-
     return this.httpClient.post<ApiReponse<User>>(url, {
-      sexe,
+      sexe: payload.gender,
       lastName: payload.lastName,
       firstName: payload.firstName,
       email: payload.email,

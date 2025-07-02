@@ -7,6 +7,7 @@ import { MegaMenuModule } from 'primeng/megamenu';
 import { ScrollDispatcher, ViewportRuler, ViewportScrollPosition } from '@angular/cdk/scrolling';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-main-layout-header',
@@ -34,6 +35,21 @@ export class MainLayoutHeaderComponent {
    * @type {string} appName
    */
   public readonly appName: string = environment.application.name;
+
+  /**
+   * Propriété title
+   * @readonly
+   *
+   * @description
+   * Titre de la page
+   *
+   * @access public
+   * @memberof MainLayoutHeaderComponent
+   * @since 1.0.0
+   *
+   * @type {Title} title
+   */
+  public readonly title: Title = inject<Title>(Title);
 
   /**
    * Propriété items

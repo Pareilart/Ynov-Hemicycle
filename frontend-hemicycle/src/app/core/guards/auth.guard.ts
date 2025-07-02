@@ -2,11 +2,11 @@ import { inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, GuardResult, MaybeAsync, Router, RouterStateSnapshot } from "@angular/router";
 import { AuthState } from "@core/stores/auth/auth.state";
 import { Store } from "@ngrx/store";
-import { selectAuthState, selectIsAuthenticated } from "../stores/auth/auth.selectors";
+import { selectAuthIsAuthenticated, selectAuthState } from "../stores/auth/auth.selectors";
 import { filter, first, map, of, switchMap, take } from "rxjs";
 import { refresh } from "../stores/auth/auth.actions";
 import { LocalStorageService } from "ngx-webstorage";
-import { REFRESH_TOKEN_KEY } from "../constants/sotrage-keys.constant";
+import { REFRESH_TOKEN_KEY } from "../constants/storage-keys.constant";
 
 @Injectable({ providedIn: "root" })
 export class AuthGuard implements CanActivate {
@@ -94,12 +94,14 @@ export class AuthGuard implements CanActivate {
         if (refreshToken) {
           this.store.dispatch(refresh({ refreshToken }));
 
-          return this.store.select(selectIsAuthenticated).pipe(
+          return this.store.select(selectAuthIsAuthenticated).pipe(
             filter(Boolean),
             first(),
             map(() => true)
           );
         }
+
+        console.log('No refresh token found');
 
         return of(this.router.createUrlTree(['/auth/login'], {
           queryParams: { returnUrl: route.url }

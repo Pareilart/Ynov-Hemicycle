@@ -100,6 +100,20 @@ export interface AuthState {
    * @type {boolean} isAuthenticated
    */
   isAuthenticated: boolean;
+
+  /**
+   * Propriété isRefreshing
+   *
+   * @description
+   * Indique si une requête de rafraîchissement
+   * est en cours
+   *
+   * @memberof AuthState
+   * @since 1.0.0
+   *
+   * @type {boolean} isRefreshing
+   */
+  isRefreshing: boolean;
   //#endregion
 };
 
@@ -121,5 +135,6 @@ export const initialAuthState: AuthState = {
   },
   user: null,
   token: null,
-  isAuthenticated: false
+  isAuthenticated: false,
+  isRefreshing: false
 };

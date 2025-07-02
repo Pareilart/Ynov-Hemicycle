@@ -96,10 +96,19 @@ export const authReducer = createReducer(
       }
     }
   })),
+  on(AuthActions.refresh, (state) => ({
+    ...state,
+    operation: {
+      loading: true,
+      status: null
+    },
+    isRefreshing: true
+  })),
   on(AuthActions.refreshSuccess, (state, { token }) => ({
     ...state,
     token: token,
-    isAuthenticated: true
+    isAuthenticated: true,
+    isRefreshing: false
   })),
   on(AuthActions.refreshFailure, (state, { status }) => ({
     ...state,
@@ -110,7 +119,8 @@ export const authReducer = createReducer(
         label: status.label,
         message: status.message
       }
-    }
+    },
+    isRefreshing: false
   })),
   on(AuthActions.fetchMeSuccess, (state, { user }) => ({
     ...state,

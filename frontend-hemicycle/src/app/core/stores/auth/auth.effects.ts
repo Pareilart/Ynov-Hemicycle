@@ -14,7 +14,7 @@ import { JwtToken } from "@app/core/models/jwt/jwt-token.model";
 import { StoreOperationStatus } from "@app/core/models/store/store-operation-status.model";
 import { UserRegistration } from "@app/core/models/user/user-registration.model";
 import { LocalStorageService } from "ngx-webstorage";
-import { REFRESH_TOKEN_KEY } from "@app/core/constants/sotrage-keys.constant";
+import { REFRESH_TOKEN_KEY } from "@app/core/constants/storage-keys.constant";
 
 @Injectable()
 export class AuthEffects {
@@ -140,6 +140,19 @@ export class AuthEffects {
     ))
   ));
 
+  /**
+   * Effet loginSuccess
+   * @method loginSuccess$
+   *
+   * @description
+   * Effet loginSuccess pour se connecter
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
   public loginSuccess$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.loginSuccess),
     tap(({ user, token }: { user: User, token: JwtToken }) => {
@@ -152,6 +165,19 @@ export class AuthEffects {
     })
   ), { dispatch: false });
 
+  /**
+   * Effet loginFailure
+   * @method loginFailure$
+   *
+   * @description
+   * Effet loginFailure pour se connecter
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
   public loginFailure$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.loginFailure),
     tap(({ status }: { status: StoreOperationStatus }) => {
@@ -159,6 +185,19 @@ export class AuthEffects {
     })
   ), { dispatch: false });
 
+  /**
+   * Effet register
+   * @method register$
+   *
+   * @description
+   * Effet register pour se connecter
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
   public register$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.register),
     switchMap(({ registration }: { registration: UserRegistration }) => this.authService.register(registration).pipe(
@@ -186,6 +225,19 @@ export class AuthEffects {
     ))
   ));
 
+  /**
+   * Effet registerSuccess
+   * @method registerSuccess$
+   *
+   * @description
+   * Effet registerSuccess pour se connecter
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
   public registerSuccess$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.registerSuccess),
     tap(({ user }: { user: User }) => {
@@ -193,6 +245,19 @@ export class AuthEffects {
     })
   ), { dispatch: false });
 
+  /**
+   * Effet registerFailure
+   * @method registerFailure$
+   *
+   * @description
+   * Effet registerFailure pour se connecter
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
   public registerFailure$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.registerFailure),
     tap(({ status }: { status: StoreOperationStatus }) => {
@@ -200,6 +265,19 @@ export class AuthEffects {
     })
   ), { dispatch: false });
 
+  /**
+   * Effet logoutSuccess
+   * @method logoutSuccess$
+   *
+   * @description
+   * Effet logoutSuccess pour se connecter
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
   public logoutSuccess$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.logoutSuccess),
     tap(() => {
@@ -208,6 +286,19 @@ export class AuthEffects {
     })
   ), { dispatch: false });
 
+  /**
+   * Effet logoutFailure
+   * @method logoutFailure$
+   *
+   * @description
+   * Effet logoutFailure pour se connecter
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
   public logoutFailure$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.logoutFailure),
     tap(({ status }: { status: StoreOperationStatus }) => {
@@ -215,6 +306,19 @@ export class AuthEffects {
     })
   ), { dispatch: false });
 
+  /**
+   * Effet refresh
+   * @method refresh$
+   *
+   * @description
+   * Effet refresh pour se connecter
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
   public refresh$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.refresh),
     switchMap(({ refreshToken }: { refreshToken: string }) => this.authService.refreshToken(refreshToken).pipe(
@@ -242,6 +346,19 @@ export class AuthEffects {
     ))
   ));
 
+  /**
+   * Effet refreshSuccess
+   * @method refreshSuccess$
+   *
+   * @description
+   * Effet refreshSuccess pour se connecter
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
   public refreshSuccess$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.refreshSuccess),
     tap(({ token }: { token: JwtToken }) => {
@@ -253,6 +370,19 @@ export class AuthEffects {
     switchMap(() => [AuthActions.fetchMe()])
   ));
 
+  /**
+   * Effet refreshFailure
+   * @method refreshFailure$
+   *
+   * @description
+   * Effet refreshFailure pour se connecter
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
   public refreshFailure$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.refreshFailure),
     tap(({ status }: { status: StoreOperationStatus }) => {
@@ -287,6 +417,19 @@ export class AuthEffects {
     ))
   ));
 
+  /**
+   * Effet fetchMeSuccess
+   * @method fetchMeSuccess$
+   *
+   * @description
+   * Effet fetchMeSuccess pour se connecter
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
   public fetchMeSuccess$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.fetchMeSuccess),
     tap(({ user }: { user: User }) => {
@@ -294,6 +437,19 @@ export class AuthEffects {
     })
   ), { dispatch: false });
 
+  /**
+   * Effet fetchMeFailure
+   * @method fetchMeFailure$
+   *
+   * @description
+   * Effet fetchMeFailure pour se connecter
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
   public fetchMeFailure$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.fetchMeFailure),
     tap(({ status }: { status: StoreOperationStatus }) => {
