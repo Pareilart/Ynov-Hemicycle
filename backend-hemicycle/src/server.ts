@@ -57,10 +57,10 @@ mongoose.connect(process.env.MONGODB_URI || '')
 app.use('/api/admin/users', adminUserRoutes);
 
 app.use('/api/deputy', deputyDeputeRoutes);
-app.use('/api/deputy/law-posts', deputyLawPostRoutes);
+app.use('/api/deputy/lawPosts', deputyLawPostRoutes);
 
 app.use('/api/users', userRoutes);
-app.use('/api/users/law-posts', userLawPostRoutes);
+app.use('/api/users/lawPosts', userLawPostRoutes);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/health', healthRoutes);
