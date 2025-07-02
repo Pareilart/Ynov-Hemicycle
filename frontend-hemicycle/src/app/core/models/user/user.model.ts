@@ -14,8 +14,8 @@ import { UserRole } from "./user-role.model";
  * @property {string} id - Identifiant unique de l'utilisateur
  * @property {Email} email - Email de l'utilisateur
  * @property {string} image - Image de l'utilisateur
- * @property {string} firstName - Prénom de l'utilisateur
- * @property {string} lastName - Nom de l'utilisateur
+ * @property {string} firstname - Prénom de l'utilisateur
+ * @property {string} lastname - Nom de l'utilisateur
  * @property {string} birthday - Nom de l'utilisateur
  *
  * @author Valentin FORTIN <contact@valentin-fortin.pro>

@@ -6,7 +6,7 @@ import { User} from '@core/models/user/user.model'
 import { MessageModule } from 'primeng/message';
 import { CommonModule } from '@angular/common';
 import { CheckboxModule } from 'primeng/checkbox';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-profil-user',
@@ -15,7 +15,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './profil-user.component.css'
 })
 export class ProfilUserComponent {
-  is2FAEnabled = false;
+  twoFactorEnabled: boolean = false;
   private readonly store: Store<AuthState> = inject<Store<AuthState>>(Store<AuthState>);
   public readonly user: Signal<User | null> = this.store.selectSignal<User | null>(selectAuthCurrentUser);
 }
