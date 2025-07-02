@@ -82,28 +82,28 @@ export interface HTTPException {
 export const HTTP_EXCEPTIONS: HTTPException[] = [
   {
     code: 404,
-    title: 'Not Found',
-    message: 'The requested resource was not found on this server.'
+    title: 'Ressource non trouvée',
+    message: 'La ressource demandée n\'a pas été trouvée sur ce serveur.'
   },
   {
     code: 500,
-    title: 'Internal Server Error',
-    message: 'An unexpected error occurred on the server.'
+    title: 'Erreur interne du serveur',
+    message: 'Une erreur inattendue est survenue sur le serveur.'
   },
   {
     code: 401,
-    title: 'Unauthorized',
-    message: 'You are not authorized to access this resource.'
+    title: 'Non autorisé',
+    message: 'Vous n\'êtes pas autorisé à accéder à cette ressource.'
   },
   {
     code: 403,
-    title: 'Forbidden',
-    message: 'You are not allowed to access this resource.'
+    title: 'Interdit',
+    message: 'Vous n\'êtes pas autorisé à accéder à cette ressource.'
   },
   {
     code: 400,
-    title: 'Bad Request',
-    message: 'The request could not be understood by the server due to malformed syntax.'
+    title: 'Requête invalide',
+    message: 'La requête n\'a pas pu être comprise par le serveur en raison d\'une syntaxe mal formée.'
   }
 ];
 

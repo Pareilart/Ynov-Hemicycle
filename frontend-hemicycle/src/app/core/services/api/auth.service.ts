@@ -4,6 +4,7 @@ import { ApiReponse } from "@app/core/models/api/api-response.model";
 import { JwtToken } from "@app/core/models/jwt/jwt-token.model";
 import { UserCredentials } from "@app/core/models/user/user-credentials.model";
 import { UserGender } from "@app/core/models/user/user-gender.enum";
+import { User2FA } from "@app/core/models/user/user-2fa.model";
 import { UserRegistration } from "@app/core/models/user/user-registration.model";
 import { User } from "@app/core/models/user/user.model";
 import { environment } from "@environments/environment";
@@ -71,6 +72,28 @@ export class AuthService {
   }
 
   /**
+   * Méthode verify2FA
+   * @method verify2FA
+   *
+   * @description
+   * Méthode verify2FA pour vérifier le code 2FA
+   *
+   * @access public
+   * @memberof AuthService
+   * @since 1.0.0
+   *
+   * @param {User2FA} payload - Identifiants de connexion
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
+  public verify2FA(payload: User2FA): Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>> {
+    const url: string = `${AuthService.API_URL}/verify-2fa-code`;
+    return this.httpClient.post<ApiReponse<User & { token: JwtToken }>>(url, payload, {
+      observe: 'response'
+    });
+  }
+
+  /**
    * Méthode me
    * @method me
    *
@@ -110,8 +133,8 @@ export class AuthService {
 
     return this.httpClient.post<ApiReponse<User>>(url, {
       sexe: payload.gender,
-      lastName: payload.lastName,
-      firstName: payload.firstName,
+      lastName: payload.lastname,
+      firstName: payload.firstname,
       email: payload.email,
       password: payload.password,
       birthday: payload.birthday,

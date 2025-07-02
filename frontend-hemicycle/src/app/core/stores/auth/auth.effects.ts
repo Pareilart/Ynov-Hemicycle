@@ -15,6 +15,7 @@ import { StoreOperationStatus } from "@app/core/models/store/store-operation-sta
 import { UserRegistration } from "@app/core/models/user/user-registration.model";
 import { LocalStorageService } from "ngx-webstorage";
 import { REFRESH_TOKEN_KEY } from "@app/core/constants/storage-keys.constant";
+import { User2FA } from "@app/core/models/user/user-2fa.model";
 
 @Injectable()
 export class AuthEffects {
@@ -126,6 +127,12 @@ export class AuthEffects {
         const token: JwtToken = response.body.data.token;
         const user: User = response.body.data;
 
+        if (user.twoFactorEnabled) {
+          this.router.navigate(['/auth/verification'], {
+            queryParams: { email: credentials.email }
+          });
+        }
+
         return AuthActions.loginSuccess({
           user: user,
           token: token,
@@ -180,6 +187,93 @@ export class AuthEffects {
    */
   public loginFailure$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.loginFailure),
+    tap(({ status }: { status: StoreOperationStatus }) => {
+      console.log(status);
+    })
+  ), { dispatch: false });
+
+  /**
+   * Effet verify2FA
+   * @method verify2FA$
+   *
+   * @description
+   * Effet verify2FA pour vérifier le code 2FA
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
+  public verify2FA$ = createEffect(() => this.actions.pipe(
+    ofType(AuthActions.verify2FA),
+    switchMap(({ twoFA }: { twoFA: User2FA }) => this.authService.verify2FA(twoFA).pipe(
+      map((response: HttpResponse<ApiReponse<User & { token: JwtToken }>>) => {
+        if (!response.body?.data) {
+          return AuthActions.verify2FAFailure({ status: {
+            code: response.status,
+            label: 'Verify 2FA Failure',
+            message: 'Verify 2FA Failure'
+          } });
+        }
+
+        const token: JwtToken = response.body.data.token;
+        const user: User = response.body.data;
+
+        return AuthActions.verify2FASuccess({
+          user: user,
+          token: token,
+          status: {
+            code: response.status,
+            label: 'Verify 2FA Success',
+            message: 'Verify 2FA Success'
+          }
+        });
+      }),
+      catchError(error => of(AuthActions.verify2FAFailure({ status: error.status })))
+    ))
+  ));
+
+  /**
+   * Effet verify2FASuccess
+   * @method verify2FASuccess$
+   *
+   * @description
+   * Effet verify2FASuccess pour vérifier le code 2FA
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
+  public verify2FASuccess$ = createEffect(() => this.actions.pipe(
+    ofType(AuthActions.verify2FASuccess),
+    tap(({ user, token }: { user: User, token: JwtToken }) => {
+      this.router.navigate(['/']);
+
+      this.localStorageService.store(
+        REFRESH_TOKEN_KEY,
+        token.refreshToken
+      );
+    })
+  ), { dispatch: false });
+
+  /**
+   * Effet verify2FAFailure
+   * @method verify2FAFailure$
+   *
+   * @description
+   * Effet verify2FAFailure pour vérifier le code 2FA
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
+  public verify2FAFailure$ = createEffect(() => this.actions.pipe(
+    ofType(AuthActions.verify2FAFailure),
     tap(({ status }: { status: StoreOperationStatus }) => {
       console.log(status);
     })

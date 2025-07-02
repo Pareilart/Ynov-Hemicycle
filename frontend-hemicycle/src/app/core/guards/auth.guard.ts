@@ -90,7 +90,7 @@ export class AuthGuard implements CanActivate {
         }
 
         // Si on a un refresh token, on tente de rafraîchir
-        const refreshToken = this.localStorageService.retrieve(REFRESH_TOKEN_KEY);
+        const refreshToken: string | undefined = this.localStorageService.retrieve(REFRESH_TOKEN_KEY);
         if (refreshToken) {
           this.store.dispatch(refresh({ refreshToken }));
 
@@ -100,8 +100,6 @@ export class AuthGuard implements CanActivate {
             map(() => true)
           );
         }
-
-        console.log('No refresh token found');
 
         return of(this.router.createUrlTree(['/auth/login'], {
           queryParams: { returnUrl: route.url }

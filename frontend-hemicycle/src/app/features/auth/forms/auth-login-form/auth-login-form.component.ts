@@ -12,6 +12,8 @@ import { AuthState } from '@app/core/stores/auth/auth.state';
 import { Store } from '@ngrx/store';
 import { selectAuthLoading } from '@app/core/stores/auth/auth.selectors';
 import { login } from '@app/core/stores/auth/auth.actions';
+import { FormErrorsComponent } from "@shared/components/form-errors/form-errors.component";
+import { FormErrorsItemComponent } from "@shared/components/form-errors/form-errors-item/form-errors-item.component";
 
 /**
  * Type AuthLoginFormValues
@@ -70,8 +72,10 @@ type AuthProvider = {
     InputTextModule,
     CheckboxModule,
     ButtonModule,
-    RouterModule
-  ],
+    RouterModule,
+    FormErrorsComponent,
+    FormErrorsItemComponent
+],
   templateUrl: './auth-login-form.component.html',
   styleUrl: './auth-login-form.component.css',
   host: { class: 'w-full' }

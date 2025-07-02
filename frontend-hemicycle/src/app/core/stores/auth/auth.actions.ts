@@ -4,6 +4,7 @@ import { JwtToken } from '@core/models/jwt/jwt-token.model';
 import { UserCredentials } from '@core/models/user/user-credentials.model';
 import { StoreOperationStatus } from '@app/core/models/store/store-operation-status.model';
 import { UserRegistration } from '@app/core/models/user/user-registration.model';
+import { User2FA } from '@app/core/models/user/user-2fa.model';
 
 /**
  * Action login
@@ -181,6 +182,53 @@ export const refreshSuccess = createAction(
  */
 export const refreshFailure = createAction(
   '[Auth] Refresh Token Failure',
+  props<{ status: StoreOperationStatus }>()
+);
+
+/**
+ * Action verify2FA
+ * @const verify2FA
+ *
+ * @description
+ * Action permettant de vérifier
+ * le code 2FA
+ *
+ * @type {Action} verify2FA
+ */
+export const verify2FA = createAction(
+  '[Auth] Verify 2FA',
+  props<{ twoFA: User2FA }>()
+);
+
+/**
+ * Action verify2FASuccess
+ * @const verify2FASuccess
+ *
+ * @description
+ * Action permettant de gérer le
+ * succès de la vérification
+ * du code 2FA
+ *
+ * @type {Action} verify2FASuccess
+ */
+export const verify2FASuccess = createAction(
+  '[Auth] Verify 2FA Success',
+  props<{ user: User, token: JwtToken, status: StoreOperationStatus }>()
+);
+
+/**
+ * Action verify2FAFailure
+ * @const verify2FAFailure
+ *
+ * @description
+ * Action permettant de gérer le
+ * échec de la vérification
+ * du code 2FA
+ *
+ * @type {Action} verify2FAFailure
+ */
+export const verify2FAFailure = createAction(
+  '[Auth] Verify 2FA Failure',
   props<{ status: StoreOperationStatus }>()
 );
 

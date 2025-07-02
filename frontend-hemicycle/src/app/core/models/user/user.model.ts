@@ -105,5 +105,20 @@ export interface User extends Timestampable {
    * @type {boolean} hasOnBoarding
    */
   readonly hasOnBoarding: boolean;
+
+  /**
+   * Propriété twoFactorEnabled
+   * @readonly
+   *
+   * @description
+   * Indique si l'utilisateur a activé
+   * le 2FA
+   *
+   * @memberof User
+   * @since 1.0.0
+   *
+   * @type {boolean} twoFactorEnabled
+   */
+  readonly twoFactorEnabled: boolean;
   //#endregion
 };

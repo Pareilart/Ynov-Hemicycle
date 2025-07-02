@@ -40,7 +40,7 @@ import { FormErrorsItemComponent } from "../../../../shared/components/form-erro
  * @see UserRegistration
  */
 type AuthRegisterFormValues = {
-  infos: Pick<UserRegistration, 'firstName' | 'lastName' | 'gender' | 'birthday'>;
+  infos: Pick<UserRegistration, 'firstname' | 'lastname' | 'gender' | 'birthday'>;
   credentials: Pick<UserRegistration, 'email' | 'password'> & {
     passwordConfirmation: string;
     terms: boolean;
@@ -237,7 +237,7 @@ export class AuthRegisterFormComponent {
         value: '',
         disabled: false
       }, [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
-      lastName: this.formBuilder.control<string>({
+      lastname: this.formBuilder.control<string>({
         value: '',
         disabled: false
       }, [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
@@ -324,8 +324,8 @@ export class AuthRegisterFormComponent {
 
     this.store.dispatch(register({
       registration: {
-        firstName: infos.firstName!,
-        lastName: infos.lastName!,
+        firstname: infos.firstname!,
+        lastname: infos.lastname!,
         email: credentials.email!,
         password: credentials.password!,
         gender: infos.gender!,

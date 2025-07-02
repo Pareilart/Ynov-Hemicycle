@@ -37,6 +37,38 @@ export const authReducer = createReducer(
       }
     }
   })),
+  on(AuthActions.verify2FA, (state) => ({
+    ...state,
+    operation: {
+      loading: true,
+      status: null
+    }
+  })),
+  on(AuthActions.verify2FAFailure, (state, { status }) => ({
+    ...state,
+    operation: {
+      loading: false,
+      status: {
+        code: status.code,
+        label: status.label,
+        message: status.message
+      }
+    }
+  })),
+  on(AuthActions.verify2FASuccess, (state, { user, token, status }) => ({
+    ...state,
+    operation: {
+      loading: false,
+      status: {
+        code: status.code,
+        label: status.label,
+        message: status.message
+      }
+    },
+    user: user,
+    token: token,
+    isAuthenticated: true
+  })),
   on(AuthActions.register, (state) => ({
     ...state,
     operation: {
@@ -107,6 +139,10 @@ export const authReducer = createReducer(
   on(AuthActions.refreshSuccess, (state, { token }) => ({
     ...state,
     token: token,
+    operation: {
+      loading: false,
+      status: null
+    },
     isAuthenticated: true,
     isRefreshing: false
   })),

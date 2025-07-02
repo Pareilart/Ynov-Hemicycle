@@ -4,7 +4,8 @@ import { AuthRegisterComponent } from "@features/auth/pages/auth-register/auth-r
 import { AuthForgotPasswordComponent } from "@features/auth/pages/auth-forgot-password/auth-forgot-password.component";
 import { AuthResetPasswordComponent } from "@features/auth/pages/auth-reset-password/auth-reset-password.component";
 import { AuthHomeComponent } from '@features/auth/pages/auth-home/auth-home.component';
-import { AuthOtpVerificationComponent } from './pages/auth-otp-verification/auth-otp-verification.component';
+import { Auth2FAVerificationFormComponent } from './forms/auth-2fa-verification-form/auth-2fa-verification-form.component';
+import { AuthEmail2FAResolver } from '@features/auth/resolvers/auth-email-2fa.resolver';
 
 /**
  * Routes AUTH_ROUTES
@@ -45,8 +46,11 @@ export const AUTH_ROUTES: Routes = [
   },
   {
     path: 'verification',
-    title: 'Confirmation OTP',
-    component: AuthOtpVerificationComponent,
+    title: 'Confirmation 2FA',
+    resolve: {
+      email: AuthEmail2FAResolver
+    },
+    component: Auth2FAVerificationFormComponent,
   },
   {
     path: '',

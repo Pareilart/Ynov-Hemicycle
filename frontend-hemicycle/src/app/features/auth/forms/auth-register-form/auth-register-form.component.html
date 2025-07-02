@@ -17,14 +17,14 @@
           <div class="flex flex-col gap-5" [formGroup]="infosForm">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <section class="flex flex-col gap-1">
-                <label for="firstName" class="flex flex-row gap-1">
+                <label for="firstname" class="flex flex-row gap-1">
                   <span class="font-medium">Prénom</span>
                   <span class="text-red-500">*</span>
                 </label>
 
                 <input
-                  id="firstName"
-                  formControlName="firstName"
+                  id="firstname"
+                  formControlName="firstname"
                   placeholder="Votre prénom"
                   type="text"
                   autocomplete="given-name"
@@ -32,7 +32,7 @@
                   [fluid]="true"
                 />
 
-                <app-form-errors [control]="infosForm.get('firstName')!" help="Veuillez renseigner votre prénom">
+                <app-form-errors [control]="infosForm.get('firstname')!" help="Veuillez renseigner votre prénom">
                   <app-form-errors-item validator="required">
                     <p>Veuillez saisir votre prénom.</p>
                   </app-form-errors-item>
@@ -48,14 +48,14 @@
               </section>
 
               <section class="flex flex-col gap-1">
-                <label for="lastName" class="flex flex-row gap-1">
+                <label for="lastname" class="flex flex-row gap-1">
                   <span class="font-medium">Nom</span>
                   <span class="text-red-500">*</span>
                 </label>
 
                 <input
-                  id="lastName"
-                  formControlName="lastName"
+                  id="lastname"
+                  formControlName="lastname"
                   placeholder="Votre nom"
                   type="text"
                   autocomplete="family-name"
@@ -63,7 +63,7 @@
                   [fluid]="true"
                 />
 
-                <app-form-errors [control]="infosForm.get('lastName')!" help="Veuillez renseigner votre nom">
+                <app-form-errors [control]="infosForm.get('lastname')!" help="Veuillez renseigner votre nom">
                   <app-form-errors-item validator="required">
                     <p>Veuillez saisir votre nom.</p>
                   </app-form-errors-item>

@@ -1,5 +1,6 @@
 <form class="flex flex-col gap-5 w-full h-full" [formGroup]="form" (ngSubmit)="onSubmit()">
   <section class="flex flex-col gap-5 mb-5">
+    <img src="/images/logo.jpg" alt="Logo" class="rounded-lg w-15 h-15">
     <h1 class="font-bold text-primary-500 text-3xl">Connexion</h1>
     <p class="text-sm text-surface-500 dark:text-surface-400">Connectez-vous pour accéder à votre compte</p>
   </section>
@@ -39,6 +40,16 @@
       pInputText
       [fluid]="true"
     />
+
+    <app-form-errors [control]="form.get('email')!" help="Veuillez renseigner votre adresse e-mail">
+      <app-form-errors-item validator="required">
+        <p>Veuillez saisir votre adresse e-mail.</p>
+      </app-form-errors-item>
+
+      <app-form-errors-item validator="email">
+        <p>Veuillez saisir une adresse e-mail valide.</p>
+      </app-form-errors-item>
+    </app-form-errors>
   </section>
 
   <section class="flex flex-col gap-1">
@@ -56,6 +67,12 @@
       [toggleMask]="true"
       [feedback]="false"
     />
+
+    <app-form-errors [control]="form.get('password')!" help="Veuillez renseigner votre mot de passe">
+      <app-form-errors-item validator="required">
+        <p>Veuillez saisir votre mot de passe.</p>
+      </app-form-errors-item>
+    </app-form-errors>
   </section>
 
   <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
