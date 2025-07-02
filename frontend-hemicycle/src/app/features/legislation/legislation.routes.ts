@@ -1,6 +1,7 @@
 import { Routes } from "@core/models/route/route.model";
 import { LegislationLawsListComponent } from "@features/legislation/pages/legislation-laws-list/legislation-laws-list.component";
 import { LegislationLawsDetailComponent } from "@features/legislation/pages/legislation-laws-detail/legislation-laws-detail.component";
+import { LegislationLawResolver } from "@features/legislation/resolvers/legislation-law.resolver";
 
 /**
  * Routes LEGISLATION_ROUTES
@@ -22,6 +23,9 @@ export const LEGISLATION_ROUTES: Routes = [
   {
     path: 'laws/:id',
     title: 'Loi',
+    resolve: {
+      law: LegislationLawResolver,
+    },
     component: LegislationLawsDetailComponent,
   },
 ];

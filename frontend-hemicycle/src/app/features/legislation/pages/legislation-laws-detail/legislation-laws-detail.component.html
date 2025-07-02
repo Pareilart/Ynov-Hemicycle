@@ -1,1 +1,84 @@
-<p>legislation-laws-detail works!</p>
+<div class="container mx-auto mt-10 px-5 md:px-0">
+  <div class="flex flex-col gap-5 p-5 bg-surface-0 rounded-md border border-surface-200">
+    <section class="flex flex-row gap-4 justify-between">
+      <div class="flex flex-row items-center gap-1">
+        <h2 class="font-semibold text-md text-lg">
+          {{ law().title }}
+        </h2>
+      </div>
+
+      <div class="flex flex-row gap-4">
+        <div class="flex flex-row items-center gap-1">
+          <i class="pi pi-megaphone text-primary-500"></i>
+          <div class="flex flex-row items-center">
+            <span>{{ law().accountability }}</span>
+            <span>/</span>
+            <span>4</span>
+          </div>
+        </div>
+
+        <div class="flex flex-row items-center gap-1">
+          @if (law().adopted) {
+            <div class="flex flex-row items-center gap-1 border border-surface-200 rounded-full px-3 py-1">
+              <i class="pi pi-check text-green-500"></i>
+              <span class="text-sm font-medium">Adopté</span>
+            </div>
+          }
+          @else {
+            <div class="flex flex-row items-center gap-1 border border-surface-200 rounded-full px-3 py-1">
+              <i class="pi pi-times text-red-500"></i>
+              <span class="text-sm font-medium">Refusé</span>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="flex flex-col">
+      <p class="text-surface-600">
+        {{ law().resume }}
+      </p>
+
+      <p-tabs [value]="0">
+        <p-tablist>
+          <p-tab [value]="0">Résumé</p-tab>
+          <p-tab [value]="1">Vote</p-tab>
+          <p-tab [value]="2">Redevabilité</p-tab>
+        </p-tablist>
+
+        <p-tabpanels>
+          <p-tabpanel [value]="0">
+            <p class="text-surface-600">
+              {{ law().content }}
+            </p>
+          </p-tabpanel>
+          
+          <p-tabpanel [value]="1">
+            test
+          </p-tabpanel>
+
+          <p-tabpanel [value]="2">
+            test
+          </p-tabpanel>
+        </p-tabpanels>
+      </p-tabs>
+    </section>
+
+    <section class="flex flex-row gap-4 items-center justify-between">
+      <div class="text-surface-600 text-sm flex items-center gap-1">
+        <i class="pi pi-calendar"></i>
+        <span>{{ law().createdAt | date: 'dd/MM/yyyy' }}</span>
+      </div>
+
+      <p-button
+        label="Voir la loi"
+        severity="secondary"
+        icon="pi pi-eye"
+        [outlined]="true"
+        size="small"
+        [routerLink]="['/legislation/laws', law().id]"
+      />
+    </section>
+  </div>
+</div>
+
