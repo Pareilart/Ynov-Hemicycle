@@ -96,6 +96,17 @@ export const addLawReaction = async (req: AuthenticatedRequest, res: Response): 
   }
 };
 
+export const getLawPosts = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const lawPosts = await LawPost.find().populate('userId', 'firstname lastname email hasOnBoarding');
+    console.log('lawPosts', lawPosts);
+    const response = lawPosts.map((lawPost) => LawPostDto.toResponse(lawPost));
+    ResponseHandler.success(res, response, 'Lois récupérées avec succès');
+  } catch (error: unknown) {
+    ResponseHandler.error(res, 'Erreur lors de la récupération des lois', error as Error);
+  }
+};
+
 export const getLawPost = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const { lawId } = req.params;
@@ -147,7 +158,8 @@ export const reportLawPost = async (req: AuthenticatedRequest, res: Response): P
       return;
     }
 
-    const lawPost = await LawPost.findById(lawPostId);
+    const lawPost = await LawPost.findById(lawPostId)
+      .populate('userId', 'firstname lastname email hasOnBoarding');
     if (!lawPost) {
       ResponseHandler.notFound(res, 'Publication non trouvée');
       return;

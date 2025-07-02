@@ -95,3 +95,16 @@ export const verify2FACodeValidator = [
     .notEmpty()
     .withMessage('L\'email est requis'),
 ];
+
+export const verifyEmailValidator = [
+  body('code')
+    .isString()
+    .notEmpty()
+    .withMessage('Le code est requis'),
+  body('email')
+    .isEmail()
+    .notEmpty()
+    .withMessage('L\'email est requis'),
+];
+
+export const resendVerificationEmailValidator = [];

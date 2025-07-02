@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Types, Document } from 'mongoose';
+import { Types, Document, Model } from 'mongoose';
 import { Parser } from 'json2csv';
 import User from '../../models/User';
 import { AuthenticatedRequest } from '../../middleware/auth';
@@ -17,6 +17,8 @@ import { RoleEnum } from '../../enum/RoleEnum';
 import LawReaction from '../../models/LawReaction';
 import { ILawPost } from '../../types/interfaces/ILawPost';
 import { ILawReaction } from '../../types/interfaces/ILawReaction';
+import { SecurityCodeService } from '../../services/SecurityCodeService';
+import { sendEmailWrapper } from '../../services/EmailService';
 
 export const userOnboarding = async (
   req: AuthenticatedRequest,
@@ -367,5 +369,63 @@ export const exportProfile = async (
     }
   } catch (error) {
     ResponseHandler.error(res, (error as Error).message);
+  }
+};
+
+/**
+ * Active ou désactive l'authentification à deux facteurs pour un utilisateur
+ */
+export const toggleTwoFactor = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    if (!req.user) {
+      return ResponseHandler.unauthorized(res, 'Utilisateur non authentifié');
+    }
+
+    const user = await User.findById(req.user._id) as IUserDocument;
+    if (!user) {
+      return ResponseHandler.notFound(res, 'Utilisateur non trouvé');
+    }
+
+    // Vérifie si l'email est vérifié avant d'activer la 2FA
+    if (!user.emailVerifiedAt) {
+      return ResponseHandler.badRequest(res, 'Vous devez vérifier votre email avant d\'activer la 2FA');
+    }
+
+    // Inverse l'état actuel de la 2FA
+    user.twoFactorEnabled = !user.twoFactorEnabled;
+    await user.save();
+
+    // Si la 2FA vient d'être activée, envoyer un code de test
+    if (user.twoFactorEnabled) {
+      const securityCode = await SecurityCodeService.createSecurityCode(user, User as Model<IUserDocument>, 5);
+
+      await sendEmailWrapper({
+        to: user.email,
+        template_uuid: 'c2f0396e-2cd1-4e0d-821a-7de1a8638176',
+        template_variables: {
+          company_info_name: 'Hemicycle',
+          firstname: user.firstname,
+          lastname: user.lastname,
+          security_code: securityCode.plainCode,
+          company_info_address: '123 Rue de la Paix, 75000 Paris, France',
+          company_info_city: 'Paris',
+          company_info_zip_code: '75000',
+          company_info_country: 'France',
+        },
+      });
+
+      return ResponseHandler.success(res, {
+        twoFactorEnabled: true,
+        message: 'Un code de vérification a été envoyé à votre email pour tester la 2FA',
+      });
+    }
+
+    return ResponseHandler.success(res, {
+      twoFactorEnabled: false,
+      message: 'L\'authentification à deux facteurs a été désactivée',
+    });
+  } catch (error: any) {
+    console.error('Erreur lors de la modification de la 2FA:', error);
+    return ResponseHandler.error(res, 'Erreur lors de la modification de la 2FA', error.message);
   }
 };
