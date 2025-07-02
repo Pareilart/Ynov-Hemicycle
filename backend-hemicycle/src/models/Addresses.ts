@@ -1,5 +1,4 @@
 import mongoose, { Schema } from 'mongoose';
-import { IAddresses } from '../types';
 
 const addressesSchema = new Schema({
   line1: {

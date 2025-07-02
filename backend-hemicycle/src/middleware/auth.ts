@@ -58,3 +58,24 @@ export const isDeputy = async (req: AuthenticatedRequest, res: Response, next: N
     ResponseHandler.error(res, 'Erreur lors de la vérification des droits');
   }
 };
+
+export const isEmailVerified = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user) {
+      return ResponseHandler.unauthorized(res, 'Utilisateur non authentifié');
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return ResponseHandler.unauthorized(res, 'Utilisateur non trouvé');
+    }
+
+    if (!user.emailVerifiedAt) {
+      return ResponseHandler.forbidden(res, 'Veuillez vérifier votre adresse email avant de continuer');
+    }
+
+    next();
+  } catch (error: any) {
+    return ResponseHandler.error(res, 'Erreur lors de la vérification de l\'email', error.message);
+  }
+};

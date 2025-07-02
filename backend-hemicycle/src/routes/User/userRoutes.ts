@@ -1,11 +1,12 @@
 import express from 'express';
-import { auth } from '../../middleware/auth';
+import { auth, isEmailVerified } from '../../middleware/auth';
 import {
   deleteUser,
   getProfile,
   updateProfile,
   userOnboarding,
   exportProfile,
+  toggleTwoFactor,
 } from '../../controllers/User/userController';
 import { exportDataProfileValidator, updateProfileValidator } from '../../middleware/validators/User/userValidator';
 import { validateRequest } from '../../middleware/validators/validationMiddleware';
@@ -28,5 +29,6 @@ router.put(
 router.get('/profile', auth, getProfile);
 router.delete('/profile/delete', auth, deleteUser);
 router.post('/profile/export-data', auth, exportDataProfileValidator, validateRequest, exportProfile);
+router.post('/profile/toggle-2fa', auth, isEmailVerified, toggleTwoFactor);
 
 export default router;
