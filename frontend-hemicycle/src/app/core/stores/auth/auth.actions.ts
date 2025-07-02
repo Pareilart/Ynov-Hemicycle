@@ -4,7 +4,8 @@ import { JwtToken } from '@core/models/jwt/jwt-token.model';
 import { UserCredentials } from '@core/models/user/user-credentials.model';
 import { StoreOperationStatus } from '@app/core/models/store/store-operation-status.model';
 import { UserRegistration } from '@app/core/models/user/user-registration.model';
-import { User2FA } from '@app/core/models/user/user-2fa.model';
+import { User2FAVerification } from '@app/core/models/user/user-2fa-verification.model';
+import { UserEmailVerification } from '@app/core/models/user/user-email-verification.model';
 
 /**
  * Action login
@@ -36,6 +37,21 @@ export const loginSuccess = createAction(
 );
 
 /**
+ * Action loginSuccessWith2FA
+ * @const loginSuccessWith2FA
+ *
+ * @description
+ * Action permettant de gérer le
+ * succès de la connexion avec 2FA
+ *
+ * @type {Action} loginSuccessWith2FA
+ */
+export const loginSuccessWith2FA = createAction(
+  '[Auth] Login Success With 2FA',
+  props<{ requires: boolean, email: string, status: StoreOperationStatus }>()
+);
+
+/**
  * Action loginFailure
  * @const loginFailure
  *
@@ -48,6 +64,20 @@ export const loginSuccess = createAction(
 export const loginFailure = createAction(
   '[Auth] Login Failure',
   props<{ status: StoreOperationStatus }>()
+);
+
+/**
+ * Action login2FARequired
+ * @const login2FARequired
+ *
+ * @description
+ * Action permettant de gérer le
+ * succès de la connexion
+ *
+ * @type {Action} login2FARequired
+ */
+export const login2FARequired = createAction(
+  '[Auth] Login 2FA Required',
 );
 
 /**
@@ -197,7 +227,7 @@ export const refreshFailure = createAction(
  */
 export const verify2FA = createAction(
   '[Auth] Verify 2FA',
-  props<{ twoFA: User2FA }>()
+  props<{ twoFA: User2FAVerification }>()
 );
 
 /**
@@ -229,6 +259,53 @@ export const verify2FASuccess = createAction(
  */
 export const verify2FAFailure = createAction(
   '[Auth] Verify 2FA Failure',
+  props<{ status: StoreOperationStatus }>()
+);
+
+/**
+ * Action verifyEmail
+ * @const verifyEmail
+ *
+ * @description
+ * Action permettant de vérifier
+ * l'email
+ *
+ * @type {Action} verifyEmail
+ */
+export const verifyEmail = createAction(
+  '[Auth] Verify Email',
+  props<{ verification: UserEmailVerification }>()
+);
+
+/**
+ * Action verifyEmailSuccess
+ * @const verifyEmailSuccess
+ *
+ * @description
+ * Action permettant de gérer le
+ * succès de la vérification
+ * de l'email
+ *
+ * @type {Action} verifyEmailSuccess
+ */
+export const verifyEmailSuccess = createAction(
+  '[Auth] Verify Email Success',
+  props<{ status: StoreOperationStatus }>()
+);
+
+/**
+ * Action verifyEmailFailure
+ * @const verifyEmailFailure
+ *
+ * @description
+ * Action permettant de gérer le
+ * échec de la vérification
+ * de l'email
+ *
+ * @type {Action} verifyEmailFailure
+ */
+export const verifyEmailFailure = createAction(
+  '[Auth] Verify Email Failure',
   props<{ status: StoreOperationStatus }>()
 );
 

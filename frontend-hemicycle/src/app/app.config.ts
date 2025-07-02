@@ -58,7 +58,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       APP_ROUTES,
       withComponentInputBinding(),
-      withDebugTracing()
+      // withDebugTracing()
     ),
     provideClientHydration(
       withEventReplay(),

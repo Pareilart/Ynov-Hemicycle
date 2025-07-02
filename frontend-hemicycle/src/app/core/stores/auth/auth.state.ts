@@ -17,21 +17,6 @@ import { JwtToken } from "@core/models/jwt/jwt-token.model";
 export const AUTH_FEATURE_KEY: string = 'auth';
 
 /**
- * Constante userAdapter
- * @const userAdapter
- *
- * @description
- * Adaptateur de l'entité User
- *
- * @version 1.0.0
- *
- * @author Valentin FORTIN <contact@valentin-fortin.pro>
- */
-export const userAdapter: EntityAdapter<User> = createEntityAdapter<User>({
-  selectId: (user: User) => user.id,
-});
-
-/**
  * Interface AuthState
  * @interface AuthState
  *

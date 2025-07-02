@@ -37,6 +37,18 @@ export const authReducer = createReducer(
       }
     }
   })),
+  on(AuthActions.loginSuccessWith2FA, (state, { requires, email, status }) => ({
+    ...state,
+    operation: {
+      loading: false,
+      status: {
+        code: status.code,
+        label: status.label,
+        message: status.message
+      }
+    },
+    isAuthenticated: true
+  })),
   on(AuthActions.verify2FA, (state) => ({
     ...state,
     operation: {
@@ -68,6 +80,35 @@ export const authReducer = createReducer(
     user: user,
     token: token,
     isAuthenticated: true
+  })),
+  on(AuthActions.verifyEmail, (state) => ({
+    ...state,
+    operation: {
+      loading: true,
+      status: null
+    }
+  })),
+  on(AuthActions.verifyEmailSuccess, (state, { status }) => ({
+    ...state,
+    operation: {
+      loading: false,
+      status: {
+        code: status.code,
+        label: status.label,
+        message: status.message
+      }
+    }
+  })),
+  on(AuthActions.verifyEmailFailure, (state, { status }) => ({
+    ...state,
+    operation: {
+      loading: false,
+      status: {
+        code: status.code,
+        label: status.label,
+        message: status.message
+      }
+    }
   })),
   on(AuthActions.register, (state) => ({
     ...state,

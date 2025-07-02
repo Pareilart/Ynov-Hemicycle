@@ -15,7 +15,9 @@ import { StoreOperationStatus } from "@app/core/models/store/store-operation-sta
 import { UserRegistration } from "@app/core/models/user/user-registration.model";
 import { LocalStorageService } from "ngx-webstorage";
 import { REFRESH_TOKEN_KEY } from "@app/core/constants/storage-keys.constant";
-import { User2FA } from "@app/core/models/user/user-2fa.model";
+import { User2FAVerification } from "@app/core/models/user/user-2fa-verification.model";
+import { UserLoginResponse } from "@app/core/models/user/user-login-response.model";
+import { UserEmailVerification } from "@app/core/models/user/user-email-verification.model";
 
 @Injectable()
 export class AuthEffects {
@@ -115,7 +117,7 @@ export class AuthEffects {
   public login$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.login),
     switchMap(({ credentials }: { credentials: UserCredentials }) => this.authService.login(credentials).pipe(
-      map((response: HttpResponse<ApiReponse<User & { token: JwtToken }>>) => {
+      map((response: HttpResponse<ApiReponse<UserLoginResponse>>) => {
         if (!response.body?.data) {
           return AuthActions.loginFailure({ status: {
             code: response.status,
@@ -124,14 +126,22 @@ export class AuthEffects {
           } });
         }
 
-        const token: JwtToken = response.body.data.token;
-        const user: User = response.body.data;
+        const data: UserLoginResponse = response.body.data;
 
-        if (user.twoFactorEnabled) {
-          this.router.navigate(['/auth/verification'], {
-            queryParams: { email: credentials.email }
+        if ('requiresTwoFactor' in data && data.requiresTwoFactor) {
+          return AuthActions.loginSuccessWith2FA({
+            email: credentials.email,
+            requires: data.requiresTwoFactor,
+            status: {
+              code: response.status,
+              label: 'Login Success With 2FA',
+              message: 'Login Success With 2FA'
+            }
           });
         }
+
+        const token = (data as User & { token: JwtToken }).token;
+        const user = data as User;
 
         return AuthActions.loginSuccess({
           user: user,
@@ -146,6 +156,31 @@ export class AuthEffects {
       catchError(error => of(AuthActions.loginFailure({ status: error.status })))
     ))
   ));
+
+  /**
+   * Effet loginSuccessWith2FA
+   * @method loginSuccessWith2FA$
+   *
+   * @description
+   * Effet loginSuccessWith2FA pour se connecter
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
+  public loginSuccessWith2FA$ = createEffect(() => this.actions.pipe(
+    ofType(AuthActions.loginSuccessWith2FA),
+    tap(({ requires, email, status }: { requires: boolean, email: string, status: StoreOperationStatus }) => {
+      console.log(requires);
+      this.router.navigate(['/auth/verification'], {
+        queryParams: {
+          email: email
+        }
+      });
+    })
+  ), { dispatch: false });
 
   /**
    * Effet loginSuccess
@@ -207,7 +242,7 @@ export class AuthEffects {
    */
   public verify2FA$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.verify2FA),
-    switchMap(({ twoFA }: { twoFA: User2FA }) => this.authService.verify2FA(twoFA).pipe(
+    switchMap(({ twoFA }: { twoFA: User2FAVerification }) => this.authService.verify2FA(twoFA).pipe(
       map((response: HttpResponse<ApiReponse<User & { token: JwtToken }>>) => {
         if (!response.body?.data) {
           return AuthActions.verify2FAFailure({ status: {
@@ -276,6 +311,37 @@ export class AuthEffects {
     ofType(AuthActions.verify2FAFailure),
     tap(({ status }: { status: StoreOperationStatus }) => {
       console.log(status);
+    })
+  ), { dispatch: false });
+
+
+  public verifyEmail$ = createEffect(() => this.actions.pipe(
+    ofType(AuthActions.verifyEmail),
+    switchMap(({ verification }: { verification: UserEmailVerification }) => this.authService.verifyEmail(verification).pipe(
+      map((response: HttpResponse<ApiReponse<void>>) => {
+        return AuthActions.verifyEmailSuccess({
+          status: {
+            code: response.status,
+            label: 'Verify Email Success',
+            message: 'Verify Email Success'
+          }
+        });
+      }),
+      catchError(error => of(AuthActions.verifyEmailFailure({ status: error.status })))
+    ))
+  ));
+
+  public verifyEmailSuccess$ = createEffect(() => this.actions.pipe(
+    ofType(AuthActions.verifyEmailSuccess),
+    tap(({ status }: { status: StoreOperationStatus }) => {
+      this.router.navigate(['/auth/login']);
+    })
+  ), { dispatch: false });
+
+  public verifyEmailFailure$ = createEffect(() => this.actions.pipe(
+    ofType(AuthActions.verifyEmailFailure),
+    tap(({ status }: { status: StoreOperationStatus }) => {
+      this.router.navigate(['/auth/login']);
     })
   ), { dispatch: false });
 

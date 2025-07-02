@@ -51,6 +51,20 @@ export interface User extends Timestampable {
   readonly email: Email;
 
   /**
+   * Propriété emailVerifiedAt
+   * @readonly
+   *
+   * @description
+   * Date de vérification de l'email de l'utilisateur
+   *
+   * @memberof User
+   * @since 1.0.0
+   *
+   * @type {Date | null} emailVerifiedAt
+   */
+  readonly emailVerifiedAt: Date | null;
+
+  /**
    * Propriété firstname
    * @readonly
    *

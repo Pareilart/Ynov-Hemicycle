@@ -2,8 +2,8 @@ import { inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, MaybeAsync, RedirectCommand, Resolve, Router, RouterStateSnapshot } from "@angular/router";
 
 /**
- * Resolver AuthEmail2FAResolver
- * @class AuthEmail2FAResolver
+ * Resolver AuthEmailResolver
+ * @class AuthEmailResolver
  *
  * @description
  * Resolver pour obtenir l'email correspondant
@@ -16,7 +16,7 @@ import { ActivatedRouteSnapshot, MaybeAsync, RedirectCommand, Resolve, Router, R
  * @see https://angular.dev/api/router/Resolve
  */
 @Injectable({ providedIn: 'root' })
-export class AuthEmail2FAResolver implements Resolve<string> {
+export class AuthEmailResolver implements Resolve<string> {
   //#region Propriétés
   /**
    * Propriété router
@@ -26,7 +26,7 @@ export class AuthEmail2FAResolver implements Resolve<string> {
    * Router injecté
    *
    * @access private
-   * @memberof AuthEmail2FAResolver
+   * @memberof AuthEmailResolver
    * @since 1.0.0
    *
    * @type {Router} router
@@ -45,7 +45,7 @@ export class AuthEmail2FAResolver implements Resolve<string> {
    * à un code donné
    *
    * @access public
-   * @memberof AuthEmail2FAResolver
+   * @memberof AuthEmailResolver
    * @since 1.0.0
    *
    * @param {ActivatedRouteSnapshot} route Route actuelle

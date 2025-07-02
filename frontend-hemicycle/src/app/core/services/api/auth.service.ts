@@ -3,13 +3,13 @@ import { inject, Injectable } from "@angular/core";
 import { ApiReponse } from "@app/core/models/api/api-response.model";
 import { JwtToken } from "@app/core/models/jwt/jwt-token.model";
 import { UserCredentials } from "@app/core/models/user/user-credentials.model";
-import { UserGender } from "@app/core/models/user/user-gender.enum";
-import { User2FA } from "@app/core/models/user/user-2fa.model";
+import { User2FAVerification } from "@app/core/models/user/user-2fa-verification.model";
 import { UserRegistration } from "@app/core/models/user/user-registration.model";
 import { User } from "@app/core/models/user/user.model";
 import { environment } from "@environments/environment";
-import { LocalStorageService } from "ngx-webstorage";
 import { Observable } from "rxjs";
+import { UserLoginResponse } from "@app/core/models/user/user-login-response.model";
+import { UserEmailVerification } from "@app/core/models/user/user-email-verification.model";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -62,11 +62,11 @@ export class AuthService {
    *
    * @param {UserCredentials} credentials - Identifiants de connexion
    *
-   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   * @returns {Observable<HttpResponse<ApiReponse<UserLoginResponse>>>} - Retourne la réponse de l'API
    */
-  public login(credentials: UserCredentials): Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>> {
+  public login(credentials: UserCredentials): Observable<HttpResponse<ApiReponse<UserLoginResponse>>> {
     const url: string = `${AuthService.API_URL}/login`;
-    return this.httpClient.post<ApiReponse<User & { token: JwtToken }>>(url, credentials, {
+    return this.httpClient.post<ApiReponse<UserLoginResponse>>(url, credentials, {
       observe: 'response'
     });
   }
@@ -82,13 +82,35 @@ export class AuthService {
    * @memberof AuthService
    * @since 1.0.0
    *
-   * @param {User2FA} payload - Identifiants de connexion
+   * @param {User2FAVerification} payload - Identifiants de connexion
    *
    * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
    */
-  public verify2FA(payload: User2FA): Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>> {
+  public verify2FA(payload: User2FAVerification): Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>> {
     const url: string = `${AuthService.API_URL}/verify-2fa-code`;
     return this.httpClient.post<ApiReponse<User & { token: JwtToken }>>(url, payload, {
+      observe: 'response'
+    });
+  }
+
+  /**
+   * Méthode verifyEmail
+   * @method verifyEmail
+   *
+   * @description
+   * Méthode verifyEmail pour vérifier le code de vérification
+   *
+   * @access public
+   * @memberof AuthService
+   * @since 1.0.0
+   *
+   * @param {UserEmailVerification} payload - Identifiants de connexion
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<void>>>} - Retourne la réponse de l'API
+   */
+  public verifyEmail(payload: UserEmailVerification): Observable<HttpResponse<ApiReponse<void>>> {
+    const url: string = `${AuthService.API_URL}/verify-email`;
+    return this.httpClient.post<ApiReponse<void>>(url, payload, {
       observe: 'response'
     });
   }

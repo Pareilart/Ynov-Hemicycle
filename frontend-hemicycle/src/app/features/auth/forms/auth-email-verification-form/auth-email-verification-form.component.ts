@@ -1,22 +1,23 @@
-import { Component, inject, input, InputSignal, Signal } from '@angular/core';
+import { Component, inject, input, InputSignal, OnInit, signal, Signal, WritableSignal } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputOtpModule } from 'primeng/inputotp';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
-import { RouterModule } from '@angular/router';
-import { User2FAVerification } from '@app/core/models/user/user-2fa-verification.model';
+import { Router, RouterModule } from '@angular/router';
+import { UserEmailVerification } from '@app/core/models/user/user-email-verification.model';
 import { Store } from '@ngrx/store';
 import { AuthState } from '@app/core/stores/auth/auth.state';
 import { selectAuthLoading } from '@app/core/stores/auth/auth.selectors';
-import { verify2FA } from '@app/core/stores/auth/auth.actions';
+import { verifyEmail } from '@app/core/stores/auth/auth.actions';
+import { ActivatedRoute } from '@angular/router';
 
 /**
- * Type Auth2FAVerificationFormValues
- * @type Auth2FAVerificationFormValues
+ * Type AuthEmailVerificationFormValues
+ * @type AuthEmailVerificationFormValues
  *
  * @description
  * Type représentant les valeurs du
- * formulaire de vérification de 2FA
+ * formulaire de vérification de Email
  *
  * @version 1.0.0
  *
@@ -24,33 +25,33 @@ import { verify2FA } from '@app/core/stores/auth/auth.actions';
  *
  * @example
  * ```typescript
- * const auth2FAVerificationFormValues: Auth2FAVerificationFormValues = {
+ * const authEmailVerificationFormValues: AuthEmailVerificationFormValues = {
  *   code: "123456"
  * };
  * ```
  *
  * @author Valentin FORTIN <contact@valentin-fortin.pro>
  */
-type Auth2FAVerificationFormValues = Omit<User2FAVerification, 'email'>;
+type AuthEmailVerificationFormValues = Omit<UserEmailVerification, 'email'>;
 
 /**
- * Type Auth2FAVerificationFormControls
- * @type Auth2FAVerificationFormControls
+ * Type AuthEmailVerificationFormControls
+ * @type AuthEmailVerificationFormControls
  *
  * @description
  * Type représentant les contrôles du
- * formulaire de vérification de 2FA
+ * formulaire de vérification de Email
  *
  * @version 1.0.0
  *
  * @author Valentin FORTIN <contact@valentin-fortin.pro>
  */
-type Auth2FAVerificationFormControls = {
-  [K in keyof Auth2FAVerificationFormValues]: FormControl<Auth2FAVerificationFormValues[K]>;
+type AuthEmailVerificationFormControls = {
+  [K in keyof AuthEmailVerificationFormValues]: FormControl<AuthEmailVerificationFormValues[K]>;
 };
 
 @Component({
-  selector: 'app-auth-2fa-verification-form',
+  selector: 'app-auth-email-verification-form',
   imports: [
     ReactiveFormsModule,
     InputOtpModule,
@@ -58,10 +59,10 @@ type Auth2FAVerificationFormControls = {
     ButtonModule,
     RouterModule
   ],
-  templateUrl: './auth-2fa-verification-form.component.html',
-  styleUrl: './auth-2fa-verification-form.component.css'
+  templateUrl: './auth-email-verification-form.component.html',
+  styleUrl: './auth-email-verification-form.component.css'
 })
-export class Auth2FAVerificationFormComponent {
+export class AuthEmailVerificationFormComponent {
   //#region Propriétés
   /**
    * Propriété formBuilder
@@ -71,7 +72,7 @@ export class Auth2FAVerificationFormComponent {
    * Service de création de formulaire
    *
    * @access private
-   * @memberof Auth2FAVerificationFormComponent
+   * @memberof AuthEmailVerificationFormComponent
    * @since 1.0.0
    *
    * @type {NonNullableFormBuilder} formBuilder
@@ -87,7 +88,7 @@ export class Auth2FAVerificationFormComponent {
    * Store de l'authentification
    *
    * @access private
-   * @memberof Auth2FAVerificationFormComponent
+   * @memberof AuthEmailVerificationFormComponent
    * @since 1.0.0
    *
    * @type {Store<AuthState>} store
@@ -103,7 +104,7 @@ export class Auth2FAVerificationFormComponent {
    * Signal de chargement
    *
    * @access public
-   * @memberof Auth2FAVerificationFormComponent
+   * @memberof AuthEmailVerificationFormComponent
    * @since 1.0.0
    *
    * @type {Signal<boolean>} loading
@@ -119,12 +120,12 @@ export class Auth2FAVerificationFormComponent {
    * Formulaire de connexion
    *
    * @access public
-   * @memberof Auth2FAVerificationFormComponent
+   * @memberof AuthEmailVerificationFormComponent
    * @since 1.0.0
    *
-   * @type {FormGroup<Auth2FAVerificationFormControls>} form
+   * @type {FormGroup<AuthEmailVerificationFormControls>} form
    */
-  public readonly form: FormGroup<Auth2FAVerificationFormControls> = this.formBuilder.group({
+  public readonly form: FormGroup<AuthEmailVerificationFormControls> = this.formBuilder.group({
     code: this.formBuilder.control<string>({
       value: '',
       disabled: false
@@ -139,7 +140,7 @@ export class Auth2FAVerificationFormComponent {
    * Signal de l'email
    *
    * @access public
-   * @memberof Auth2FAVerificationFormComponent
+   * @memberof AuthEmailVerificationFormComponent
    * @since 1.0.0
    *
    * @type {InputSignal<string>} email
@@ -155,10 +156,10 @@ export class Auth2FAVerificationFormComponent {
    *
    * @description
    * Méthode onSubmit pour soumettre
-   * le formulaire de vérification de 2FA.
+   * le formulaire de vérification de Email.
    *
    * @access public
-   * @memberof Auth2FAVerificationFormComponent
+   * @memberof AuthEmailVerificationFormComponent
    * @since 1.0.0
    *
    * @returns {void} - Retourne rien
@@ -168,8 +169,8 @@ export class Auth2FAVerificationFormComponent {
 
     const email: string = this.email();
 
-    this.store.dispatch(verify2FA({
-      twoFA: {
+    this.store.dispatch(verifyEmail({
+      verification: {
         email: email,
         code: this.form.value.code!
       }
