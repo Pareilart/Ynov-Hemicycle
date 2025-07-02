@@ -4,6 +4,7 @@ import { Law } from '@core/models/law/law.model';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
 import { TabsModule } from 'primeng/tabs';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @Component({
   selector: 'app-legislation-laws-detail',
@@ -11,7 +12,8 @@ import { TabsModule } from 'primeng/tabs';
     CommonModule,
     RouterModule, 
     ButtonModule,
-    TabsModule
+    TabsModule,
+    ProgressBarModule
   ],
   templateUrl: './legislation-laws-detail.component.html',
   styleUrl: './legislation-laws-detail.component.css'
@@ -19,11 +21,11 @@ import { TabsModule } from 'primeng/tabs';
 export class LegislationLawsDetailComponent {
   //#region Propriétés
   public icons = [
-    { src: 'images/emoji-pouce.svg', alt: 'D\'accord' },
-    { src: 'images/emoji-non.svg', alt: 'Doute' },
-    { src: 'images/emoji-fan.svg', alt: 'Trop cool' },
-    { src: 'images/emoji-check.svg', alt: 'Je valide' },
-    { src: 'images/emoji-croix.svg', alt: 'Pas d\'accord' }
+    { src: 'images/emoji-pouce.svg', alt: 'D\'accord', value:'50' },
+    { src: 'images/emoji-non.svg', alt: 'Doute', value:'30' },
+    { src: 'images/emoji-fan.svg', alt: 'Trop cool', value:'20' },
+    { src: 'images/emoji-check.svg', alt: 'Je valide', value:'70' },
+    { src: 'images/emoji-croix.svg', alt: 'Pas d\'accord', value:'65' }
   ];
   /**
    * Propriété law

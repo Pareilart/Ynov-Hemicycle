@@ -73,8 +73,21 @@
           class="w-6 h-6 cursor-pointer hover:scale-110 transition-transform duration-200" />
       </div>
     </section>
+
+    <!--Emojis-->
+    <section class="mt-10 flex flex-col gap-3">
+      <div *ngFor="let icon of icons" class="flex gap-3">
+        <img  [src]="icon.src" [alt]="icon.alt"
+          class="w-6 h-6 cursor-pointer hover:scale-110 transition-transform duration-200" />
+          <div class="w-full md:w-[80%] rounded-xl p-[2px] bg-gradient-to-r from-tertiary-700 to-primary-500">
+            <p-progressbar [value]="icon.value"
+              class="rounded-md [&_.p-progressbar]:bg-white [&_.p-progressbar-value]:bg-gradient-to-r [&_.p-progressbar-value]:from-tertiary-700 [&_.p-progressbar-value]:to-primary-500">
+            </p-progressbar>    
+          </div>
+      </div>
+    </section>
   </div>
 
   <!-- Bordure bas -->
-  <div class="h-[2px] w-full bg-gradient-to-r from-tertiary-700 to-primary-500 rounded-b-md"></div>
+  <div class="h-[2px] w-full bg-gradient-to-r from-tertiary-700 to-primary-500 rounded-b-md mb-20"></div>
 </div>
