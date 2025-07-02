@@ -50,7 +50,7 @@ export interface User extends Timestampable {
   readonly email: Email;
 
   /**
-   * Propriété firstName
+   * Propriété firstname
    * @readonly
    *
    * @description
@@ -59,12 +59,12 @@ export interface User extends Timestampable {
    * @memberof User
    * @since 1.0.0
    *
-   * @type {string} firstName
+   * @type {string} firstname
    */
-  readonly firstName: string;
+  readonly firstname: string;
 
   /**
-   * Propriété lastName
+   * Propriété lastname
    * @readonly
    *
    * @description
@@ -73,9 +73,9 @@ export interface User extends Timestampable {
    * @memberof User
    * @since 1.0.0
    *
-   * @type {string} lastName
+   * @type {string} lastname
    */
-  readonly lastName: string;
+  readonly lastname: string;
 
   /**
    * Propriété role

@@ -21,7 +21,7 @@ export const getAllUsers = async (req: AuthenticatedRequest, res: Response): Pro
 
     const users = await User.find()
       .populate('role')
-      .populate('addresses')
+      .populate('address')
       .populate('votingSurvey');
 
     const userResponses = users.map((user) => UserDto.toResponse(user as unknown as IUserDocument));
@@ -41,7 +41,7 @@ export const getUserById = async (req: AuthenticatedRequest, res: Response): Pro
 
     const user = await User.findById(req.params.id)
       .populate('role')
-      .populate('addresses')
+      .populate('address')
       .populate('votingSurvey');
 
     if (user) {
@@ -75,8 +75,10 @@ export const createUser = async (req: AuthenticatedRequest, res: Response): Prom
     const userData: IUserCreate = {
       email: req.body.email,
       password: req.body.password,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      sexe: req.body.sexe,
+      birthday: new Date(req.body.birthday),
       role: userRole._id,
     };
 

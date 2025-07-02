@@ -21,7 +21,7 @@ export class UserService {
   }> {
     try {
       // Vérification des champs requis
-      if (!userData.email || !userData.password || !userData.firstName || !userData.lastName || !userData.role) {
+      if (!userData.email || !userData.password || !userData.firstname || !userData.lastname || !userData.role) {
         throw new Error('Tous les champs sont requis');
       }
 
@@ -55,7 +55,7 @@ export class UserService {
       // Récupérer l'utilisateur avec ses relations
       const populatedUser = await User.findById(user._id)
         .populate('role')
-        .populate('addresses')
+        .populate('address')
         .populate('votingSurvey') as IUserDocument;
 
       return {
@@ -82,7 +82,7 @@ export class UserService {
       // Récupérer l'utilisateur avec ses relations
       const user = await User.findById(userId)
         .populate('role')
-        .populate('addresses')
+        .populate('address')
         .populate('votingSurvey');
 
       if (!user) {
@@ -114,7 +114,7 @@ export class UserService {
       // Récupérer l'utilisateur mis à jour avec ses relations
       const updatedUser = await User.findById(userId)
         .populate('role')
-        .populate('addresses')
+        .populate('address')
         .populate('votingSurvey') as IUserDocument;
 
       return {
@@ -163,7 +163,7 @@ export class UserService {
       // Récupérer l'utilisateur mis à jour avec ses relations
       const updatedUser = await User.findById(userId)
         .populate('role')
-        .populate('addresses')
+        .populate('address')
         .populate('votingSurvey');
 
       if (!updatedUser) {

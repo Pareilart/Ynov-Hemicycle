@@ -6,7 +6,7 @@ export const createUserValidator = [
     .withMessage('L\'email doit être une adresse email valide')
     .normalizeEmail(),
 
-  body('firstName')
+  body('firstname')
     .isString()
     .trim()
     .notEmpty()
@@ -14,7 +14,7 @@ export const createUserValidator = [
     .isLength({ min: 2, max: 50 })
     .withMessage('Le prénom doit contenir entre 2 et 50 caractères'),
 
-  body('lastName')
+  body('lastname')
     .isString()
     .trim()
     .notEmpty()
@@ -32,6 +32,9 @@ export const createUserValidator = [
     ),
 
   body('sexe')
+    .isString()
+    .notEmpty()
+    .withMessage('Le sexe est requis')
     .isIn(['Homme', 'Femme', 'Autre'])
     .withMessage('Le sexe doit être Homme, Femme ou Autre'),
 
@@ -43,7 +46,7 @@ export const createUserValidator = [
       try {
         const date = new Date(value);
         const now = new Date();
-        if (isNaN(date.getTime())) {
+        if (Number.isNaN(date.getTime())) {
           throw new Error(
             'Format de date invalide. Utilisez le format YYYY-MM-DD (exemple: 2000-12-31)',
           );
@@ -68,7 +71,7 @@ export const updateProfileValidator = [
     .isEmail()
     .withMessage('L\'email doit être une adresse email valide'),
 
-  body('firstName')
+  body('firstname')
     .optional()
     .isString()
     .trim()
@@ -77,7 +80,7 @@ export const updateProfileValidator = [
     .isLength({ min: 2, max: 50 })
     .withMessage('Le prénom doit contenir entre 2 et 50 caractères'),
 
-  body('lastName')
+  body('lastname')
     .optional()
     .isString()
     .trim()
@@ -110,7 +113,7 @@ export const updateProfileValidator = [
       try {
         const date = new Date(value);
         const now = new Date();
-        if (isNaN(date.getTime())) {
+        if (Number.isNaN(date.getTime())) {
           throw new Error(
             'Format de date invalide. Utilisez le format YYYY-MM-DD (exemple: 2000-12-31)',
           );

@@ -233,7 +233,7 @@ export class AuthRegisterFormComponent {
    */
   public readonly form: FormGroup<AuthRegisterFormControls> = this.formBuilder.group({
     infos: this.formBuilder.group({
-      firstName: this.formBuilder.control<string>({
+      firstname: this.formBuilder.control<string>({
         value: '',
         disabled: false
       }, [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),

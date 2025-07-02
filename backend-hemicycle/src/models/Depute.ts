@@ -25,7 +25,7 @@ const deputeSchema = new Schema<IDepute>(
     },
     photo: {
       type: String,
-      default: 'default.jpg',
+      required: false,
     },
     mandats: [
       {

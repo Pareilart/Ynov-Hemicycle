@@ -10,8 +10,8 @@ import { User } from "./user.model";
  *
  * @version 1.0.0
  *
- * @property {string} firstName - Prénom de l'utilisateur
- * @property {string} lastName - Nom de l'utilisateur
+ * @property {string} firstname - Prénom de l'utilisateur
+ * @property {string} lastname - Nom de l'utilisateur
  * @property {Email} email - Email de l'utilisateur
  * @property {string} password - Mot de passe de l'utilisateur
  *
@@ -29,8 +29,8 @@ import { User } from "./user.model";
  */
 export type UserRegistration = {
   -readonly [K in keyof Pick<User,
-    | 'firstName'
-    | 'lastName'
+    | 'firstname'
+    | 'lastname'
     | 'email'
   >]: User[K];
 } & {
