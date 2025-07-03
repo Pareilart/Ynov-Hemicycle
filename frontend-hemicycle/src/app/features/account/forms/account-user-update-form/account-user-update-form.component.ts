@@ -212,7 +212,7 @@ export class AccountUserUpdateFormComponent implements OnInit {
     this.form.patchValue({
       firstname: account.firstname,
       lastname: account.lastname,
-      birthday: account.birthday,
+      birthday: new Date(account.birthday),
       twoFactorEnabled: account.twoFactorEnabled
     });
   }

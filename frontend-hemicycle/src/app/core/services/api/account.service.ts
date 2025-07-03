@@ -39,7 +39,7 @@ export class AccountService {
    *
    * @type {string} API_URL
    */
-  private static readonly API_URL: string = `${environment.apis['main'].url}/account`;
+  private static readonly API_URL: string = `${environment.apis['main'].url}`;
 
   /**
    * Propriété API_AUTH_ENDPOINT

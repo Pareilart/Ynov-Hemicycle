@@ -94,7 +94,18 @@
         inputId="twoFactorEnabled"
       />
 
-      <label for="twoFactorEnabled">Activer l'authentification à double facteur</label>
+      <label class="font-medium" for="twoFactorEnabled">Authentification à double facteur</label>
     </div>
+  </section>
+
+  <section class="flex flex-row gap-3">
+    <p-button
+      class="w-full"
+      type="submit"
+      [fluid]="true"
+      label="Enregistrer"
+      [loading]="loading()"
+      [disabled]="form.invalid && !loading()"
+    />
   </section>
 </form>

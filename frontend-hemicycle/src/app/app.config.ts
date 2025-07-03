@@ -78,7 +78,7 @@ export const appConfig: ApplicationConfig = {
         weak: 'Faible',
         strong: 'Fort',
         medium: 'Moyen',
-        dateFormat: 'dd/MM/yyyy',
+        dateFormat: 'dd/mm/yy',
         chooseYear: 'Choisir une année',
         chooseMonth: 'Choisir un mois',
         chooseDate: 'Choisir une date',

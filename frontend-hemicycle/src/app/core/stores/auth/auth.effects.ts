@@ -419,6 +419,24 @@ export class AuthEffects {
   ), { dispatch: false });
 
   /**
+   * Effet logout
+   * @method logout$
+   *
+   * @description
+   * Effet logout pour se connecter
+   *
+   * @access public
+   * @memberof AuthEffects
+   * @since 1.0.0
+   *
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
+   */
+  public logout$ = createEffect(() => this.actions.pipe(
+    ofType(AuthActions.logout),
+    map(() => AuthActions.logoutSuccess())
+  ));
+
+  /**
    * Effet logoutSuccess
    * @method logoutSuccess$
    *

@@ -14,6 +14,9 @@ import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { AuthState } from '@app/core/stores/auth/auth.state';
+import { Store } from '@ngrx/store';
+import * as AuthActions from '@app/core/stores/auth/auth.actions';
 
 @Component({
   selector: 'app-main-layout-header',
@@ -24,21 +27,38 @@ import { ButtonModule } from 'primeng/button';
     MenuModule,
     BadgeModule,
     AvatarModule,
-    ButtonModule  
+    ButtonModule
   ],
   templateUrl: './main-layout-header.component.html',
   styleUrl: './main-layout-header.component.css',
 })
 export class MainLayoutHeaderComponent {
+  //#region Propriétés
+  /**
+   * Propriété store
+   * @readonly
+   *
+   * @description
+   * Stocke l'état de l'authentification
+   *
+   * @access private
+   * @memberof MainLayoutHeaderComponent
+   * @since 1.0.0
+   *
+   * @type {Store<AuthState>} store
+   */
+  private readonly store: Store<AuthState> =
+    inject<Store<AuthState>>(Store<AuthState>);
+  //#endregion
 
   @ViewChild('profileMenuContainer', { static: true }) profileMenuContainer!: ElementRef;
   constructor(private router: Router) {}
 
-  profileMenuItems = [
+  public profileMenuItems = [
     { label: 'Mon profil', icon: 'pi pi-user', command: () => this.goToProfile() },
     { label: 'Paramètres', icon: 'pi pi-cog', command: () => this.goToSettings() },
     { separator: true },
-    { label: 'Déconnexion', icon: 'pi pi-sign-out', }
+    { label: 'Déconnexion', icon: 'pi pi-sign-out', command: () => this.logout() }
   ];
 
   goToProfile() {
@@ -51,6 +71,9 @@ export class MainLayoutHeaderComponent {
     this.router.navigate(['/settings']);
   }
 
+  public logout() {
+    this.store.dispatch(AuthActions.logout());
+  }
 
   //#region Propriétés
   /**
