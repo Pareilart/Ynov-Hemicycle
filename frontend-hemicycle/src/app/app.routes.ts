@@ -53,6 +53,11 @@ export const APP_ROUTES: Routes = [
             canActivate: [AuthGuard],
             loadChildren: () => import('@features/account/account.routes').then(m => m.ACCOUNT_ROUTES)
           },
+          {
+            path: 'political',
+            canActivate: [AuthGuard],
+            loadChildren: () => import('@features/political/political.routes').then(m => m.POLITICAL_ROUTES)
+          },
         ]
       },
     ]

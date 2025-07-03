@@ -88,7 +88,7 @@ export class MainLayoutHeaderComponent {
     {
       label: "Les partis politiques",
       icon: PrimeIcons.PLUS,
-      routerLink: '/partis-politiques'
+      routerLink: '/political/party'
     }
   ]);
 
