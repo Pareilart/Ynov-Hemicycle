@@ -25,11 +25,6 @@ export const AUTH_FEATURE_KEY: string = 'auth';
  *
  * @version 1.0.0
  *
- * @property {EntityState<User>} entities - Entités de l'authentification
- * @property {string | null} selectedUserId - Identifiant de l'utilisateur sélectionné
- * @property {JwtToken | null} token - Token de l'utilisateur
- * @property {boolean} isAuthenticated - Indique si l'utilisateur est authentifié
- *
  * @author Valentin FORTIN <contact@valentin-fortin.pro>
  */
 export interface AuthState {

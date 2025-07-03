@@ -8,10 +8,10 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
 import { Email } from '@core/models/email/email.model';
-import { AuthState } from '@app/core/stores/auth/auth.state';
+import { AuthState } from '@core/stores/auth/auth.state';
 import { Store } from '@ngrx/store';
-import { selectAuthLoading } from '@app/core/stores/auth/auth.selectors';
-import { login } from '@app/core/stores/auth/auth.actions';
+import { selectAuthLoading } from '@core/stores/auth/auth.selectors';
+import { login } from '@core/stores/auth/auth.actions';
 import { FormErrorsComponent } from "@shared/components/form-errors/form-errors.component";
 import { FormErrorsItemComponent } from "@shared/components/form-errors/form-errors-item/form-errors-item.component";
 

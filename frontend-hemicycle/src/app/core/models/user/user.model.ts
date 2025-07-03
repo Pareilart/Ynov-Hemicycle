@@ -151,3 +151,7 @@ export interface User extends Timestampable {
   readonly twoFactorEnabled: boolean;
   //#endregion
 };
+
+export type UserUpdatePayload = Partial<Pick<User, 'firstname' | 'lastname' | 'birthday' | 'twoFactorEnabled'>>;
+export type UserDeletePayload = Pick<User, 'id'>;
+export type UserCreatePayload = Omit<User, 'id' | 'emailVerifiedAt' | 'hasOnBoarding' | 'twoFactorEnabled' | 'createdAt' | 'updatedAt'>;

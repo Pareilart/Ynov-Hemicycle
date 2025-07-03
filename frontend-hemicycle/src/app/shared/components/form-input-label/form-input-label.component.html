@@ -1,0 +1,7 @@
+<label [for]="labelFor()" class="flex flex-row gap-1">
+  <span class="font-medium">{{ label() }}</span>
+  
+  @if (required(); as required) {
+    <span class="text-red-500">*</span>
+  }
+</label>

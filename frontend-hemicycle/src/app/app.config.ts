@@ -1,4 +1,4 @@
-import { ApplicationConfig, ApplicationRef, inject, PLATFORM_ID, provideAppInitializer, provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, ApplicationRef, inject, PLATFORM_ID, provideAppInitializer, provideExperimentalZonelessChangeDetection, isDevMode } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withDebugTracing, withEnabledBlockingInitialNavigation } from '@angular/router';
 import { HttpInterceptorFn } from '@angular/common/http';
 import { APP_ROUTES } from '@app/app.routes';
@@ -22,6 +22,9 @@ import { refreshInterceptor } from '@core/interceptors/refresh.interceptor';
 import { LAW_FEATURE_KEY } from './core/stores/law/law.state';
 import { lawReducer } from './core/stores/law/law.reducer';
 import { LawEffects } from './core/stores/law/law.effects';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { accountReducer } from './core/stores/account/account.reducer';
+import { AccountEffects } from './core/stores/account/account.effects';
 
 /**
  * Interceptors
@@ -60,8 +63,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideRouter(
       APP_ROUTES,
-      withComponentInputBinding(),
-      // withDebugTracing()
+      withComponentInputBinding()
     ),
     provideClientHydration(
       withEventReplay(),
@@ -69,6 +71,28 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimationsAsync(),
     providePrimeNG({
+      translation: {
+        today: 'Aujourd\'hui',
+        accept: 'Accepter',
+        cancel: 'Annuler',
+        weak: 'Faible',
+        strong: 'Fort',
+        medium: 'Moyen',
+        dateFormat: 'dd/MM/yyyy',
+        chooseYear: 'Choisir une année',
+        chooseMonth: 'Choisir un mois',
+        chooseDate: 'Choisir une date',
+        monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+        monthNamesShort: ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec'],
+        dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+        dayNamesShort: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
+        dayNamesMin: ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'],
+        firstDayOfWeek: 1,
+        weekHeader: 'Semaine',
+        pending: 'En attente',
+        upload: 'Télécharger',
+
+      },
       theme: {
         preset: Aura,
         options: {
@@ -81,18 +105,29 @@ export const appConfig: ApplicationConfig = {
       }
     }),
     provideTitleStrategy(TitleStrategy),
-    provideNgxWebstorage(withNgxWebstorageConfig({
-      prefix: environment.storage.prefix,
-      separator: environment.storage.separator,
-      caseSensitive: environment.storage.caseSensitive
-    }),
-    withLocalStorage(),
-    withSessionStorage()),
+    provideNgxWebstorage(
+      withNgxWebstorageConfig({
+        prefix: environment.storage.prefix,
+        separator: environment.storage.separator,
+        caseSensitive: environment.storage.caseSensitive
+      }),
+      withLocalStorage(),
+      withSessionStorage()
+    ),
     DialogService,
     provideStore({
       auth: authReducer,
-      law: lawReducer
+      law: lawReducer,
+      account: accountReducer
     }),
-    provideEffects([AuthEffects, LawEffects])
+    provideEffects([
+      AuthEffects,
+      LawEffects,
+      AccountEffects
+    ]),
+    provideStoreDevtools({
+      maxAge: 25,
+      logOnly: !isDevMode()
+    })
   ]
 };
