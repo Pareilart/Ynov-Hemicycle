@@ -1,0 +1,28 @@
+<div class="container mx-auto pb-5 md:px-0 px-5">
+
+  <!-- Contenu principal -->
+  <div class="flex flex-col gap-5 p-5 bg-surface-0 rounded-none">
+    <section class="flex flex-row gap-4 justify-between">
+      <div class="flex flex-row items-center gap-1 w-full">
+        <h2 class="font-semibold text-md text-lg text-center w-full">
+          Pour mieux comprendre le paysage politique actuel, voici un aperçu des différents partis représentés à l’Assemblée
+          nationale.
+        </h2>
+      </div>
+    </section>
+    <!--Partis Politiques-->
+    <section>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2 md:gap-5 justify-items-center mt-5">
+        <div *ngFor="let parti of partis" class="w-48 h-60 flex flex-col gap-3 items-center sm:items-start">
+          <img [src]="parti.src" [alt]="parti.alt" class="w-40 h-40 object-contain" />
+          <p
+          class="w-full pl-4 relative font-medium
+          before:content-[''] before:absolute before:top-0 before:left-0
+          before:w-[0.3rem] before:h-[2rem]
+          before:bg-gradient-to-b before:from-tertiary-700 before:to-primary-500">
+            {{ parti.name }} ({{parti.nb}})
+          </p>
+        </div></div>
+    </section>
+  </div>
+</div>
