@@ -12,33 +12,18 @@ const createTestApp = () => {
     app.use(cors());
     app.use(express.json());
     app.use('/api/auth', authRoutes);
-
-    
-
     return app;
 };
 
 describe('Auth Routes', () => {
+    jest.setTimeout(30000); // Augmenter le timeout pour les tests
     let app: express.Application;
-
     beforeAll(async () => {
-        jest.setTimeout(30000); // Augmenter le timeout pour les tests
-        try {
-            // Attendre que la connexion à la base de données soit établie
-            await mongoose.connect(process.env.MONGODB_URI || '');
-            console.log('Connected to the database');
-        } catch (error) {
-            console.error('Database connection error:', error);
-            throw error; // Faire échouer les tests si la connexion échoue
-        }
 
         app = createTestApp();
     });
 
-    afterAll(async () => {
-        // Close the database connection after tests
-        await mongoose.connection.close();
-    });
+
 
     describe('POST /api/auth/register', () => {
         test('should return 201 if registration is successful', async () => {
@@ -91,7 +76,7 @@ describe('Auth Routes', () => {
     });
 
     describe('GET /api/auth/me', () => {
-        
+
         test('should return 200 and user data if authenticated', async () => {
             // First login to get auth token
             const loginResponse = await request(app)
