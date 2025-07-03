@@ -1,0 +1,94 @@
+openapi: 3.0.0
+info:
+  title: Hemicycle API
+  version: 1.0.0
+  description: Documentation de l'API Hemicycle
+servers:
+  - url: /api
+paths:
+  /auth/login:
+    post:
+      summary: Connexion utilisateur
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  example: Password123@
+      responses:
+        '200':
+          description: Connexion réussie
+        '401':
+          description: Email ou mot de passe incorrect
+        '400':
+          description: Mauvaise requête, données manquantes ou invalides
+        '429':
+          description: Trop de tentatives de connexion, veuillez réessayer plus tard
+        '500':
+          description: Erreur interne du serveur, veuillez réessayer plus tard
+  /auth/register:
+    post:
+      summary: Inscription utilisateur
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - firstname
+                - lastname
+                - sexe
+                - birthday
+                - twoFactorEnabled
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  example: Password123@
+                firstname:
+                  type: string
+                  example: John
+                lastname:
+                  type: string
+                  example: Doe
+                sexe:
+                  type: string
+                  enum: [Homme, Femme, Autre]
+                  example: Homme
+                birthday:
+                  type: string
+                  format: date
+                  example: '1990-01-01'
+                twoFactorEnabled:
+                  type: boolean
+                  example: true
+      responses:
+        '201':
+          description: Inscription réussie
+        '400':
+          description: Mauvaise requête, données manquantes ou invalides
+        '409':
+          description: Email déjà utilisé
+        '500':
+          description: Erreur interne du serveur, veuillez réessayer plus tard

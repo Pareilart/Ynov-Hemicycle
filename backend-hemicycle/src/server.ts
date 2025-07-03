@@ -3,6 +3,9 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
+// Swagger
+import { setupSwagger } from './utils/swagger';
+
 // Logging
 import { log, createServiceLogger } from './utils/logger';
 import { requestLogger } from './middleware/requestLogger';
@@ -40,6 +43,9 @@ import healthRoutes from './routes/healthRoutes';
 dotenv.config();
 
 const app = express();
+
+// Swagger docs
+setupSwagger(app);
 
 // Middleware
 app.use(cors());
@@ -90,7 +96,10 @@ app.listen(PORT, () => {
     environment: process.env.NODE_ENV || 'development',
     timestamp: new Date().toISOString(),
   });
-  
+
+  // Log Swagger documentation URL
+  log.info(`Swagger docs available at http://localhost:${PORT}/api/docs`);
+
   // Display available route
   logRoutes(app);
 });
