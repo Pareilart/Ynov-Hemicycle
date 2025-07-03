@@ -13,7 +13,7 @@ export const {
   selectAll,
   selectEntities,
   selectIds,
-  selectTotal
+  selectTotal,
 } = lawAdapter.getSelectors();
 
 export const selectAllLaws = createSelector(
@@ -55,6 +55,17 @@ export const selectLawStatus = createSelector(
   selectLawState,
   (state: LawState) => state.operation.status
 );
+
+export const selectSelectedLaw = createSelector(
+  selectLawState,
+  (state: LawState) => state.selectedLawId
+);
+
+export const selectLawById = (id: string) => createSelector(
+  selectLawState,
+  (state: LawState) => state.entities[id]
+);
+
 
 
 

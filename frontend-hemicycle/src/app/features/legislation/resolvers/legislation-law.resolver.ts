@@ -1,11 +1,11 @@
 import { inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, MaybeAsync, RedirectCommand, Resolve, Router, RouterStateSnapshot } from "@angular/router";
 import { fetchLaw } from "@app/core/stores/law/law.actions";
-import { selectEntities } from "@app/core/stores/law/law.selectors";
+import { selectEntities, selectLawById } from "@app/core/stores/law/law.selectors";
 import { LawState } from "@app/core/stores/law/law.state";
 import { Law } from "@core/models/law/law.model";
 import { Store } from "@ngrx/store";
-import { filter, first, map, Observable, of } from "rxjs";
+import { catchError, filter, first, map, Observable, of, take, tap, timeout } from "rxjs";
 
 /**
  * Resolver LegislationLawResolver
@@ -51,7 +51,23 @@ export class LegislationLawResolver implements Resolve<Law | null> {
    *
    * @type {Store<LawState>} store
    */
-  private readonly store: Store<LawState> = inject<Store<LawState>>(Store<LawState>);
+  private readonly store: Store<LawState> =
+    inject<Store<LawState>>(Store<LawState>);
+
+  /**
+   * Propriété LEGISLATION_LAWS_ROUTE
+   * @readonly
+   *
+   * @description
+   * Route de la liste des lois
+   *
+   * @access private
+   * @memberof LegislationLawResolver
+   * @since 1.0.0
+   *
+   * @type {string} LEGISLATION_LAWS_ROUTE
+   */
+  private static readonly LEGISLATION_LAWS_ROUTE: string = '/legislation/laws';
   //#endregion
 
   //#region Méthodes
@@ -78,16 +94,19 @@ export class LegislationLawResolver implements Resolve<Law | null> {
     const id: string | null = route.paramMap.get('id');
 
     if (!id) {
-      return new RedirectCommand(this.router.createUrlTree(['/legislation/laws']));
+      return new RedirectCommand(this.router.createUrlTree([LegislationLawResolver.LEGISLATION_LAWS_ROUTE]));
     }
 
-    this.store.dispatch(fetchLaw({ id }));
-
-    return this.store.select(selectEntities).pipe(
-      map(entities => entities[id]),
-      filter(law => law !== undefined),
-      first(),
-      map(law => law || new RedirectCommand(this.router.createUrlTree(['/legislation/laws'])))
+    return this.store.select(selectLawById(id)).pipe(
+      tap((law: Law | undefined) => {
+        if (!law) {
+          this.store.dispatch(fetchLaw({ id }));
+        }
+      }),
+      filter(Boolean),
+      take(1),
+      timeout(5000),
+      catchError(() => of(new RedirectCommand(this.router.createUrlTree([LegislationLawResolver.LEGISLATION_LAWS_ROUTE]))))
     );
   }
   //#endregion
