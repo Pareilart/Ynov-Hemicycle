@@ -30,7 +30,7 @@
       @if (item.routerLink || item.url) {
       <a [routerLink]="item.routerLink" [href]="item.url" class="flex">
         <div
-          class="cursor-pointer overflow-hidden relative px-5 py-1 flex gap-3 items-center hover-gradient-bg rounded-md transition-colors">
+          class="cursor-pointer overflow-hidden relative px-5 py-1 flex gap-3 items-center rounded-md transition-colors">
           <section class="flex items-center flex-row gap-4">
             <span class="font-medium">{{ item.label }}</span>
           </section>
@@ -39,15 +39,17 @@
       }
 
       @if (!item.routerLink && !item.url) {
-      <button class="flex h-full" type="button">
-        <div
-          class="cursor-pointer overflow-hidden relative px-5 py-2 flex gap-3 items-center hover-gradient-bg rounded-md transition-colors">
-          <section class="flex items-center flex-row gap-4">
-            <span class="font-medium">{{ item.label }}</span>
-          </section>
-
-          <section class="flex items-center">
-            <i class="pi pi-chevron-down text-xs"></i>
+      <button class="flex h-full" type="button" class="bg-white hover:bg-white">
+        <div class="cursor-pointer overflow-hidden relative px-5 py-2 flex gap-3 items-center bg-white hover:bg-white rounded-md transition-colors">
+          <section class="flex items-center flex-row gap-4 hover:bg-white bg-white">
+            <div class="flex items-center p-[2px] rounded-lg bg-gradient-to-r from-tertiary-700 to-primary-500 bg-white hover:bg-white">
+              <div class="flex items-center gap-2 bg-white text-black hover:text-white dark:bg-gray-900 rounded-lg px-4 py-2 hover:bg-gradient-to-r hover:from-tertiary-700 hover:to-primary-500">
+                <span class="block font-medium ">
+                  {{ item.label }}
+                </span>
+                <i class="pi pi-chevron-down text-xs"></i>
+              </div>
+            </div>
           </section>
         </div>
       </button>
@@ -56,13 +58,23 @@
 
       @if (!root && !item.image) {
       @if (item.routerLink || item.url) {
-      <a [routerLink]="item.routerLink" [href]="item.url" class="flex cursor-pointer">
+      <a [routerLink]="item.routerLink" [href]="item.url" class="flex cursor-pointer bg-white hover:bg-white">
         <div
-          class="select-none flex flex-row gap-4 items-center px-4 py-2 overflow-hidden relative w-full hover-gradient-bg rounded-md">
-          <section class="flex item-center flex-col">
-            <span class="font-semibold">{{ item.label }}</span>
-            <p class="text-sm text-surface-500">{{ item.subtext }}</p>
-          </section>
+          class="select-none flex flex-row gap-4 items-center px-4 py-2 overflow-hidden relative w-full rounded-md">
+          <a [routerLink]="item.routerLink" [href]="item.url" class="flex cursor-pointer bg-white hover:bg-white">
+            <div class="select-none flex flex-row gap-4 items-center px-4 py-2 overflow-hidden relative w-full rounded-md">
+              <section class="flex items-center flex-row gap-4 hover:bg-white bg-white">
+                <div
+                  class="flex items-center p-[2px] rounded-lg bg-gradient-to-r from-tertiary-700 to-primary-500 bg-white hover:bg-white">
+                  <div
+                    class="flex items-center gap-2 bg-white text-black hover:text-white dark:bg-gray-900 rounded-lg px-4 py-2 hover:bg-gradient-to-r hover:from-tertiary-700 hover:to-primary-500">
+                    <span class="block font-medium ">
+                      {{ item.label }}
+                    </span>
+                  </div>
+                </div>
+              </section>
+            </div></a>
         </div>
       </a>
       }
@@ -70,15 +82,33 @@
       @if (!item.routerLink && !item.url) {
       <div class="flex">
         <div
-          class="select-none flex flex-row gap-4 items-center px-4 py-2 overflow-hidden relative w-full hover-gradient-bg rounded-md">
-          <section class="flex item-center flex-col">
-            <span class="font-semibold">{{ item.label }}</span>
-            <p class="text-sm text-surface-500">{{ item.subtext }}</p>
-          </section>
+          class="select-none flex flex-row gap-4 items-center px-4 py-2 overflow-hidden relative w-full rounded-md">
+          <a [routerLink]="item.routerLink" [href]="item.url" class="flex cursor-pointer bg-white hover:bg-white">
+            <div class="select-none flex flex-row gap-4 items-center px-4 py-2 overflow-hidden relative w-full rounded-md">
+              <section class="flex items-center flex-row gap-4 hover:bg-white bg-white">
+                <div
+                  class="flex items-center p-[2px] rounded-lg bg-gradient-to-r from-tertiary-700 to-primary-500 bg-white hover:bg-white">
+                  <div
+                    class="flex items-center gap-2 bg-white text-black hover:text-white dark:bg-gray-900 rounded-lg px-4 py-2 hover:bg-gradient-to-r hover:from-tertiary-700 hover:to-primary-500">
+                    <span class="block font-medium ">
+                      {{ item.label }}
+                    </span>
+                  </div>
+                </div>
+              </section>
+            </div></a>
         </div>
       </div>
       }
       }
+    </ng-template>
+
+    <!-- END : bouton profil -->
+    <ng-template pTemplate="end" class="relative">
+      <button pButton type="button" label="Profil" icon="pi pi-user" (click)="profileMenu.toggle($event)" 
+          class="mr-4 relative bg-gradient-to-r from-tertiary-700 to-primary-500 border-2 border-transparent hover:border-2 hover:border-black">
+      </button>
+      <p-menu #profileMenu [popup]="true" [model]="profileMenuItems" [appendTo]="'body'"></p-menu>
     </ng-template>
 
   </p-megamenu>
@@ -89,3 +119,5 @@
     <h1 class="bg-gradient-to-r from-tertiary-700 to-primary-500 bg-clip-text text-transparent text-3xl md:text-[3rem] xl:text-[4em] font-medium leading-[1.4]">{{ title.getTitle() }}</h1>
   </div>
 </section>
+
+
