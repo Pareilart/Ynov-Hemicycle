@@ -63,6 +63,7 @@ export const registerValidator = [
 
   body('twoFactorEnabled')
     .isBoolean()
+    .optional()
     .withMessage('La 2FA doit être un booléen'),
 ];
 
