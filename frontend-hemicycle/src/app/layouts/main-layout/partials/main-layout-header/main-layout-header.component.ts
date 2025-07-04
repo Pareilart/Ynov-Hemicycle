@@ -56,19 +56,13 @@ export class MainLayoutHeaderComponent {
 
   public profileMenuItems = [
     { label: 'Mon profil', icon: 'pi pi-user', command: () => this.goToProfile() },
-    { label: 'Paramètres', icon: 'pi pi-cog', command: () => this.goToSettings() },
     { separator: true },
     { label: 'Déconnexion', icon: 'pi pi-sign-out', command: () => this.logout() }
   ];
 
   goToProfile() {
     // Navigation vers le profil
-    this.router.navigate(['/profil/user']);
-  }
-
-  goToSettings() {
-    // Navigation vers paramètres
-    this.router.navigate(['/settings']);
+    this.router.navigate(['/account/profil']);
   }
 
   public logout() {

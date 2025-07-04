@@ -43,7 +43,7 @@
         <div class="cursor-pointer overflow-hidden relative px-5 py-2 flex gap-3 items-center bg-white hover:bg-white rounded-md transition-colors">
           <section class="flex items-center flex-row gap-4 hover:bg-white bg-white">
             <div class="flex items-center p-[2px] rounded-lg bg-gradient-to-r from-tertiary-700 to-primary-500 bg-white hover:bg-white">
-              <div class="flex items-center gap-2 bg-white text-black hover:text-white dark:bg-gray-900 rounded-lg px-4 py-2 hover:bg-gradient-to-r hover:from-tertiary-700 hover:to-primary-500">
+              <div class="flex items-center gap-2 bg-white text-black hover:text-white rounded-lg px-4 py-2 hover:bg-gradient-to-r hover:from-tertiary-700 hover:to-primary-500">
                 <span class="block font-medium ">
                   {{ item.label }}
                 </span>
@@ -67,7 +67,7 @@
                 <div
                   class="flex items-center p-[2px] rounded-lg bg-gradient-to-r from-tertiary-700 to-primary-500 bg-white hover:bg-white">
                   <div
-                    class="flex items-center gap-2 bg-white text-black hover:text-white dark:bg-gray-900 rounded-lg px-4 py-2 hover:bg-gradient-to-r hover:from-tertiary-700 hover:to-primary-500">
+                    class="flex items-center gap-2 bg-white text-black hover:text-white rounded-lg px-4 py-2 hover:bg-gradient-to-r hover:from-tertiary-700 hover:to-primary-500">
                     <span class="block font-medium ">
                       {{ item.label }}
                     </span>
@@ -89,7 +89,7 @@
                 <div
                   class="flex items-center p-[2px] rounded-lg bg-gradient-to-r from-tertiary-700 to-primary-500 bg-white hover:bg-white">
                   <div
-                    class="flex items-center gap-2 bg-white text-black hover:text-white dark:bg-gray-900 rounded-lg px-4 py-2 hover:bg-gradient-to-r hover:from-tertiary-700 hover:to-primary-500">
+                    class="flex items-center gap-2 bg-white text-black hover:text-white rounded-lg px-4 py-2 hover:bg-gradient-to-r hover:from-tertiary-700 hover:to-primary-500">
                     <span class="block font-medium ">
                       {{ item.label }}
                     </span>
@@ -105,7 +105,7 @@
 
     <!-- END : bouton profil -->
     <ng-template pTemplate="end" class="relative">
-      <button pButton type="button" label="Profil" icon="pi pi-user" (click)="profileMenu.toggle($event)" 
+      <button pButton type="button" label="Profil" icon="pi pi-user" (click)="profileMenu.toggle($event)"
           class="mr-4 relative bg-gradient-to-r from-tertiary-700 to-primary-500 border-2 border-transparent hover:border-2 hover:border-black">
       </button>
       <p-menu #profileMenu [popup]="true" [model]="profileMenuItems" [appendTo]="'body'"></p-menu>

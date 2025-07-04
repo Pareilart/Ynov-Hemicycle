@@ -20,7 +20,12 @@ export const environment: Environment = {
     authors: [
       {
         name: "Valentin FORTIN",
-        email: "contact@valentin-fortin.pro",
+        email: "valentin.fortin@ynov.com",
+        role: "Developer"
+      },
+      {
+        name: "Julie ALBINI",
+        email: "julie.albini@ynov.com",
         role: "Developer"
       }
     ]
@@ -30,7 +35,7 @@ export const environment: Environment = {
     message: "Maintenance en cours"
   },
   storage: {
-    prefix: "app",
+    prefix: "hemicycle",
     separator: "|",
     caseSensitive: true
   },

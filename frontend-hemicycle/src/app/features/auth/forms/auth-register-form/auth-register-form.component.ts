@@ -19,6 +19,7 @@ import { register } from '@app/core/stores/auth/auth.actions';
 import { CommonModule } from '@angular/common';
 import { FormErrorsComponent } from "../../../../shared/components/form-errors/form-errors.component";
 import { FormErrorsItemComponent } from "../../../../shared/components/form-errors/form-errors-item/form-errors-item.component";
+import { FormInputLabelComponent } from "../../../../shared/components/form-input-label/form-input-label.component";
 
 /**
  * Type AuthRegisterFormValues
@@ -105,7 +106,8 @@ type GenderOption = {
     DatePickerModule,
     CommonModule,
     FormErrorsComponent,
-    FormErrorsItemComponent
+    FormErrorsItemComponent,
+    FormInputLabelComponent
 ],
   templateUrl: './auth-register-form.component.html',
   styleUrl: './auth-register-form.component.css',
@@ -258,7 +260,18 @@ export class AuthRegisterFormComponent {
       password: this.formBuilder.control<string>({
         value: '',
         disabled: false
-      }, [Validators.required]),
+      }, [Validators.required, Validators.pattern(
+        // Au moins une lettre minuscule
+        /^(?=.*[a-z])/.source +
+        // Au moins une lettre majuscule
+        /(?=.*[A-Z])/.source +
+        // Au moins un chiffre
+        /(?=.*\d)/.source +
+        // Au moins un caractère spécial
+        /(?=.*[!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?])/.source +
+        // Longueur minimale de 8 caractères et caractères autorisés
+        /[A-Za-z\d!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?]{8,}$/.source
+      )]),
       passwordConfirmation: this.formBuilder.control<string>({
         value: '',
         disabled: false

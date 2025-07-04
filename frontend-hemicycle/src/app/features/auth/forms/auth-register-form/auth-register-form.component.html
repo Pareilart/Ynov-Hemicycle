@@ -17,10 +17,11 @@
           <div class="flex flex-col gap-5" [formGroup]="infosForm">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <section class="flex flex-col gap-1">
-                <label for="firstname" class="flex flex-row gap-1">
-                  <span class="font-medium">Prénom</span>
-                  <span class="text-red-500">*</span>
-                </label>
+                <app-form-input-label
+                  label="Prénom"
+                  [required]="true"
+                  labelFor="firstname"
+                />
 
                 <input
                   id="firstname"
@@ -48,10 +49,11 @@
               </section>
 
               <section class="flex flex-col gap-1">
-                <label for="lastname" class="flex flex-row gap-1">
-                  <span class="font-medium">Nom</span>
-                  <span class="text-red-500">*</span>
-                </label>
+                <app-form-input-label
+                  label="Nom"
+                  [required]="true"
+                  labelFor="lastname"
+                />
 
                 <input
                   id="lastname"
@@ -80,10 +82,11 @@
             </div>
 
             <section class="flex flex-col gap-1">
-              <label for="gender" class="flex flex-row gap-1">
-                <span class="font-medium">Genre</span>
-                <span class="text-red-500">*</span>
-              </label>
+              <app-form-input-label
+                label="Genre"
+                [required]="true"
+                labelFor="gender"
+              />
 
               <p-select
                 formControlName="gender"
@@ -101,10 +104,11 @@
             </section>
 
             <section class="flex flex-col gap-1">
-              <label for="birthday" class="flex flex-row gap-1">
-                <span class="font-medium">Date de naissance</span>
-                <span class="text-red-500">*</span>
-              </label>
+              <app-form-input-label
+                label="Date de naissance"
+                [required]="true"
+                labelFor="birthday"
+              />
 
               <p-date-picker
                 inputId="birthday"
@@ -141,10 +145,11 @@
         <ng-template #content let-activateCallback="activateCallback">
           <div class="flex flex-col gap-5" [formGroup]="credentialsForm">
             <section class="flex flex-col gap-1">
-              <label for="email" class="flex flex-row gap-1">
-                <span class="font-medium">Adresse e-mail</span>
-                <span class="text-red-500">*</span>
-              </label>
+              <app-form-input-label
+                label="Adresse e-mail"
+                [required]="true"
+                labelFor="email"
+              />
 
               <input
                 id="email"
@@ -168,10 +173,11 @@
             </section>
 
             <section class="flex flex-col gap-1">
-              <label for="password" class="flex flex-row gap-1">
-                <span class="font-medium">Mot de passe</span>
-                <span class="text-red-500">*</span>
-              </label>
+              <app-form-input-label
+                label="Mot de passe"
+                [required]="true"
+                labelFor="password"
+              />
 
               <p-password weakLabel="Faible" strongLabel="Fort" mediumLabel="Moyen" formControlName="password" autocomplete="new-password" placeholder="Votre mot de passe" inputId="password" [fluid]="true" [toggleMask]="true">
                 <ng-template #header>
@@ -194,37 +200,32 @@
                   <p>Veuillez saisir votre mot de passe.</p>
                 </app-form-errors-item>
 
-                <app-form-errors-item validator="minlength">
-                  <p>Veuillez saisir un mot de passe de minimum 8 caractères.</p>
-                </app-form-errors-item>
-
-                <app-form-errors-item validator="maxlength">
-                  <p>Veuillez saisir un mot de passe de maximum 50 caractères.</p>
+                <app-form-errors-item validator="pattern">
+                  <p>Votre mot de passe doit contenir au moins :</p>
+                  <ul class="pl-2 ml-2 my-0 leading-normal">
+                    <li>Une minuscule</li>
+                    <li>Une majuscule</li>
+                    <li>Un chiffre</li>
+                    <li>8 caractères</li>
+                  </ul>
                 </app-form-errors-item>
               </app-form-errors>
             </section>
 
             <section class="flex flex-col gap-1">
-              <label for="passwordConfirmation" class="flex flex-row gap-1">
-                <span class="font-medium">Confirmez le mot de passe</span>
-                <span class="text-red-500">*</span>
-              </label>
+              <app-form-input-label
+                label="Confirmez le mot de passe"
+                [required]="true"
+                labelFor="passwordConfirmation"
+              />
+
+              <p-password formControlName="passwordConfirmation" autocomplete="new-password" placeholder="Confirmez votre mot de passe" inputId="passwordConfirmation" [feedback]="false" [toggleMask]="true" [fluid]="true" />
 
               <app-form-errors [control]="credentialsForm.get('passwordConfirmation')!" help="Veuillez renseigner votre mot de passe">
                 <app-form-errors-item validator="required">
                   <p>Veuillez saisir votre mot de passe.</p>
                 </app-form-errors-item>
-
-                <app-form-errors-item validator="minlength">
-                  <p>Veuillez saisir un mot de passe de minimum 8 caractères.</p>
-                </app-form-errors-item>
-
-                <app-form-errors-item validator="maxlength">
-                  <p>Veuillez saisir un mot de passe de maximum 50 caractères.</p>
-                </app-form-errors-item>
               </app-form-errors>
-
-              <p-password formControlName="passwordConfirmation" autocomplete="new-password" placeholder="Confirmez votre mot de passe" inputId="passwordConfirmation" [feedback]="false" [toggleMask]="true" [fluid]="true" />
             </section>
 
             <section class="flex flex-row gap-3 items-center">
