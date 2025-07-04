@@ -4,7 +4,7 @@ import { seedRoles } from './seedRoles';
 import { seedUsers } from './seedUsers';
 
 // Charger les variables d'environnement
-dotenv.config();
+dotenv.config(); // Charger les variables d'environnement
 
 const runAllSeeds = async () => {
   try {
