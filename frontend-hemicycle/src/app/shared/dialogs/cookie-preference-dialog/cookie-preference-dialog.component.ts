@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { DialogService, DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Component } from '@angular/core';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
 
 /**
  * Type CookiePreferenceDialogData

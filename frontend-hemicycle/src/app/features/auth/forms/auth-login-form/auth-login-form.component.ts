@@ -8,6 +8,12 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
 import { Email } from '@core/models/email/email.model';
+import { AuthState } from '@core/stores/auth/auth.state';
+import { Store } from '@ngrx/store';
+import { selectAuthLoading } from '@core/stores/auth/auth.selectors';
+import { login } from '@core/stores/auth/auth.actions';
+import { FormErrorsComponent } from "@shared/components/form-errors/form-errors.component";
+import { FormErrorsItemComponent } from "@shared/components/form-errors/form-errors-item/form-errors-item.component";
 
 /**
  * Type AuthLoginFormValues
@@ -66,8 +72,10 @@ type AuthProvider = {
     InputTextModule,
     CheckboxModule,
     ButtonModule,
-    RouterModule
-  ],
+    RouterModule,
+    FormErrorsComponent,
+    FormErrorsItemComponent
+],
   templateUrl: './auth-login-form.component.html',
   styleUrl: './auth-login-form.component.css',
   host: { class: 'w-full' }
@@ -89,6 +97,38 @@ export class AuthLoginFormComponent {
    */
   private readonly formBuilder: NonNullableFormBuilder =
     inject<NonNullableFormBuilder>(NonNullableFormBuilder);
+
+  /**
+   * Propriété store
+   * @readonly
+   *
+   * @description
+   * Store de l'authentification
+   *
+   * @access private
+   * @memberof AuthLoginFormComponent
+   * @since 1.0.0
+   *
+   * @type {Store<AuthState>} store
+   */
+  private readonly store: Store<AuthState> =
+    inject<Store<AuthState>>(Store<AuthState>);
+
+  /**
+   * Propriété loading
+   * @readonly
+   *
+   * @description
+   * Signal de chargement
+   *
+   * @access public
+   * @memberof AuthLoginFormComponent
+   * @since 1.0.0
+   *
+   * @type {Signal<boolean>} loading
+   */
+  public readonly loading: Signal<boolean> =
+    this.store.selectSignal(selectAuthLoading);
 
   /**
    * Propriété form
@@ -168,7 +208,12 @@ export class AuthLoginFormComponent {
   public onSubmit(): void {
     if (this.form.invalid) return;
 
-    console.log(this.form.value);
+    this.store.dispatch(login({
+      credentials: {
+        email: this.form.value.email!,
+        password: this.form.value.password!
+      }
+    }))
   }
   //#endregion
 }

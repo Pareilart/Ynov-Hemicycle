@@ -1,0 +1,13 @@
+<div class="flex flex-col">
+  @if (control(); as control) {
+    @if (control.invalid && control.touched) {
+      @for (item of items(); track item.validator()) {
+        @if (control.hasError(item.validator())) {
+          <ng-container [ngTemplateOutlet]="item.template()" />
+        }
+      }
+    } @else if (help()) {
+      <p class="text-surface-400 text-sm">{{ help() }}</p>
+    }
+  }
+</div>

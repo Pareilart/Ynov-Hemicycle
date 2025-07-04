@@ -1,7 +1,6 @@
 import { Timestampable } from "@core/models/timestampable/timestampable.model";
-import { Uuid } from "@core/models/uuid/uuid.model";
 import { Email } from "@core/models/email/email.model";
-import { UserGender } from "./user-gender.enum";
+import { UserRole } from "./user-role.model";
 
 /**
  * Modèle User
@@ -12,24 +11,12 @@ import { UserGender } from "./user-gender.enum";
  *
  * @version 1.0.0
  *
- * @property {Uuid} id - Identifiant unique de l'utilisateur
+ * @property {string} id - Identifiant unique de l'utilisateur
  * @property {Email} email - Email de l'utilisateur
  * @property {string} image - Image de l'utilisateur
  * @property {string} firstname - Prénom de l'utilisateur
  * @property {string} lastname - Nom de l'utilisateur
- *
- * @example
- * ```typescript
- * const user: User = {
- *   id: "123e4567-e89b-12d3-a456-426614174000",
- *   email: "contact@valentin-fortin.pro",
- *   firstname: "Valentin",
- *   lastname: "FORTIN",
- *   createdAt: new Date(),
- *   updatedAt: new Date(),
- *   deletedAt: undefined
- * };
- * ```
+ * @property {string} birthday - Nom de l'utilisateur
  *
  * @author Valentin FORTIN <contact@valentin-fortin.pro>
  */
@@ -45,9 +32,9 @@ export interface User extends Timestampable {
    * @memberof User
    * @since 1.0.0
    *
-   * @type {Uuid} id
+   * @type {string} id
    */
-  readonly id: Uuid;
+  readonly id: string;
 
   /**
    * Propriété email
@@ -62,6 +49,20 @@ export interface User extends Timestampable {
    * @type {Email} email
    */
   readonly email: Email;
+
+  /**
+   * Propriété emailVerifiedAt
+   * @readonly
+   *
+   * @description
+   * Date de vérification de l'email de l'utilisateur
+   *
+   * @memberof User
+   * @since 1.0.0
+   *
+   * @type {Date | null} emailVerifiedAt
+   */
+  readonly emailVerifiedAt: Date | null;
 
   /**
    * Propriété firstname
@@ -92,45 +93,65 @@ export interface User extends Timestampable {
   readonly lastname: string;
 
   /**
-   * Propriété gender
+   * Propriété role
    * @readonly
    *
    * @description
-   * Genre de l'utilisateur
+   * Rôle de l'utilisateur
    *
    * @memberof User
    * @since 1.0.0
    *
-   * @type {UserGender} gender
+   * @type {UserRole} role
    */
-  readonly gender: UserGender;
+  readonly role: UserRole;
 
   /**
-   * Propriété city
+   * Propriété birthday
    * @readonly
    *
    * @description
-   * Ville de l'utilisateur
+   * Date de naissance de l'utilisateur
    *
    * @memberof User
    * @since 1.0.0
    *
-   * @type {string} city
+   * @type {Date} birthday
    */
-  readonly city?: string;
+  readonly birthday: Date;
 
   /**
-   * Propriété postalCode
+   * Propriété hasOnBoarding
    * @readonly
    *
    * @description
-   * Code postal de l'utilisateur
+   * Indique si l'utilisateur a terminé
+   * son onboarding
    *
    * @memberof User
    * @since 1.0.0
    *
-   * @type {string} postalCode
+   * @type {boolean} hasOnBoarding
    */
-  readonly postalCode?: string;
+  readonly hasOnBoarding: boolean;
+
+  /**
+   * Propriété twoFactorEnabled
+   * @readonly
+   *
+   * @description
+   * Indique si l'utilisateur a activé
+   * le 2FA
+   *
+   * @memberof User
+   * @since 1.0.0
+   *
+   * @type {boolean} twoFactorEnabled
+   */
+  readonly twoFactorEnabled: boolean;
   //#endregion
 };
+
+export type UserUpdatePayload = Partial<Pick<User, 'firstname' | 'lastname' | 'birthday' | 'twoFactorEnabled'>>;
+export type UserDeletePayload = Pick<User, 'id'>;
+export type UserCreatePayload = Omit<User, 'id' | 'emailVerifiedAt' | 'hasOnBoarding' | 'twoFactorEnabled' | 'createdAt' | 'updatedAt'>;

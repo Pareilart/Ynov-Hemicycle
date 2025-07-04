@@ -1,0 +1,23 @@
+<div class="flex flex-row items-center gap-2">
+  @for (reaction of reactions(); track $index) {
+    @let icon = reaction.active ? reaction.icon.active : reaction.icon.inactive;
+    @let labelClass = reaction.active ? 'text-xs font-bold' : 'text-xs';
+
+    <p-button
+      severity="secondary"
+      size="small"
+      [pTooltip]="tooltipContent"
+      tooltipPosition="top"
+      [showDelay]="300"
+      [outlined]="true"
+      (onClick)="reaction?.onClick($event)"
+    >
+      <i [class]="icon"></i>
+      <span [class]="labelClass">{{ reaction.value }}</span>
+    </p-button>
+
+    <ng-template #tooltipContent >
+      <p class="text-sm">{{ reaction.label }}</p>
+    </ng-template>
+  }
+</div>

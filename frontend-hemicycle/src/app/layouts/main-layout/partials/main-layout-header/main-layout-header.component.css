@@ -1,1 +1,3 @@
-
+.hover-gradient-bg:hover {
+    background-image: linear-gradient(to right, #D4145A, #93278F);
+    color: white !important; }

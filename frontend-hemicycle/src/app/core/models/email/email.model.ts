@@ -14,4 +14,4 @@
  *
  * @author Valentin FORTIN <contact@valentin-fortin.pro>
  */
-export type Email = `${string}@${string}`;
+export type Email = string;

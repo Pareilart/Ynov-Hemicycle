@@ -1,0 +1,14 @@
+<div class="flex flex-col gap-3">
+  <section class="flex flex-col">
+    <p class="text-surface-700 mb-4">
+      Veuillez remplir le formulaire ci-dessous pour
+      mettre à jour vos informations.
+    </p>
+  </section>
+
+  <section class="flex flex-col">
+    @if (dialogConfig.data?.account; as account) {
+      <app-account-user-update-form [account]="account"/>
+    }
+  </section>
+</div>

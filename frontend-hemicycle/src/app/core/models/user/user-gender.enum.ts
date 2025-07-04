@@ -32,7 +32,7 @@ export enum UserGender {
    *
    * @type {string} MALE
    */
-  MALE = "MALE",
+  MALE = "Homme",
 
   /**
    * Constante FEMALE
@@ -45,7 +45,7 @@ export enum UserGender {
    *
    * @type {string} FEMALE
    */
-  FEMALE = "FEMALE",
+  FEMALE = "Femme",
 
   /**
    * Constante OTHER
@@ -58,19 +58,6 @@ export enum UserGender {
    *
    * @type {string} OTHER
    */
-  OTHER = "OTHER",
-
-  /**
-   * Constante PREFER_NOT_TO_SAY
-   *
-   * @description
-   * Genre préfère ne pas dire
-   *
-   * @memberof UserGender
-   * @since 1.0.0
-   *
-   * @type {string} PREFER_NOT_TO_SAY
-   */
-  PREFER_NOT_TO_SAY = "PREFER_NOT_TO_SAY"
+  OTHER = "Autre",
   //#endregion
 }

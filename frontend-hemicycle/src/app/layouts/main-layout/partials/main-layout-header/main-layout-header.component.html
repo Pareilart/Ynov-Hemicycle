@@ -1,16 +1,17 @@
 <header>
-  <p-megamenu
-    [model]="items()"
-    orientation="horizontal"
-    class="bg-transparent container mx-auto flex w-full [&_.p-megamenu]:bg-transparent [&_.p-megamenu-submenu-label]:text-sm [&_.p-megamenu-end]:ml-0 [&_.p-megamenu-start]:mr-auto"
-    styleClass="flex w-full py-8 px-4 md:px-0 border-0"
-  >
+  <p-megamenu [model]="items()" orientation="horizontal" class="bg-transparent container mx-auto flex w-full
+      [&_.p-megamenu]:bg-transparent
+      [&_.p-megamenu-submenu-label]:text-sm
+      [&_.p-megamenu-end]:ml-0
+      [&_.p-megamenu-start]:mr-auto
+      [&_.p-megamenu-root-list]:border-t-tertiary-700" styleClass="flex w-full py-5 px-4 md:px-0 border-0">
+
     <!-- Début du menu (partie à gauche) -->
-    <ng-template #start>
+    <ng-template pTemplate="start">
       <section class="flex items-center gap-2">
         <a class="flex items-center gap-3" [routerLink]="['/']">
           <div class="flex items-center">
-            <img [src]="logo" alt="Logo" class="h-10 rounded-sm"/>
+            <img [src]="logo" alt="Logo" class="h-10 rounded-sm" />
           </div>
 
           <div class="flex flex-col justify-center">
@@ -22,62 +23,101 @@
     </ng-template>
 
     <!-- Élément du menu -->
-    <ng-template #item let-item>
+    <ng-template pTemplate="item" let-item>
       @let root = item.items && item.items.length > 0;
 
       @if (root) {
-        @if (item.routerLink || item.url) {
-          <a [routerLink]="item.routerLink" [href]="item.url" class="flex">
-            <ng-container [ngTemplateOutlet]="rootItemContent"/>
-          </a>
-        }
-
-        @if (!item.routerLink || !item.url) {
-          <button class="flex h-full" type="button">
-            <ng-container [ngTemplateOutlet]="rootItemContent"/>
-          </button>
-        }
-
-        <ng-template #rootItemContent>
-          <div class="cursor-pointer overflow-hidden relative px-5 py-1 flex gap-3 items-center hover:bg-surface-100 rounded-md transition-colors">
-            <section class="flex items-center flex-row gap-4">
-              <span class="font-medium text-surface-950">{{ item.label }}</span>
-            </section>
-
-            <section class="flex items-center">
-              <i class="pi pi-chevron-down text-xs text-surface-400"></i>
-            </section>
-          </div>
-        </ng-template>
+      @if (item.routerLink || item.url) {
+      <a [routerLink]="item.routerLink" [href]="item.url" class="flex">
+        <div
+          class="cursor-pointer overflow-hidden relative px-5 py-1 flex gap-3 items-center rounded-md transition-colors">
+          <section class="flex items-center flex-row gap-4">
+            <span class="font-medium">{{ item.label }}</span>
+          </section>
+        </div>
+      </a>
       }
 
+      @if (!item.routerLink && !item.url) {
+      <button class="flex h-full" type="button" class="bg-white hover:bg-white">
+        <div class="cursor-pointer overflow-hidden relative px-5 py-2 flex gap-3 items-center bg-white hover:bg-white rounded-md transition-colors">
+          <section class="flex items-center flex-row gap-4 hover:bg-white bg-white">
+            <div class="flex items-center p-[2px] rounded-lg bg-gradient-to-r from-tertiary-700 to-primary-500 bg-white hover:bg-white">
+              <div class="flex items-center gap-2 bg-white text-black hover:text-white dark:bg-gray-900 rounded-lg px-4 py-2 hover:bg-gradient-to-r hover:from-tertiary-700 hover:to-primary-500">
+                <span class="block font-medium ">
+                  {{ item.label }}
+                </span>
+                <i class="pi pi-chevron-down text-xs"></i>
+              </div>
+            </div>
+          </section>
+        </div>
+      </button>
+      }
+      }
 
       @if (!root && !item.image) {
-        @if (item.routerLink || item.url) {
-          <a [routerLink]="item.routerLink" [href]="item.url" class="flex cursor-pointer">
-            <ng-container [ngTemplateOutlet]="itemContent"/>
-          </a>
-        }
+      @if (item.routerLink || item.url) {
+      <a [routerLink]="item.routerLink" [href]="item.url" class="flex cursor-pointer bg-white hover:bg-white">
+        <div
+          class="select-none flex flex-row gap-4 items-center px-4 py-2 overflow-hidden relative w-full rounded-md">
+          <a [routerLink]="item.routerLink" [href]="item.url" class="flex cursor-pointer bg-white hover:bg-white">
+            <div class="select-none flex flex-row gap-4 items-center px-4 py-2 overflow-hidden relative w-full rounded-md">
+              <section class="flex items-center flex-row gap-4 hover:bg-white bg-white">
+                <div
+                  class="flex items-center p-[2px] rounded-lg bg-gradient-to-r from-tertiary-700 to-primary-500 bg-white hover:bg-white">
+                  <div
+                    class="flex items-center gap-2 bg-white text-black hover:text-white dark:bg-gray-900 rounded-lg px-4 py-2 hover:bg-gradient-to-r hover:from-tertiary-700 hover:to-primary-500">
+                    <span class="block font-medium ">
+                      {{ item.label }}
+                    </span>
+                  </div>
+                </div>
+              </section>
+            </div></a>
+        </div>
+      </a>
+      }
 
-        @if (!item.routerLink || !item.url) {
-          <div class="flex">
-            <ng-container [ngTemplateOutlet]="itemContent"/>
-          </div>
-        }
-
-        <ng-template #itemContent>
-          <div class="select-none flex flex-row gap-4 items-center px-4 py-2 overflow-hidden relative w-full hover:bg-surface-100 rounded-md transition-colors">
-            <section class="flex items-center flex-row gap-2">
-              @if (item.icon; as icon) { <i [class]="icon" class="text-xl text-surface-500"></i> }
-            </section>
-
-            <section class="flex item-center flex-col">
-              <span class="font-semibold">{{ item.label }}</span>
-              <p class="text-sm text-surface-500">{{ item.subtext }}</p>
-            </section>
-          </div>
-        </ng-template>
+      @if (!item.routerLink && !item.url) {
+      <div class="flex">
+        <div
+          class="select-none flex flex-row gap-4 items-center px-4 py-2 overflow-hidden relative w-full rounded-md">
+          <a [routerLink]="item.routerLink" [href]="item.url" class="flex cursor-pointer bg-white hover:bg-white">
+            <div class="select-none flex flex-row gap-4 items-center px-4 py-2 overflow-hidden relative w-full rounded-md">
+              <section class="flex items-center flex-row gap-4 hover:bg-white bg-white">
+                <div
+                  class="flex items-center p-[2px] rounded-lg bg-gradient-to-r from-tertiary-700 to-primary-500 bg-white hover:bg-white">
+                  <div
+                    class="flex items-center gap-2 bg-white text-black hover:text-white dark:bg-gray-900 rounded-lg px-4 py-2 hover:bg-gradient-to-r hover:from-tertiary-700 hover:to-primary-500">
+                    <span class="block font-medium ">
+                      {{ item.label }}
+                    </span>
+                  </div>
+                </div>
+              </section>
+            </div></a>
+        </div>
+      </div>
+      }
       }
     </ng-template>
+
+    <!-- END : bouton profil -->
+    <ng-template pTemplate="end" class="relative">
+      <button pButton type="button" label="Profil" icon="pi pi-user" (click)="profileMenu.toggle($event)" 
+          class="mr-4 relative bg-gradient-to-r from-tertiary-700 to-primary-500 border-2 border-transparent hover:border-2 hover:border-black">
+      </button>
+      <p-menu #profileMenu [popup]="true" [model]="profileMenuItems" [appendTo]="'body'"></p-menu>
+    </ng-template>
+
   </p-megamenu>
 </header>
+
+<section class=" bg-white md:py-5 xl:py-10">
+  <div class="container mx-auto py-5 flex justify-center items-center">
+    <h1 class="bg-gradient-to-r from-tertiary-700 to-primary-500 bg-clip-text text-transparent text-3xl md:text-[3rem] xl:text-[4em] font-medium leading-[1.4]">{{ title.getTitle() }}</h1>
+  </div>
+</section>
+
+

@@ -1,0 +1,111 @@
+<form class="flex flex-col gap-5 w-full h-full" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <section class="flex flex-col gap-1">
+      <app-form-input-label
+        label="Prénom"
+        [required]="true"
+        labelFor="firstname"
+      />
+
+      <input
+        id="firstname"
+        formControlName="firstname"
+        placeholder="Prénom"
+        type="text"
+        autocomplete="firstname"
+        pInputText
+        [fluid]="true"
+      />
+
+      <app-form-errors [control]="form.get('firstname')!" help="Veuillez renseigner votre prénom">
+        <app-form-errors-item validator="required">
+          <p>Veuillez saisir votre prénom.</p>
+        </app-form-errors-item>
+
+        <app-form-errors-item validator="minlength">
+          <p>Veuillez saisir un prénom de minimum 2 caractères.</p>
+        </app-form-errors-item>
+
+        <app-form-errors-item validator="maxlength">
+          <p>Veuillez saisir un prénom de maximum 50 caractères.</p>
+        </app-form-errors-item>
+      </app-form-errors>
+    </section>
+
+    <section class="flex flex-col gap-1">
+      <app-form-input-label
+        label="Nom"
+        [required]="true"
+        labelFor="lastname"
+      />
+
+      <input
+        id="lastname"
+        formControlName="lastname"
+        placeholder="Nom"
+        type="text"
+        autocomplete="lastname"
+        pInputText
+        [fluid]="true"
+      />
+
+      <app-form-errors [control]="form.get('lastname')!" help="Veuillez renseigner votre nom">
+        <app-form-errors-item validator="required">
+          <p>Veuillez saisir votre nom.</p>
+        </app-form-errors-item>
+
+        <app-form-errors-item validator="minlength">
+          <p>Veuillez saisir un nom de minimum 2 caractères.</p>
+        </app-form-errors-item>
+
+        <app-form-errors-item validator="maxlength">
+          <p>Veuillez saisir un nom de maximum 50 caractères.</p>
+        </app-form-errors-item>
+      </app-form-errors>
+    </section>
+  </div>
+
+  <section class="flex flex-col gap-1">
+    <app-form-input-label
+      label="Date de naissance"
+      [required]="true"
+      labelFor="birthday"
+    />
+
+    <p-datepicker
+      formControlName="birthday"
+      iconDisplay="input"
+      [showIcon]="true"
+      inputId="birthday"
+      [fluid]="true"
+    />
+
+    <app-form-errors [control]="form.get('birthday')!" help="Veuillez renseigner votre date de naissance">
+      <app-form-errors-item validator="required">
+        <p>Veuillez saisir votre date de naissance.</p>
+      </app-form-errors-item>
+    </app-form-errors>
+  </section>
+
+  <section class="flex flex-col gap-1">
+    <div class="flex flex-row gap-2">
+      <p-toggle-switch
+        formControlName="twoFactorEnabled"
+        inputId="twoFactorEnabled"
+      />
+
+      <label class="font-medium" for="twoFactorEnabled">Authentification à double facteur</label>
+    </div>
+  </section>
+
+  <section class="flex flex-row gap-3">
+    <p-button
+      class="w-full"
+      type="submit"
+      [fluid]="true"
+      label="Enregistrer"
+      [loading]="loading()"
+      [disabled]="form.invalid && !loading()"
+    />
+  </section>
+</form>
