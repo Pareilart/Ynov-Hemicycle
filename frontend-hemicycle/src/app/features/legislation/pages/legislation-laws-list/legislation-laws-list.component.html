@@ -1,6 +1,6 @@
 @if (laws().length > 0) {
   <p-virtual-scroller class="flex flex-col" styleClass="flex flex-col px-10" [items]="laws()" [itemSize]="100"
-    [lazy]="true" (onLazyLoad)="onLazyLoad($event)" [delay]="100" [showLoader]="true" scrollHeight="500px">
+    [lazy]="false" (onLazyLoad)="onLazyLoad($event)" [delay]="100" scrollHeight="500px">
     <ng-template pTemplate="item" let-law>
       <app-legislation-law-card class="block not-first:mt-4" [law]="law" />
     </ng-template>

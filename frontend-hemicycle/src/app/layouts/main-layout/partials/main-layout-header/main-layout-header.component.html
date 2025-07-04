@@ -114,9 +114,19 @@
   </p-megamenu>
 </header>
 
-<section class=" bg-white md:py-5 xl:py-10">
-  <div class="container mx-auto py-5 flex justify-center items-center">
-    <h1 class="bg-gradient-to-r from-tertiary-700 to-primary-500 bg-clip-text text-transparent text-3xl md:text-[3rem] xl:text-[4em] font-medium leading-[1.4]">{{ title.getTitle() }}</h1>
+<section class="bg-surface-0 mb-10 md:py-2 border-y border-surface-200">
+  <div class="container mx-auto px-5 md:px-0 py-2 flex justify-between items-center">
+    <p-breadcrumb styleClass="rounded-lg text-sm px-3 py-2" [model]="breadcrumbItems" [home]="home">
+      <ng-template #item let-item>
+        <a class="cursor-pointer text-surface-950" [routerLink]="item.routerLink">
+          {{ item.label }}
+        </a>
+      </ng-template>
+      <ng-template #separator>/</ng-template>
+    </p-breadcrumb>
+    <h1 class="bg-gradient-to-r from-tertiary-700 to-primary-500 bg-clip-text text-transparent text-[1rem] md:text-[1rem] xl:text-[1.5rem] font-medium leading-[1.4]">
+      {{ title.getTitle() }}
+    </h1>
   </div>
 </section>
 

@@ -1,5 +1,6 @@
 import { Data as AngularRouteData } from "@angular/router";
 import { RouteMeta } from "@core/models/route/route-meta.model";
+import { MenuItem } from "primeng/api";
 
 /**
  * Modèle RouteData
@@ -43,5 +44,19 @@ export type RouteData = {
    * @type {boolean} hero
    */
   readonly hero?: boolean;
+
+  /**
+   * Propriété breadcrumb
+   * @readonly
+   *
+   * @description
+   * Indique si la route est une page d'accueil
+   *
+   * @memberof RouteData
+   * @since 1.0.0
+   *
+   * @type {MenuItem[]} breadcrumb
+   */
+  readonly breadcrumb?: MenuItem[];
   //#endregion
 } & AngularRouteData;

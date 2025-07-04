@@ -1,6 +1,6 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { afterRenderEffect, Component, computed, DestroyRef, effect, EffectCleanupRegisterFn, ElementRef, inject, input, InputSignal, PLATFORM_ID, Signal, signal, viewChild, WritableSignal, ViewChild  } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { afterRenderEffect, Component, computed, DestroyRef, effect, EffectCleanupRegisterFn, ElementRef, inject, input, InputSignal, PLATFORM_ID, Signal, signal, viewChild, WritableSignal, ViewChild, OnInit  } from '@angular/core';
+import { NavigationEnd, RouterModule } from '@angular/router';
 import { environment } from '@environments/environment';
 import { MegaMenuItem, PrimeIcons } from 'primeng/api';
 import { MegaMenuModule } from 'primeng/megamenu';
@@ -17,6 +17,9 @@ import { ButtonModule } from 'primeng/button';
 import { AuthState } from '@app/core/stores/auth/auth.state';
 import { Store } from '@ngrx/store';
 import * as AuthActions from '@app/core/stores/auth/auth.actions';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { ActivatedRoute } from '@angular/router';
+import { filter, map, mergeMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-main-layout-header',
@@ -27,12 +30,13 @@ import * as AuthActions from '@app/core/stores/auth/auth.actions';
     MenuModule,
     BadgeModule,
     AvatarModule,
-    ButtonModule
+    ButtonModule,
+    BreadcrumbModule
   ],
   templateUrl: './main-layout-header.component.html',
   styleUrl: './main-layout-header.component.css',
 })
-export class MainLayoutHeaderComponent {
+export class MainLayoutHeaderComponent implements OnInit {
   //#region Propriétés
   /**
    * Propriété store
@@ -52,7 +56,7 @@ export class MainLayoutHeaderComponent {
   //#endregion
 
   @ViewChild('profileMenuContainer', { static: true }) profileMenuContainer!: ElementRef;
-  constructor(private router: Router) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   public profileMenuItems = [
     { label: 'Mon profil', icon: 'pi pi-user', command: () => this.goToProfile() },
@@ -90,7 +94,7 @@ export class MainLayoutHeaderComponent {
    * @readonly
    *
    * @description
-   * Titre de la page
+   * Service de titre
    *
    * @access public
    * @memberof MainLayoutHeaderComponent
@@ -99,6 +103,35 @@ export class MainLayoutHeaderComponent {
    * @type {Title} title
    */
   public readonly title: Title = inject<Title>(Title);
+
+  /**
+   * Propriété breadcrumbItems
+   *
+   * @description
+   * Éléments du fil d'Ariane
+   *
+   * @access public
+   * @memberof MainLayoutHeaderComponent
+   * @since 1.0.0
+   *
+   * @type {MenuItem[]} breadcrumbItems
+   */
+  public breadcrumbItems: MenuItem[] = [];
+
+  /**
+   * Propriété home
+   * @readonly
+   *
+   * @description
+   * Élément d'accueil du fil d'Ariane
+   *
+   * @access public
+   * @memberof MainLayoutHeaderComponent
+   * @since 1.0.0
+   *
+   * @type {MenuItem} home
+   */
+  public readonly home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
 
   /**
    * Propriété items
@@ -155,5 +188,39 @@ export class MainLayoutHeaderComponent {
    * @type {string} logo
    */
   public readonly logo: string = "images/logo.jpg";
-  //#endregion
+
+  /**
+   * Méthode ngOnInit
+   *
+   * @description
+   * Initialise le composant
+   *
+   * @access public
+   * @memberof MainLayoutHeaderComponent
+   * @since 1.0.0
+   *
+   * @returns {void} void
+   */
+  public ngOnInit(): void {
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        map(() => this.activatedRoute),
+        map(route => {
+          while (route.firstChild) {
+            route = route.firstChild;
+          }
+          return route;
+        }),
+        filter(route => route.outlet === 'primary'),
+        mergeMap(route => route.data)
+      )
+      .subscribe(data => {
+        if (data['breadcrumb']) {
+          this.breadcrumbItems = data['breadcrumb'];
+        } else {
+          this.breadcrumbItems = [];
+        }
+      });
+  }
 }

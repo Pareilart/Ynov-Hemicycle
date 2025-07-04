@@ -17,16 +17,40 @@ export const LEGAL_ROUTES: Routes = [
   {
     path: 'cgu',
     title: 'Conditions générales d\'utilisation',
+    data: {
+      breadcrumb: [
+        {
+          label: 'Conditions générales d\'utilisation',
+          routerLink: '/legal/cgu',
+        },
+      ],
+    },
     component: LegalCguComponent,
   },
   {
     path: 'politique',
     title: 'Politique de confidentialité',
+    data: {
+      breadcrumb: [
+        {
+          label: 'Politique de confidentialité',
+          routerLink: '/legal/politique',
+        },
+      ],
+    },
     component: LegalPolitiqueComponent,
   },
   {
     path: 'mentions',
     title: 'Mentions légales',
+    data: {
+      breadcrumb: [
+        {
+          label: 'Mentions légales',
+          routerLink: '/legal/mentions',
+        },
+      ],
+    },
     component: LegalMentionsComponent,
   },
 ];

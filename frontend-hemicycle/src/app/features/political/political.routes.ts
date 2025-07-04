@@ -15,6 +15,14 @@ export const POLITICAL_ROUTES: Routes = [
   {
     path: 'party',
     title: 'Partis politiques',
+    data: {
+      breadcrumb: [
+        {
+          label: 'Partis politiques',
+          routerLink: '/political/party',
+        },
+      ],
+    },
     component: PoliticalPartyComponent,
   },
 ];

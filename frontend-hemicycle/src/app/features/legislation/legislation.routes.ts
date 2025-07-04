@@ -19,6 +19,14 @@ export const LEGISLATION_ROUTES: Routes = [
   {
     path: 'laws',
     title: 'Lois',
+    data: {
+      breadcrumb: [
+        {
+          label: 'Lois',
+          routerLink: '/legislation/laws',
+        },
+      ],
+    },
     component: LegislationLawsListComponent,
   },
   {
@@ -26,6 +34,18 @@ export const LEGISLATION_ROUTES: Routes = [
     title: 'Loi',
     resolve: {
       law: LegislationLawResolver,
+    },
+    data: {
+      breadcrumb: [
+        {
+          label: 'Lois',
+          routerLink: '/legislation/laws',
+        },
+        {
+          label: 'Loi',
+          routerLink: '/legislation/laws/:id',
+        },
+      ],
     },
     component: LegislationLawsDetailComponent,
   },

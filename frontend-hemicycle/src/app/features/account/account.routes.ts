@@ -19,11 +19,27 @@ export const ACCOUNT_ROUTES: Routes = [
     path: 'onboarding',
     title: 'Embarquement',
     component: AccountOnboardingComponent,
+    data: {
+      breadcrumb: [
+        {
+          label: 'Embarquement',
+          routerLink: '/account/onboarding',
+        },
+      ],
+    },
     canActivate: [OnBoardingGuard]
   },
   {
     path: 'profil',
     title: 'Profil',
+    data: {
+      breadcrumb: [
+        {
+          label: 'Profil',
+          routerLink: '/account/profil',
+        },
+      ],
+    },
     component: AccountUserProfilComponent,
   }
 ];
