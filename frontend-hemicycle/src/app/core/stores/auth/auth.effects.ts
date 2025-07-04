@@ -311,8 +311,21 @@ export class AuthEffects {
   public verifyEmail$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.verifyEmail),
     switchMap(({ verification }: { verification: UserEmailVerification }) => this.authService.verifyEmail(verification).pipe(
-      map((response: HttpResponse<ApiReponse<void>>) => {
+      map((response: HttpResponse<ApiReponse<User & { token: JwtToken }>>) => {
+        if (!response.body?.data) {
+          return AuthActions.verifyEmailFailure({ status: {
+            code: response.status,
+            label: 'Verify Email Failure',
+            message: 'Verify Email Failure'
+          } });
+        }
+
+        const token: JwtToken = response.body.data.token;
+        const user: User = response.body.data;
+
         return AuthActions.verifyEmailSuccess({
+          user: user,
+          token: token,
           status: {
             code: response.status,
             label: 'Verify Email Success',
@@ -326,8 +339,13 @@ export class AuthEffects {
 
   public verifyEmailSuccess$ = createEffect(() => this.actions.pipe(
     ofType(AuthActions.verifyEmailSuccess),
-    tap(({ status }: { status: StoreOperationStatus }) => {
-      this.router.navigate(['/auth/login']);
+    tap(({ user, token }: { user: User, token: JwtToken }) => {
+      this.router.navigate(['/']);
+
+      this.localStorageService.store(
+        REFRESH_TOKEN_KEY,
+        token.refreshToken
+      );
     })
   ), { dispatch: false });
 

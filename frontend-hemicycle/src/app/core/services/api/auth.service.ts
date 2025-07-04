@@ -106,11 +106,11 @@ export class AuthService {
    *
    * @param {UserEmailVerification} payload - Identifiants de connexion
    *
-   * @returns {Observable<HttpResponse<ApiReponse<void>>>} - Retourne la réponse de l'API
+   * @returns {Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>>} - Retourne la réponse de l'API
    */
-  public verifyEmail(payload: UserEmailVerification): Observable<HttpResponse<ApiReponse<void>>> {
+  public verifyEmail(payload: UserEmailVerification): Observable<HttpResponse<ApiReponse<User & { token: JwtToken }>>> {
     const url: string = `${AuthService.API_URL}/verify-email`;
-    return this.httpClient.post<ApiReponse<void>>(url, payload, {
+    return this.httpClient.post<ApiReponse<User & { token: JwtToken }>>(url, payload, {
       observe: 'response'
     });
   }

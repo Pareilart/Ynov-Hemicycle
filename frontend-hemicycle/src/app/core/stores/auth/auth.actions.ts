@@ -290,7 +290,7 @@ export const verifyEmail = createAction(
  */
 export const verifyEmailSuccess = createAction(
   '[Auth] Verify Email Success',
-  props<{ status: StoreOperationStatus }>()
+  props<{ user: User, token: JwtToken, status: StoreOperationStatus }>()
 );
 
 /**

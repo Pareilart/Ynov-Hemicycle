@@ -247,7 +247,27 @@ export const verifyEmail = async (req: Request, res: Response) => {
     user.emailVerifiedAt = new Date();
     await user.save();
 
-    return ResponseHandler.success(res, null, 'Email vérifié avec succès');
+    const userWithDetails = await User.findById(user._id)
+      .populate('role')
+      .populate('address')
+      .populate('votingSurvey')
+      .exec() as IUserDocument | null;
+
+    if (!userWithDetails) {
+      return ResponseHandler.notFound(res, 'Utilisateur non trouvé après la vérification');
+    }
+
+    
+    const tokens = generateToken(userWithDetails._id, userWithDetails.role.name);
+    const userResponse = UserDto.toResponse(userWithDetails);
+    userResponse.token = {
+      token: tokens.token,
+      refreshToken: tokens.refreshToken,
+      expiresIn: tokens.expiresIn,
+      exp: tokens.expiresAt.getTime(),
+    };
+
+    return ResponseHandler.success(res, userResponse, 'Email vérifié avec succès');
   } catch (error: any) {
     return ResponseHandler.error(res, 'Erreur lors de la vérification de l\'email', error);
   }
