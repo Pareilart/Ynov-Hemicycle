@@ -5,26 +5,6 @@
     <p class="text-sm text-surface-500 dark:text-surface-400">Connectez-vous pour accéder à votre compte</p>
   </section>
 
-  <section class="flex flex-col gap-5">
-    <div class="flex flex-row gap-3 justify-center flex-wrap">
-      @for (provider of providers(); track $index) {
-        <p-button
-          class="flex-1"
-          type="button"
-          severity="secondary"
-          [outlined]="true"
-          [fluid]="true"
-          [icon]="provider.icon"
-          [label]="provider.name"
-        />
-      }
-    </div>
-
-    <p-divider styleClass="m-0" layout="horizontal">
-      <span>OU</span>
-    </p-divider>
-  </section>
-
   <section class="flex flex-col gap-1">
     <label for="email" class="flex flex-row gap-1">
       <span class="font-medium">Adresse e-mail</span>
@@ -99,6 +79,26 @@
       [loading]="loading()"
       [disabled]="form.invalid && !loading()"
     />
+  </section>
+
+  <section class="flex flex-col gap-5">
+    <p-divider styleClass="m-0" layout="horizontal">
+      <span>OU</span>
+    </p-divider>
+
+    <div class="flex flex-row gap-3 justify-center flex-wrap">
+      @for (provider of providers(); track $index) {
+        <p-button
+          class="flex-1"
+          type="button"
+          severity="secondary"
+          [outlined]="true"
+          [fluid]="true"
+          [icon]="provider.icon"
+          [label]="provider.name"
+        />
+      }
+    </div>
   </section>
 
   <p class="mt-auto text-center text-sm text-surface-500 dark:text-surface-400">
